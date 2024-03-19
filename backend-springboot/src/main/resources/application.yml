@@ -20,9 +20,14 @@ spring:
   multipart:
    max-file-size: 2MB
    max-request-size: 2MB
-
-
-    
+ security:
+  user:
+   name: admin
+   password: 1234
+nlu:
+ jwt:
+  expiration: 86400000
+  secret: xIozWdD9r3RiqzaaRxJTYMvVvoKVk4G9Iq4kZ7ZEXXpePPxgtRQKj/O43HYbWhKy
       
   
 
