@@ -1,4 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
+import todoSlice from './slices/counterSlice'
+
 export const store = configureStore({
-    reducer: {},
+    reducer: {
+        todos: todoSlice.reducer,
+    },
 })
