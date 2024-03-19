@@ -1,5 +1,5 @@
 server:
- port: 9000
+  port: 9000
 spring:
  application:
   name: quiz-api
@@ -28,6 +28,4 @@ nlu:
  jwt:
   expiration: 86400000
   secret: xIozWdD9r3RiqzaaRxJTYMvVvoKVk4G9Iq4kZ7ZEXXpePPxgtRQKj/O43HYbWhKy
-      
-  
 

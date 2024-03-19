@@ -1,0 +1,46 @@
+# Dependency directories
+/node_modules
+/.idea
+
+# Build files
+/build
+/.next
+/out
+
+# IDE/Editor specific files
+/.vscode
+/.idea
+/.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependency lock files
+/yarn.lock
+/package-lock.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage
+/coverage
+
+# Build scripts
+/webpack.config.js
+
+# Editor configuration
+.editorconfig
+
+# Typescript configuration
+/tsconfig.json
+/tsconfig.tsbuildinfo
