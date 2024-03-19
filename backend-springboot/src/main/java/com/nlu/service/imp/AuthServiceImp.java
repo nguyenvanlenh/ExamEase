@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nlu.exception.ResourceExistedException;
 import com.nlu.model.entity.Role;
 import com.nlu.model.entity.User;
 import com.nlu.model.enumeration.ERole;
@@ -44,36 +44,28 @@ public class AuthServiceImp implements AuthService{
 	AuthenticationManager authenticationManager;
 
 	@Override
-//	@Transactional
+	@Transactional
 	public AuthenticationResponse login(LoginRequest request) {
-	    try {
-	        // Thực hiện xác thực người dùng
-	        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-	                request.getUsername(), request.getPassword());
-	        Authentication authentication = authenticationManager.authenticate(token);
-	        // Xác thực thành công, tiếp tục xử lý
-	        SecurityContextHolder.getContext().setAuthentication(authentication);
-	        CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(request.getUsername());
-	        String jwtToken = jwtTokenProvider.generateToken(customUserDetails);
-	        
-	        Set<String> listRoles = customUserDetails.getAuthorities().stream()
-	                .map(item -> item.getAuthority()).collect(Collectors.toSet());
-	        
-	        return AuthenticationResponse.builder()
-	                .token(jwtToken)
-	                .authenticated(true)
-	                .listRoles(listRoles)
-	                .build();
-	    } catch (LockedException e) {
-	        // Xử lý trường hợp tài khoản bị khóa
-	        // Ví dụ: thông báo cho người dùng biết tài khoản của họ đã bị khóa
-	        // và hướng dẫn họ liên hệ với quản trị viên hoặc sử dụng một quy trình khôi phục tài khoản nào đó.
-	        // Đồng thời có thể trả về một thông báo lỗi phản hồi HTTP 403 (Forbidden) cho người dùng.
-	        return AuthenticationResponse.builder()
-	                .error("User account is locked")
-	                .authenticated(false)
-	                .build();
-	    }
+	    
+				// Thực hiện xác thực người dùng
+				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+				        request.getUsername(), request.getPassword());
+				Authentication authentication = authenticationManager.authenticate(token);
+				// Xác thực thành công, tiếp tục xử lý
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+				CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(request.getUsername());
+				String jwtToken = jwtTokenProvider.generateToken(customUserDetails);
+				
+				Set<String> listRoles = customUserDetails.getAuthorities().stream()
+				        .map(item -> item.getAuthority()).collect(Collectors.toSet());
+				
+				return AuthenticationResponse.builder()
+				        .token(jwtToken)
+				        .authenticated(true)
+				        .listRoles(listRoles)
+				        .build();
+			
+	    
 	}
 
 	@Transactional
@@ -81,9 +73,9 @@ public class AuthServiceImp implements AuthService{
 	public void register(RegisterRequest request) {
 		// TODO Auto-generated method stub
 		if(userRepository.existsByUsername(request.getUsername()))
-			throw new RuntimeException("username already exists!");
+			throw new ResourceExistedException("username already exists!");
 		if(userRepository.existsByEmail(request.getEmail()))
-			throw new RuntimeException("email already exists!");
+			throw new ResourceExistedException("email already exists!");
 		
 		User user = new User();
 		user.setUsername(request.getUsername());

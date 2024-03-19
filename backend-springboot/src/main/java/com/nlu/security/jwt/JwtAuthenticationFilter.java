@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		return null;
 	}
 
-	private boolean validate(String jwt) {
+	private boolean validateJwt(String jwt) {
 		boolean result = false;
 		if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
 			result = true;
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		
 			String jwt = getJwtFromRequest(request);
-			if (validate(jwt)) {
+			if (validateJwt(jwt)) {
 				String username = jwtTokenProvider.getUsernameFromJwt(jwt);
 
 				UserDetails userDetails = userDetailsService.loadUserByUsername(username);

@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("username not found"));
-//		 Hibernate.initialize(user.getListRoles());
 		return new CustomUserDetails().mapUserToUserDetals(user);
 	}
 

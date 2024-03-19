@@ -2,7 +2,6 @@ package com.nlu.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nlu.model.request.LoginRequest;
 import com.nlu.model.request.RegisterRequest;
 import com.nlu.model.response.AuthenticationResponse;
-import com.nlu.repository.RoleRepository;
 import com.nlu.service.AuthService;
-import com.nlu.utils.AuthenticationUtils;
 
 
 @RestController
@@ -33,6 +30,5 @@ public class AuthController {
 	@ResponseStatus(code = HttpStatus.OK)
 	public AuthenticationResponse login(@RequestBody LoginRequest request) {
 		return authService.login(request);
-	}
-	
+	}	
 }

@@ -61,23 +61,18 @@ public class JwtTokenProvider {
 		} catch (SignatureException e) {
 			// Xử lý ngoại lệ khi xác thực chữ ký của chuỗi JWT thất bại
 			log.error("Invalid JWT signature");
-			log.trace("Invalid JWT signature trace", e);
 		} catch (MalformedJwtException e) {
 			// Xử lý ngoại lệ khi chuỗi JWT không đúng định dạng
 			log.error("Malformed JWT token");
-			log.trace("Malformed JWT token trace", e);
 		} catch (ExpiredJwtException e) {
 			// Xử lý ngoại lệ khi chuỗi JWT đã hết hạn
 			log.error("Expired JWT token");
-			log.trace("Expired JWT token trace", e);
 		} catch (UnsupportedJwtException e) {
 			// Xử lý ngoại lệ khi chuỗi JWT không được hỗ trợ
 			log.error("Unsupported JWT token");
-			log.trace("Unsupported JWT token trace", e);
 		} catch (IllegalArgumentException e) {
 			// Xử lý ngoại lệ khi đối số không hợp lệ
 			log.error("JWT token claims string is empty.");
-			log.trace("JWT token claims string is empty trace", e);
 		}
 
 		return false;
