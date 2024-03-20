@@ -15,14 +15,14 @@ import com.nlu.util.ExcelUtils;
 @RestController
 @RequestMapping("/api/student")
 public class StudentController {
-	
+
 	@Autowired
 	private StudentService studentService;
 
 	@PostMapping("/excel/upload")
-	public ResponseEntity<?> uploadFileExcel(@RequestParam(name = "file") MultipartFile file){
+	public ResponseEntity<?> uploadFileExcel(@RequestParam(name = "file") MultipartFile file) {
 		String message = "";
-		if(ExcelUtils.hasExcelFormat(file)) {
+		if (ExcelUtils.hasExcelFormat(file)) {
 			try {
 				studentService.save(file);
 				return ResponseEntity.status(HttpStatus.CREATED)
@@ -32,8 +32,8 @@ public class StudentController {
 						.body("upload FILE fail!");
 			}
 		}
-		 message = "Please upload an excel file!";
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+		message = "Please upload an excel file!";
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
 	}
-	
+
 }
