@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nlu.service.StudentService;
-import com.nlu.util.ExcelUtils;
+import com.nlu.utils.ExcelUtils;
 
 @RestController
 @RequestMapping("/api/student")

@@ -12,8 +12,8 @@ import com.nlu.model.entity.User;
 import com.nlu.repository.StudentRepository;
 import com.nlu.repository.UserRepository;
 import com.nlu.service.StudentService;
-import com.nlu.util.AuthenticationUtils;
-import com.nlu.util.ExcelUtils;
+import com.nlu.utils.AuthenticationUtils;
+import com.nlu.utils.ExcelUtils;
 @Service
 public class StudentServiceImp implements StudentService{
 

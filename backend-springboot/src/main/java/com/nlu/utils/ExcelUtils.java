@@ -1,4 +1,4 @@
-package com.nlu.util;
+package com.nlu.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
