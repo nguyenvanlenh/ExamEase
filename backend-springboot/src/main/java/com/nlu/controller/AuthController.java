@@ -39,7 +39,7 @@ public class AuthController {
 	
 	@GetMapping("/test")
 	public UserDetails getCustomUserDetails() {
-		return AuthenticationUtils.extractRole();
+		return AuthenticationUtils.extractUserDetails();
 	}
 }
 
