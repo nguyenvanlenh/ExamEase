@@ -21,7 +21,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails{
 	
 	/**
 	 * 
@@ -79,7 +79,7 @@ public class CustomUserDetails implements UserDetails {
 	
 	public CustomUserDetails mapUserToUserDetals(User user) {
 		List<GrantedAuthority> authorities = user.getListRoles().stream()
-				.map(role -> new SimpleGrantedAuthority(role.getName()))
+				.map(role -> new SimpleGrantedAuthority("ROLE_"+role.getName()))
 				.collect(Collectors.toList());
 		
 		return CustomUserDetails.builder()

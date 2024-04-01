@@ -14,12 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nlu.exception.ResourceExistedException;
+import com.nlu.model.dto.request.LoginRequest;
+import com.nlu.model.dto.request.RegisterRequest;
+import com.nlu.model.dto.response.AuthenticationResponse;
 import com.nlu.model.entity.Role;
 import com.nlu.model.entity.User;
 import com.nlu.model.enumeration.ERole;
-import com.nlu.model.request.LoginRequest;
-import com.nlu.model.request.RegisterRequest;
-import com.nlu.model.response.AuthenticationResponse;
 import com.nlu.repository.RoleRepository;
 import com.nlu.repository.UserRepository;
 import com.nlu.security.CustomUserDetails;
@@ -46,25 +46,28 @@ public class AuthServiceImp implements AuthService{
 	@Override
 	@Transactional
 	public AuthenticationResponse login(LoginRequest request) {
-	    
-				// Thực hiện xác thực người dùng
-				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-				        request.getUsername(), request.getPassword());
-				Authentication authentication = authenticationManager.authenticate(token);
-				// Xác thực thành công, tiếp tục xử lý
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-				CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(request.getUsername());
-				String jwtToken = jwtTokenProvider.generateToken(customUserDetails);
-				
-				Set<String> listRoles = customUserDetails.getAuthorities().stream()
-				        .map(item -> item.getAuthority()).collect(Collectors.toSet());
-				
-				return AuthenticationResponse.builder()
-				        .token(jwtToken)
-				        .authenticated(true)
-				        .listRoles(listRoles)
-				        .build();
-			
+
+		// Thực hiện xác thực người dùng
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+				request.getUsername(),
+				request.getPassword());
+		Authentication authentication = authenticationManager.authenticate(token);
+		// Xác thực thành công, tiếp tục xử lý
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService
+				.loadUserByUsername(request.getUsername());
+		String jwtToken = jwtTokenProvider.generateToken(customUserDetails);
+
+		Set<String> listRoles = customUserDetails.getAuthorities()
+				.stream()
+				.map(item -> item.getAuthority())
+				.collect(Collectors.toSet());
+
+		return AuthenticationResponse.builder()
+				.token(jwtToken)
+				.authenticated(true)
+				.listRoles(listRoles)
+				.build();
 	    
 	}
 

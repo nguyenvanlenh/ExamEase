@@ -12,4 +12,11 @@ public class AuthenticationUtils {
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		return userDetails.getId();
 	}
+	
+	public static CustomUserDetails extractUserDetails() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		return userDetails;
+	}
 }

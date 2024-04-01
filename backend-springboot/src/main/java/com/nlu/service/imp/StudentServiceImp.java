@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nlu.model.entity.Student;
@@ -25,6 +26,8 @@ public class StudentServiceImp implements StudentService{
 	@Override
 	public void save(MultipartFile file) {
 		try {
+			System.out.println("name: "+file.getOriginalFilename());
+			System.out.println("size: "+(double)file.getSize()/1024.0);
 			User teacher = userRepository.findById(AuthenticationUtils.extractUserId())
 					.orElseThrow(() -> new RuntimeException("teacher not found!"));
 			List<Student> listStudents = ExcelUtils.toListStudents(file.getInputStream());
@@ -49,6 +52,8 @@ public class StudentServiceImp implements StudentService{
 			studentRepository.save(student);
 		});
 	}
+	
+	
 
 	
 }
