@@ -1,7 +1,9 @@
 package com.nlu.service;
 
-public interface ExamService {
+import com.nlu.model.dto.response.ExamResponse;
+import org.springframework.stereotype.Service;
 
-	
-	
+
+public interface ExamService {
+    public ExamResponse getExamById(Long id);
 }
