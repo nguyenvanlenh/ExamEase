@@ -1,4 +1,4 @@
-package com.nlu.model.response;
+package com.nlu.model.dto.response;
 
 import java.util.Set;
 
@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthenticationResponse {
