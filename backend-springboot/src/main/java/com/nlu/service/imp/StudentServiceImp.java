@@ -24,14 +24,17 @@ public class StudentServiceImp implements StudentService{
 	@Autowired
 	private UserRepository userRepository;
 	@Override
-	public void save(MultipartFile file) {
+	public void save(MultipartFile file,String codeGroup) {
 		try {
 			System.out.println("name: "+file.getOriginalFilename());
 			System.out.println("size: "+(double)file.getSize()/1024.0);
+			
 			User teacher = userRepository.findById(AuthenticationUtils.extractUserId())
 					.orElseThrow(() -> new RuntimeException("teacher not found!"));
+			
 			List<Student> listStudents = ExcelUtils.toListStudents(file.getInputStream());
-			createAndSaveListStudentOfTeacher( teacher,  listStudents);
+			
+			createAndSaveListStudentOfTeacher( teacher,  listStudents, codeGroup);
 			
 		} catch (IOException ex) {
 			 throw new RuntimeException("Excel data is failed to store: " + ex.getMessage());
@@ -44,11 +47,13 @@ public class StudentServiceImp implements StudentService{
 		 return studentRepository.findAll();
 	}
 	
-	private void createAndSaveListStudentOfTeacher(User teacher, List<Student> listStudents) {
-		listStudents.forEach(student ->{
+	private void createAndSaveListStudentOfTeacher(User teacher, List<Student> listStudents, String codeGroup) {
+		listStudents.forEach(student -> {
+			student.setCodeGroup(codeGroup);
 			student.setTeacher(teacher);
 			student.setUsername(student.getCode());
 			student.setPassword(student.getCode());
+			student.setActive(true);
 			studentRepository.save(student);
 		});
 	}

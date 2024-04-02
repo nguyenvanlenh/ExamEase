@@ -19,6 +19,8 @@ import lombok.Setter;
 public class ExamResponse {
 	private Long id;
 	private String title;
+	@JsonProperty("code_group")
+	private String codeGroup;
 	@JsonProperty("short_description")
 	private String shortDescription;
 	private String description;
@@ -35,6 +37,7 @@ public class ExamResponse {
 		return ExamResponse.builder()
 				.id(exam.getId())
 				.title(exam.getTitle())
+				.codeGroup(exam.getCodeGroup())
 				.shortDescription(exam.getShortDescription())
 				.description(exam.getDescription())
 				.quantityQuestion(exam.getQuantityQuestion())

@@ -25,6 +25,8 @@ public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(name ="code_group")
+	private String codeGroup;
 	@Column(nullable = false,length = 8)
 	private String code;
 	@Column(nullable = false,length = 20)

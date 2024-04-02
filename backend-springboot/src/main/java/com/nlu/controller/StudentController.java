@@ -20,11 +20,12 @@ public class StudentController {
 	private StudentService studentService;
 
 	@PostMapping("/import")
-	public ResponseEntity<?> uploadFileExcel(@RequestParam(name = "file") MultipartFile file){
+	public ResponseEntity<?> uploadFileExcel(@RequestParam(name = "file") MultipartFile file,
+			@RequestParam(name = "code_group") String codeGroup ){
 		String message = "";
 		if(ExcelUtils.hasExcelFormat(file)) {
 			try {
-				studentService.save(file);
+				studentService.save(file,codeGroup);
 				return ResponseEntity.status(HttpStatus.CREATED)
 						.body("upload FILE success!");
 			} catch (Exception e) {

@@ -28,11 +28,17 @@ public class WorkTime {
 	@JoinColumn(name = "examnumber_id")
 	private ExamNumber examNumber;
 	
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "student_id")
 	private Student student;
+	
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "user_id")
+	private User user;
+	
 	@Column(name="begin_exam")
 	private Timestamp beginExam;
+	
 	@Column(name="end_exam")
 	private Timestamp endExam;
 

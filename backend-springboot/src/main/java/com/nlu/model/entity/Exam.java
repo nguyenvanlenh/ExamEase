@@ -3,6 +3,7 @@ package com.nlu.model.entity;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,6 +41,8 @@ public class Exam implements Serializable{
 	private Long id;
 	
 	private String title;
+	@Column(name ="code_group")
+	private String codeGroup = UUID.randomUUID().toString();
 	@Column(name = "short_description")
 	private String shortDescription;
 	private String description;

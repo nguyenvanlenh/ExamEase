@@ -73,7 +73,7 @@ public class SecurityConfig{
                 
                 .authorizeHttpRequests(request ->
                         request.requestMatchers( PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/student/import")
+                                .requestMatchers(HttpMethod.POST, "/api/students/import")
                                 .hasAnyRole(ERole.TEACHER.toString(), ERole.ROOT.toString())
                                 .anyRequest().authenticated()
                 )

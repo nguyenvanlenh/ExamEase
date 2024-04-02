@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -58,6 +58,11 @@ public class GlobalExceptionHandler {
 	ResponseEntity<String> handlingResourceNotExistException(ResourceNotExistException e){
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(e.getMessage());
+	}
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	ResponseEntity<String> handlingMissingServletRequestParameterException(MissingServletRequestParameterException e){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(e.getLocalizedMessage());
 	}
 
 }
