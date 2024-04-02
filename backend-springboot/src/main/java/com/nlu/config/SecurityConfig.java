@@ -31,13 +31,14 @@ public class SecurityConfig{
 	private final String[] PUBLIC_ENDPOINTS = {
 			"/api/auth/login",
 			"/api/auth/register",
-			"/api/exams"
+			"/api/exams/**"
 	};
 	private final String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
 			"/swagger-ui/**",
 			"/v3/api-docs/**",
             "/javainuse-openapi/**"
+
 	};
 	
 	@Autowired private UserDetailsService userDetailsService;

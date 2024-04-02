@@ -48,4 +48,10 @@ public class GlobalExceptionHandler {
 		
 	}
 
+	@ExceptionHandler(ResourceNotExistException.class)
+	ResponseEntity<String> handlingResourceNotExistException(ResourceNotExistException e){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(e.getMessage());
+	}
+
 }
