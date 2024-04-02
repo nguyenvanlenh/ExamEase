@@ -2,6 +2,8 @@ package com.nlu.model.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +35,7 @@ public class User {
 	private String code;
 	@Column(nullable = false,length = 20)
 	private String username;
+	@JsonIgnore
 	@Column(nullable = false)
 	private String password;
 	private String fullname;
@@ -44,7 +47,7 @@ public class User {
 	
 	@OneToMany(mappedBy = "teacher")
 	private Set<Exam> listExams;
-	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name ="user_roles",
 	joinColumns = @JoinColumn(name = "user_id"),

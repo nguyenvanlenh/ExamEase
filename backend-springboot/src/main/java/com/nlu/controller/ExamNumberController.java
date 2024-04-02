@@ -12,7 +12,7 @@ public class ExamNumberController {
     @Autowired
     private ExamNumberService examNumberService;
     @GetMapping
-    public ResponseEntity<ExamNumber> getExamNumber(@RequestParam Long id, @RequestParam Long idUser) {
+    public ResponseEntity<ExamNumber> getExamNumber(@RequestParam Integer id, @RequestParam Long idUser) {
         return ResponseEntity.ok(examNumberService.getExamNumberById(id, idUser).getBody());
     }
 }

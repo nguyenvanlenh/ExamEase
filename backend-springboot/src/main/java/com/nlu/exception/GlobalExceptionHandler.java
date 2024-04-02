@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,6 +47,11 @@ public class GlobalExceptionHandler {
 	        responseBody.put("errors", errors);
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
 		
+	}
+	@ExceptionHandler(NotFoundException.class)
+	ResponseEntity<?> handlingNotFoundException(NotFoundException e){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(e.getLocalizedMessage());
 	}
 
 	@ExceptionHandler(ResourceNotExistException.class)

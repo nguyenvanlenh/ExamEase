@@ -28,22 +28,16 @@ import com.nlu.security.jwt.JwtAuthenticationFilter;
 public class SecurityConfig{
 	
 	
-	private final String[] PUBLIC_ENDPOINTS_POST = {
+	private final String[] PUBLIC_ENDPOINTS = {
 			"/api/auth/login",
 			"/api/auth/register",
 			"/api/exams/**"
 	};
-
-	private final String[] PUBLIC_ENDPOINTS_GET = {
-            "/api/exams/**",
-			"/api/exam-number"
-    };
 	private final String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
 			"/swagger-ui/**",
 			"/v3/api-docs/**",
             "/javainuse-openapi/**"
-
 	};
 	
 	@Autowired private UserDetailsService userDetailsService;
@@ -78,18 +72,18 @@ public class SecurityConfig{
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
-								.requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET).permitAll()
-								.requestMatchers(HttpMethod.POST, "/api/student/excel/upload")
+                        request.requestMatchers( PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/student/import")
                                 .hasAnyRole(ERole.TEACHER.toString(), ERole.ROOT.toString())
                                 .anyRequest().authenticated()
                 )
                 // thêm filter jwt trước usernamepasswordAuthenticationFilter nhằm ưu tiên cho jwt hơn là username - password
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 
 //                .exceptionHandling(handling -> {
 //                handling.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
-//                });
+//                })
+                ;
         
       return http.build();
 	}
