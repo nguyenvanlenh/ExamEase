@@ -2,6 +2,7 @@ package com.nlu.service.imp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -84,9 +85,10 @@ public class ExamServiceImp implements ExamService {
 			Collections.shuffle(shuffledQuestionRequests);
 			List<Question> listQuestions = saveQuestion(shuffledQuestionRequests);
 
-			examNumber.setListQuestions(listQuestions);
+			examNumber.setListQuestions(new HashSet<>(listQuestions));
 			return examNumber;
 		}).toList();
+		// save exam number
 		examNumberRepository.saveAll(listExamNumbers);
 
 		return ExamResponse.fromEntity(examSaved);

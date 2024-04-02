@@ -42,7 +42,7 @@ public class ExamNumber {
 	@JoinTable(name = "examnumber_ques",
 	joinColumns = @JoinColumn(name = "examnumber_id"),
 	inverseJoinColumns = @JoinColumn(name = "question_id"))
-	private List<Question> listQuestions;
+	private Set<Question> listQuestions;
 	
 	@OneToMany(mappedBy = "examNumber")
 	private Set<WorkTime> listWorkTimes;

@@ -19,7 +19,7 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 
-	@PostMapping("import")
+	@PostMapping("/import")
 	public ResponseEntity<?> uploadFileExcel(@RequestParam(name = "file") MultipartFile file){
 		String message = "";
 		if(ExcelUtils.hasExcelFormat(file)) {

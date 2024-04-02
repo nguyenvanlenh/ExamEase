@@ -1,3 +1,4 @@
+
 package com.nlu.service;
 
 import com.nlu.model.dto.request.ExamRequest;
@@ -9,6 +10,6 @@ public interface ExamService {
 	ExamResponse updateExam(Long examId, ExamRequest request);
 	void deleteExam(Long id);
 	ExamResponse updatePublicExam(Long examId,boolean request);
-	
-	
+
+
 }
