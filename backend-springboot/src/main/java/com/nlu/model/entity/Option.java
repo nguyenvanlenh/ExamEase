@@ -14,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,7 +40,7 @@ public class Option {
 	@JoinColumn(name="question_id")
 	private Question question;
 	
-//	@OneToMany(mappedBy = "option")
-//	private Set<UserAnswer> listUserAnswers;
+	@OneToMany(mappedBy = "option")
+	private Set<UserAnswer> listUserAnswers;
 	
 }
