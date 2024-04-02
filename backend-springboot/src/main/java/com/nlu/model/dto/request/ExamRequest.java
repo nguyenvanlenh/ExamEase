@@ -1,6 +1,5 @@
 package com.nlu.model.dto.request;
 
-import java.util.HashSet;
 import java.util.List;
 
 import com.nlu.model.entity.Exam;

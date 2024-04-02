@@ -2,6 +2,7 @@ package com.nlu.model.dto.response;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import lombok.Setter;
 public class ExamNumberResponse {
 	private Integer id;
 	private String name;
-	private Set<QuestionResponse> listQuestions;
+	private List<QuestionResponse> listQuestions;
 
 	public static ExamNumberResponse fromEntity(ExamNumber examNumber) {
 		return ExamNumberResponse.builder().id(examNumber.getId()).name(examNumber.getName())

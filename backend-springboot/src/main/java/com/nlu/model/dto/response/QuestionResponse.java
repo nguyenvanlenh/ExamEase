@@ -1,6 +1,7 @@
 package com.nlu.model.dto.response;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,9 +28,9 @@ public class QuestionResponse {
 				.build();
 	}
 	
-	 public static Set<QuestionResponse> fromEntities(Set<Question> questions) {
+	 public static List<QuestionResponse> fromEntities(Set<Question> questions) {
 	        return Optional.ofNullable(questions).orElse(Collections.emptySet()).stream()
 	                .map(QuestionResponse::fromEntity)
-	                .collect(Collectors.toSet());
+	                .toList();
 	    }
 }

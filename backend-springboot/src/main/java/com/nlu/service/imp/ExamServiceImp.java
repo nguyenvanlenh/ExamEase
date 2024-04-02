@@ -155,30 +155,5 @@ public class ExamServiceImp implements ExamService {
 		return ExamResponse.fromEntity(exam);
 	}
 	
-	 /**
-     * Retrieves all exams.
-     * 
-     * @return A Set of ExamResponse objects representing all exams.
-     */
-	@Transactional(readOnly = true)
-	@Override
-	public Set<ExamResponse> getAllExams() {
-		return ExamResponse.fromEntities(examRepository.findAll());
-	}
-	
-	 /**
-     * Retrieves an exam by its ID.
-     * 
-     * @param id The ID of the exam to retrieve.
-     * @return An ExamResponse object representing the retrieved exam.
-     * @throws RuntimeException if the exam is not found.
-     */
-	@Transactional(readOnly = true)
-	@Override
-	public ExamResponse getExamById(Long id) {
-		Exam exam = examRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("exam not found"));
-		return ExamResponse.fromEntity(exam);
-	}
 
 }
