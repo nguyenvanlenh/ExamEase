@@ -1,5 +1,7 @@
 package com.nlu.model.dto.response;
 
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,21 +28,20 @@ public class UserResponse {
 	String emai;
 	Set<String> listRoles;
 	
-	public UserResponse fromEntity(User user) {
+	public static UserResponse fromEntity(User user) {
 		return UserResponse.builder()
 				.id(user.getId())
 				.code(user.getCode())
 				.fullname(user.getFullname())
 				.emai(user.getEmail())
-				.listRoles(this.cvtListRoles(user.getListRoles()))
+				.listRoles(cvtListRoles(user.getListRoles()))
 				.build();
 	}
 	
-	private Set<String> cvtListRoles(Set<Role> listRoles){
-		return listRoles.stream()
-				.map(role -> role.getName())
-				.collect(Collectors.toSet())
-				;
-	}
+	private static Set<String> cvtListRoles(Set<Role> listRoles){
+        return Optional.ofNullable(listRoles).orElse(Collections.emptySet()).stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+    }
 
 }

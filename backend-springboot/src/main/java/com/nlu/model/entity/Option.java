@@ -2,6 +2,8 @@ package com.nlu.model.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,28 +15,33 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name ="options")
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Option {
 
 	@Id
-	private Long id;
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	@Column(name ="name_option")
 	private String nameOption;
 	
 	private Boolean correct;
-	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="question_id")
 	private Question question;
 	
-	@OneToMany(mappedBy = "option")
-	private Set<UserAnswer> listUserAnswers;
+//	@OneToMany(mappedBy = "option")
+//	private Set<UserAnswer> listUserAnswers;
 	
 }

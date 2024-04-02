@@ -30,7 +30,8 @@ public class SecurityConfig{
 	
 	private final String[] PUBLIC_ENDPOINTS = {
 			"/api/auth/login",
-			"/api/auth/register"
+			"/api/auth/register",
+			"/api/exams/**"
 	};
 	private final String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
@@ -71,7 +72,7 @@ public class SecurityConfig{
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        request.requestMatchers( PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/student/excel/upload")
                                 .hasAnyRole(ERole.TEACHER.toString(), ERole.ROOT.toString())
                                 .anyRequest().authenticated()
@@ -79,9 +80,10 @@ public class SecurityConfig{
                 // thêm filter jwt trước usernamepasswordAuthenticationFilter nhằm ưu tiên cho jwt hơn là username - password
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 
-                .exceptionHandling(handling -> {
-                handling.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
-                });
+//                .exceptionHandling(handling -> {
+//                handling.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
+//                })
+                ;
         
       return http.build();
 	}

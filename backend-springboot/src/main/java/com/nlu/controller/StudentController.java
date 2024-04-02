@@ -13,13 +13,13 @@ import com.nlu.service.StudentService;
 import com.nlu.utils.ExcelUtils;
 
 @RestController
-@RequestMapping("/api/student")
+@RequestMapping("/api/students")
 public class StudentController {
 	
 	@Autowired
 	private StudentService studentService;
 
-	@PostMapping("/excel/upload")
+	@PostMapping("import")
 	public ResponseEntity<?> uploadFileExcel(@RequestParam(name = "file") MultipartFile file){
 		String message = "";
 		if(ExcelUtils.hasExcelFormat(file)) {
