@@ -10,4 +10,8 @@ import java.util.Optional;
 @Repository
 public interface UserAnswerRepository extends JpaRepository<UserAnswer, Long> {
 
+    UserAnswer findByUser_IdAndOption_Id(Long idUser, Long idOption);
+
+    Optional<UserAnswer> findByStudent_IdAndOption_Id(Long idStudent, Long idOptionFirst);
+
 }
