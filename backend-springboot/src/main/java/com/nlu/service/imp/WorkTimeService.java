@@ -19,50 +19,56 @@ import com.nlu.repository.WorkTimeRepository;
 
 @Service
 public class WorkTimeService {
-	
-	@Autowired private ExamRepository examRepository;
-	@Autowired private UserRepository userRepository;
-	@Autowired private StudentRepository studentRepository;
-	@Autowired private WorkTimeRepository workTimeRepository;
+
+	@Autowired
+	private ExamRepository examRepository;
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private StudentRepository studentRepository;
+	@Autowired
+	private WorkTimeRepository workTimeRepository;
 
 	@Transactional
-	 public List<WorkTime> createWorkTime(Long examId) {
-	        // Lấy thông tin về kỳ thi từ examId
-	        Exam exam = examRepository.findById(examId)
-	                .orElseThrow(() -> new NotFoundException("Exam not found"));
+	public List<WorkTime> createWorkTime(Long examId) {
+		// Lấy thông tin về kỳ thi từ examId
+		Exam exam = examRepository.findById(examId).orElseThrow(() -> new NotFoundException("Exam not found"));
 
-	        // Lấy mã nhóm của kỳ thi
-	        String codeGroup = exam.getCodeGroup();
+		// Lấy mã nhóm của kỳ thi
+		String codeGroup = exam.getCodeGroup();
 
-	        List<ExamNumber> listExamNumbers = exam.getExamNumbers().stream().toList();
+		List<ExamNumber> listExamNumbers = exam.getExamNumbers().stream().toList();
 
-	        List<Student> listStudents = studentRepository.findByCodeGroup(codeGroup);
+		List<Student> listStudents = studentRepository.findByCodeGroup(codeGroup);
 
-	        List<WorkTime> workTimes = new ArrayList<>();
+		List<WorkTime> workTimes = new ArrayList<>();
 
-	        int examNumberIndex = 0;
-	        for (Student student : listStudents) {
-	        	
-	            // Lấy đề cho học sinh hiện tại
-	            ExamNumber examNumber = listExamNumbers.get(examNumberIndex);
-	            // Tạo đối tượng chứa thông tin về thời gian làm việc của học sinh với đề
-	            WorkTime workTime = createWorkTime(student, examNumber);
-	            workTimes.add(workTime);
-	            // Di chuyển đến số báo danh tiếp theo, lặp lại danh sách
-	            examNumberIndex = (examNumberIndex + 1) % listExamNumbers.size();
-	        }
+		int examNumberIndex = 0;
+		for (Student student : listStudents) {
 
-	        return workTimes;
-	    }
+			// Lấy đề cho học sinh hiện tại
+			ExamNumber examNumber = listExamNumbers.get(examNumberIndex);
+			// Tạo đối tượng chứa thông tin về thời gian làm việc của học sinh với đề
+			WorkTime workTime = createWorkTime(student, examNumber);
+			workTimes.add(workTime);
+			// Di chuyển đến số báo danh tiếp theo, lặp lại danh sách
+			examNumberIndex = (examNumberIndex + 1) % listExamNumbers.size();
+		}
 
-	    private WorkTime createWorkTime(Student student, ExamNumber examNumber) {
-	        // Tạo và trả về đối tượng chứa thông tin về thời gian làm việc của học sinh với đề
-	        // Bạn có thể tạo một đối tượng WorkTime hoặc sử dụng một cấu trúc dữ liệu phù hợp khác
-	        // Trong ví dụ này, tôi sẽ trả về một String đơn giản
-	    	WorkTime workTime = new WorkTime();
-	    	workTime.setStudent(student);
-	    	workTime.setExamNumber(examNumber);
-	        return workTimeRepository.save(workTime);
-	    }
-		
+		return workTimes;
+	}
+
+	private WorkTime createWorkTime(Student student, ExamNumber examNumber) {
+		// Tạo và trả về đối tượng chứa thông tin về thời gian làm việc của học sinh với
+		// đề
+		// Bạn có thể tạo một đối tượng WorkTime hoặc sử dụng một cấu trúc dữ liệu phù
+		// hợp khác
+		// Trong ví dụ này, tôi sẽ trả về một String đơn giản
+		WorkTime workTime = new WorkTime();
+		workTime.setStudent(student);
+		workTime.setExamNumber(examNumber);
+		return workTimeRepository.save(workTime);
+	}
+	
+
 }

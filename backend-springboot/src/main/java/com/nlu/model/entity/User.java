@@ -41,7 +41,7 @@ public class User {
 	private String fullname;
 	private String email;
 	private Boolean active;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy = "teacher")
 	private Set<Student> listStudents;
 	

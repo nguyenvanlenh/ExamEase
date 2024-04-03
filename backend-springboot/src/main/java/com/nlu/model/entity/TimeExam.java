@@ -2,6 +2,7 @@ package com.nlu.model.entity;
 
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -16,12 +17,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TimeExam {
+	
 	@Id
 	private Integer id;
-	private String name;
-	private int minutes;
-	
-	@OneToMany(mappedBy = "timeExam")
+	private String name;	
+	@OneToMany(mappedBy = "timeExam", cascade = CascadeType.ALL)
 	private Set<Exam> exams;
 
 }

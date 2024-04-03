@@ -1,10 +1,9 @@
 package com.nlu.model.dto.response;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nlu.model.entity.Exam;
@@ -26,12 +25,16 @@ public class ExamResponse {
 	private String description;
 	@JsonProperty("quantity_question")
 	private int quantityQuestion;
-	@JsonProperty("is_public")
-	private boolean isPublic;
 	@JsonProperty("exam_numbers")
 	private List<ExamNumberResponse> examNumbers;
 	@JsonProperty("time_exam")
 	private String timeExam;
+	@JsonProperty("start_time")
+	private Timestamp startTime;
+	@JsonProperty("end_time")
+	private Timestamp endTime;
+	@JsonProperty("is_public")
+	private boolean isPublic;
 
 	public static ExamResponse fromEntity(Exam exam) {
 		return ExamResponse.builder()
@@ -41,9 +44,11 @@ public class ExamResponse {
 				.shortDescription(exam.getShortDescription())
 				.description(exam.getDescription())
 				.quantityQuestion(exam.getQuantityQuestion())
-				.isPublic(exam.isPublic())
 				.examNumbers(ExamNumberResponse.fromEntities(exam.getExamNumbers()))
 				.timeExam(exam.getTimeExam().getName())
+				.startTime(exam.getStartTime())
+				.endTime(exam.getEndTime())
+				.isPublic(exam.isPublic())
 				.build();
 	}
 
