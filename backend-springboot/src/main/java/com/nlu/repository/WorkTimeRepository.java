@@ -6,4 +6,5 @@ import com.nlu.model.entity.WorkTime;
 
 public interface WorkTimeRepository extends JpaRepository<WorkTime, Long>{
 
+    WorkTime findByStudent_Id(Long idStudent);
 }

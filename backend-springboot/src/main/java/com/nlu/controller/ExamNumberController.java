@@ -15,17 +15,15 @@ public class ExamNumberController {
     @Autowired
     private ExamNumberService examNumberService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public ExamResponse
-        getExamNumberUser(@PathVariable Integer id ,@RequestParam(required = false) Long idUser, @RequestParam(required = false) Long idStudent) {
-        if(idUser != null) return examNumberService.getExamNumberUser(id, idUser);
-        return null;
+        getExamNumberUser(@PathVariable Integer id ,@RequestParam(required = false) Long idUser) {
+        return examNumberService.getExamNumberUser(id, idUser);
     }
 
-    @GetMapping("/{idStudent}")
+    @GetMapping("/students/{idStudent}")
     public ExamResponse
     getExamNumberStudent(@PathVariable Long idStudent) {
-        if(idStudent != null) return examNumberService.getExamNumberStudent(idStudent);
-        return null;
+        return examNumberService.getExamNumberStudent(idStudent);
     }
 }
