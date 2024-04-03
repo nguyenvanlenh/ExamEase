@@ -1,7 +1,13 @@
 package com.nlu.service.imp;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.nlu.model.dto.response.ExamNumberResponse;
+import com.nlu.model.dto.response.ExamResponse;
+import com.nlu.model.entity.Exam;
+import com.nlu.model.entity.WorkTime;
+import com.nlu.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,10 +15,6 @@ import org.springframework.stereotype.Service;
 import com.nlu.exception.NotFoundException;
 import com.nlu.model.entity.ExamNumber;
 import com.nlu.model.entity.Question;
-import com.nlu.repository.ExamNumberRepository;
-import com.nlu.repository.OptionRepository;
-import com.nlu.repository.QuestionRepository;
-import com.nlu.repository.UserAnswerRepository;
 import com.nlu.service.ExamNumberService;
 
 @Service
@@ -20,18 +22,27 @@ public class ExamNumberServiceImp implements ExamNumberService {
     @Autowired
     private ExamNumberRepository examNumberRepo;
     @Autowired
-    private UserAnswerRepository userAnswerRepo;
-    @Autowired
-    private QuestionRepository questionRepo;
-    @Autowired
-    private OptionRepository optionRepo;
+    private ExamRepository examRepository;
 
     @Override
-    public ResponseEntity<ExamNumber> getExamNumberById(Integer id, Long idUser) {
-        ExamNumber examNumber = examNumberRepo.findById(id)
-                .orElseThrow(() -> new NotFoundException("No such exam"));
-        Set<Question> listQuestions = examNumber.getListQuestions();
-
-        return ResponseEntity.ok(examNumber);
+    public ExamResponse getExamNumberUser(Integer id, Long idUser) {
+        Exam exam = examRepository.findByExamNumbers_Id(id);
+        Set<ExamNumber>  examNumberList = exam.getExamNumbers()
+                .stream()
+                .filter(item -> item.getId().equals(id)).collect(Collectors.toSet());
+        exam.setExamNumbers(examNumberList);
+        return ExamResponse.fromEntity(exam);
     }
+
+    @Override
+    public ExamResponse getExamNumberStudent(Long idStudent) {
+//        Exam exam = examRepository.findByExamNumbers_Id(id);
+//        Set<ExamNumber>  examNumberList = exam.getExamNumbers()
+//                .stream()
+//                .filter(item -> item.getId().equals(id)).collect(Collectors.toSet());
+
+        return null;
+    }
+
+
 }
