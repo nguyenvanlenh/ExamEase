@@ -23,7 +23,7 @@ public class ExamRequest {
 	List<ExamNumberRequest> lisExamNumberRequests;
 	List<QuestionRequest> listQuestionRequests;
 
-	public static void toEntity(Exam exam, ExamRequest request) {
+	public static void setForEntity(Exam exam, ExamRequest request) {
 		exam.setShortDescription(request.getShortDescription());
 		exam.setDescription(request.getDescription());
 		exam.setTitle(request.getTitle());
