@@ -48,13 +48,13 @@ public class ExamServiceImp implements ExamService {
 	ExamRepository examRepository;
 	UserRepository userRepository;
 
-	 /**
-     * Creates an exam based on the provided request.
-     * 
-     * @param request The request containing exam details.
-     * @return An ExamResponse object representing the created exam.
-     * @throws NotFoundException if time or user is not found.
-     */
+	/**
+	 * Creates an exam based on the provided request.
+	 *
+	 * @param request The request containing exam details.
+	 * @return An ExamResponse object representing the created exam.
+	 * @throws NotFoundException if time or user is not found.
+	 */
 	@Transactional
 	@Override
 	public ExamResponse createExam(ExamRequest request) {
@@ -94,7 +94,7 @@ public class ExamServiceImp implements ExamService {
 		return ExamResponse.fromEntity(examSaved);
 	}
 
-	// save options with related question 
+	// save options with related question
 	private List<Option> saveOption(Question question, List<OptionRequest> lisOptionRequests) {
 		List<Option> listOptions = lisOptionRequests.stream().map(itemOption -> {
 			Option option = new Option();
@@ -121,7 +121,7 @@ public class ExamServiceImp implements ExamService {
 
 	/**
 	 * Updates an existing exam based on the provided exam ID and request.
-	 * 
+	 *
 	 * @param examId The ID of the exam to update.
 	 * @param request The request containing updated exam details.
 	 * @return An ExamResponse object representing the updated exam.
@@ -139,15 +139,15 @@ public class ExamServiceImp implements ExamService {
 	public void deleteExam(Long id) {
 		examRepository.deleteById(id);
 	}
-	
-	  /**
-     * Updates the visibility of an exam.
-     * 
-     * @param examId The ID of the exam to update.
-     * @param request The boolean value indicating whether the exam is public or not.
-     * @return An ExamResponse object representing the updated exam.
-     * @throws NotFoundException if the exam is not found.
-     */
+
+	/**
+	 * Updates the visibility of an exam.
+	 *
+	 * @param examId The ID of the exam to update.
+	 * @param request The boolean value indicating whether the exam is public or not.
+	 * @return An ExamResponse object representing the updated exam.
+	 * @throws NotFoundException if the exam is not found.
+	 */
 	@Override
 	public ExamResponse updatePublicExam(Long examId, boolean request) {
 		Exam exam = examRepository.findById(examId)
@@ -156,25 +156,25 @@ public class ExamServiceImp implements ExamService {
 		examRepository.save(exam);
 		return ExamResponse.fromEntity(exam);
 	}
-	
-	 /**
-     * Retrieves all exams.
-     * 
-     * @return A Set of ExamResponse objects representing all exams.
-     */
+
+	/**
+	 * Retrieves all exams.
+	 *
+	 * @return A Set of ExamResponse objects representing all exams.
+	 */
 	@Transactional(readOnly = true)
 	@Override
 	public List<ExamResponse> getAllExams() {
 		return ExamResponse.fromEntities(examRepository.findAll());
 	}
 
-	 /**
-     * Retrieves an exam by its ID.
-     * 
-     * @param id The ID of the exam to retrieve.
-     * @return An ExamResponse object representing the retrieved exam.
-     * @throws RuntimeException if the exam is not found.
-     */
+	/**
+	 * Retrieves an exam by its ID.
+	 *
+	 * @param id The ID of the exam to retrieve.
+	 * @return An ExamResponse object representing the retrieved exam.
+	 * @throws RuntimeException if the exam is not found.
+	 */
 	@Transactional(readOnly = true)
 	@Override
 	public ExamResponse getExamById(Long id) {
