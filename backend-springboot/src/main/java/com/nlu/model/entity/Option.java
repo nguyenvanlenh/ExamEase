@@ -40,7 +40,7 @@ public class Option {
 	@JoinColumn(name="question_id")
 	private Question question;
 	
-	@OneToMany(mappedBy = "option")
-	private Set<UserAnswer> listUserAnswers;
+//	@OneToMany(mappedBy = "option")
+//	private Set<UserAnswer> listUserAnswers;
 	
 }
