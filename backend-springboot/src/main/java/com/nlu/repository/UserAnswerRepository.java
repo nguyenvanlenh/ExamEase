@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public interface UserAnswerRepository extends JpaRepository<UserAnswer, Long> {
-
-	UserAnswer findByStudent_IdAndOption_Id(Long student_Id, Long option_Id);
+  
+    UserAnswer findByUser_IdAndOption_Id(Long idUser, Long idOption);
+    Optional<UserAnswer> findByStudent_IdAndOption_Id(Long idStudent, Long idOptionFirst);
 }
