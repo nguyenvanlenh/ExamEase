@@ -1,23 +1,22 @@
 package com.nlu.service.imp;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.nlu.exception.ResourceNotExistException;
-import com.nlu.model.dto.response.ExamNumberResponse;
 import com.nlu.model.dto.response.ExamResponse;
-import com.nlu.model.entity.*;
-import com.nlu.repository.*;
+import com.nlu.model.dto.response.ExamResultResponse;
+import com.nlu.model.entity.Exam;
+import com.nlu.model.entity.ExamNumber;
+import com.nlu.model.entity.WorkTime;
+import com.nlu.repository.ExamNumberRepository;
+import com.nlu.repository.ExamRepository;
+import com.nlu.repository.StudentRepository;
+import com.nlu.repository.WorkTimeRepository;
+import com.nlu.service.ExamNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.nlu.exception.NotFoundException;
-import com.nlu.service.ExamNumberService;
+import java.sql.Timestamp;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ExamNumberServiceImp implements ExamNumberService {
@@ -29,6 +28,8 @@ public class ExamNumberServiceImp implements ExamNumberService {
     private WorkTimeRepository workTimeRepo;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private ExamNumberRepository examNumberRepository;
 
     @Override
     public ExamResponse getExamNumberUser(Integer id, Long idUser) {
@@ -63,6 +64,33 @@ public class ExamNumberServiceImp implements ExamNumberService {
             throw new ResourceNotExistException("Outside exam time");
         }
         return ExamResponse.fromEntity(exam);
+    }
+
+    @Override
+    public ExamResultResponse getExamResult(Long idExamNumber, Long idUser, Long totalTime) {
+        int totalQuestion, totalCorrect, totalWrong, totalSkipped = 0;
+        String examName;
+        try {
+            totalQuestion = examNumberRepository.getExamNumberCountById(idExamNumber);
+
+            totalCorrect = examNumberRepository.getExamNumberQuestionCorrectByIdExamAndIdUser(idExamNumber, idUser);
+
+            totalWrong = examNumberRepository.getExamNumberQuestionWrongByIdExamAndIdUser(idExamNumber, idUser);
+
+            examName = examNumberRepository.getExamNumberExamTitleById(idExamNumber);
+        }catch (Exception e) {
+            throw new ResourceNotExistException("ExamNumber Not Found");
+        }
+        totalSkipped = totalQuestion - totalCorrect - totalWrong;
+
+        return ExamResultResponse.builder()
+                .examName(examName)
+                .totalCorrect(totalCorrect)
+                .totalWrong(totalWrong)
+                .totalQuestion(totalQuestion)
+                .totalSkipped(totalSkipped)
+                .totalTime(totalTime)
+                .build();
     }
 
 
