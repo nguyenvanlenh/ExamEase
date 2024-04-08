@@ -62,16 +62,16 @@ public class ExamController {
 		return examService.getAllExams();
 	}
 	
-	@PutMapping("/{idStudent}/{idOp}/{idOpNew}")
-	public UserAnswer getTestAnswer(@PathVariable("idStudent") Long idS 
-			, @PathVariable("idOp") Long idOp
-			, @PathVariable("idOpNew") Long idOpNew) {
-		
-				UserAnswer u =	userAnswerRepository.findByStudent_IdAndOption_Id(idS, idOp); 
-				Option newOption = optionRepository.findById(idOpNew)
-						.orElseThrow(()-> new NotFoundException("Option not found"));
-				u.setOption(newOption);
-				return userAnswerRepository.save(u);
-	}
+//	@PutMapping("/{idStudent}/{idOp}/{idOpNew}")
+//	public UserAnswer getTestAnswer(@PathVariable("idStudent") Long idS
+//			, @PathVariable("idOp") Long idOp
+//			, @PathVariable("idOpNew") Long idOpNew) {
+//
+//				UserAnswer u =	userAnswerRepository.findByStudent_IdAndOption_Id(idS, idOp);
+//				Option newOption = optionRepository.findById(idOpNew)
+//						.orElseThrow(()-> new NotFoundException("Option not found"));
+//				u.setOption(newOption);
+//				return userAnswerRepository.save(u);
+//	}
 
 }
