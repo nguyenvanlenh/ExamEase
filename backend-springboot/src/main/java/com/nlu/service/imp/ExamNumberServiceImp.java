@@ -67,7 +67,7 @@ public class ExamNumberServiceImp implements ExamNumberService {
     }
 
     @Override
-    public ExamResultResponse getExamResult(Long idExamNumber, Long idUser, Long totalTime) {
+    public ExamResultResponse getExamResultUser(Long idExamNumber, Long idUser, Long totalTime) {
         int totalQuestion, totalCorrect, totalWrong, totalSkipped = 0;
         String examName;
         try {
@@ -93,5 +93,30 @@ public class ExamNumberServiceImp implements ExamNumberService {
                 .build();
     }
 
+    @Override
+    public ExamResultResponse getExamResultStudent(Long idExamNumber, Long idStudent, Long totalTime) {
+        int totalQuestion, totalCorrect, totalWrong, totalSkipped = 0;
+        String examName;
+        try {
+            totalQuestion = examNumberRepository.getExamNumberCountById(idExamNumber);
 
+            totalCorrect = examNumberRepository.getExamNumberQuestionCorrectByIdExamAndIdStudent(idExamNumber, idStudent);
+
+            totalWrong = examNumberRepository.getExamNumberQuestionWrongByIdExamAndIdStudent(idExamNumber, idStudent);
+
+            examName = examNumberRepository.getExamNumberExamTitleById(idExamNumber);
+        }catch (Exception e) {
+            throw new ResourceNotExistException("ExamNumber Not Found");
+        }
+        totalSkipped = totalQuestion - totalCorrect - totalWrong;
+
+        return ExamResultResponse.builder()
+                .examName(examName)
+                .totalCorrect(totalCorrect)
+                .totalWrong(totalWrong)
+                .totalQuestion(totalQuestion)
+                .totalSkipped(totalSkipped)
+                .totalTime(totalTime)
+                .build();
+    }
 }

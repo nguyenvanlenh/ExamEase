@@ -34,4 +34,24 @@ public interface ExamNumberRepository extends JpaRepository<ExamNumber, Integer>
     //JPQL
     @Query("SELECT en.exam.title FROM ExamNumber en WHERE en.id = ?1 ")
     String getExamNumberExamTitleById(Long idExamNumber);
+    //JPQL
+    @Query("SELECT COUNT(o.id) " +
+            "FROM ExamNumber en " +
+            "JOIN en.listQuestions q " +
+            "JOIN q.options o " +
+            "JOIN UserAnswer ua ON ua.option.id = o.id " +
+            "WHERE en.id = ?1 " +
+            "AND ua.student.id = ?2 " +
+            "AND o.correct = true")
+    Integer getExamNumberQuestionCorrectByIdExamAndIdStudent(Long idExamNumber, Long idStudent);
+    //JPQL
+    @Query("SELECT COUNT(o.id) " +
+            "FROM ExamNumber en " +
+            "JOIN en.listQuestions q " +
+            "JOIN q.options o " +
+            "JOIN UserAnswer ua ON ua.option.id = o.id " +
+            "WHERE en.id = ?1 " +
+            "AND ua.student.id = ?2 " +
+            "AND o.correct = false ")
+    Integer getExamNumberQuestionWrongByIdExamAndIdStudent(Long idExamNumber, Long idStudent);
 }

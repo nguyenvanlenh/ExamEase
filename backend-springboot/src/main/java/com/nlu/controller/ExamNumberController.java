@@ -1,13 +1,9 @@
 package com.nlu.controller;
 
-import com.nlu.model.dto.response.ExamNumberResponse;
 import com.nlu.model.dto.response.ExamResponse;
 import com.nlu.model.dto.response.ExamResultResponse;
-import com.nlu.model.entity.ExamNumber;
-import com.nlu.repository.ExamRepository;
 import com.nlu.service.ExamNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,9 +26,16 @@ public class ExamNumberController {
 
     @GetMapping("/users/submit/{idExamNumber}")
     public ExamResultResponse
-    getExamResult(@PathVariable Long idExamNumber,
+    getExamResultUser(@PathVariable Long idExamNumber,
                   @RequestParam Long idUser,
                   @RequestParam(required = false) Long totalTime) {
-        return examNumberService.getExamResult(idExamNumber, idUser, totalTime);
+        return examNumberService.getExamResultUser(idExamNumber, idUser, totalTime);
+    }
+    @GetMapping("/students/submit/{idExamNumber}")
+    public ExamResultResponse
+    getExamResultStudent(@PathVariable Long idExamNumber,
+                  @RequestParam Long idStudent,
+                  @RequestParam(required = false) Long totalTime) {
+        return examNumberService.getExamResultStudent(idExamNumber, idStudent, totalTime);
     }
 }

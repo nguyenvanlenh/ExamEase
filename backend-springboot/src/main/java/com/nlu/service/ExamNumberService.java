@@ -6,5 +6,6 @@ import com.nlu.model.dto.response.ExamResultResponse;
 public interface ExamNumberService {
     ExamResponse getExamNumberUser(Integer id, Long idUser);
     ExamResponse getExamNumberStudent(Long idStudent);
-    ExamResultResponse getExamResult(Long idExamNumber, Long idUser, Long totalTime);
+    ExamResultResponse getExamResultUser(Long idExamNumber, Long idUser, Long totalTime);
+    ExamResultResponse getExamResultStudent(Long idExamNumber, Long idStudent, Long totalTime);
 }

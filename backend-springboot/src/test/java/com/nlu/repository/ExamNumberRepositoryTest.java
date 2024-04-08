@@ -10,7 +10,7 @@ class ExamNumberRepositoryTest {
     @Autowired
     private ExamNumberRepository examNumberRepository;
     @Test
-    public void testSubmitExamNumber() {
+    public void testSubmitExamNumberUser() {
         int total = examNumberRepository.getExamNumberCountById(1L);
         System.out.println("total: "+ total);
 
@@ -18,6 +18,20 @@ class ExamNumberRepositoryTest {
         System.out.println("totalCorrect: "+totalCorrect);
 
         int totalWrong = examNumberRepository.getExamNumberQuestionWrongByIdExamAndIdUser(1L, 1L);
+        System.out.println("totalWrong: "+ totalWrong);
+
+        String nameExam = examNumberRepository.getExamNumberExamTitleById(1L);
+        System.out.println("nameExam: "+nameExam);
+    }
+    @Test
+    public void testSubmitExamNumberStudent() {
+        int total = examNumberRepository.getExamNumberCountById(1L);
+        System.out.println("total: "+ total);
+
+        int totalCorrect = examNumberRepository.getExamNumberQuestionCorrectByIdExamAndIdStudent(1L, 2L);
+        System.out.println("totalCorrect: "+totalCorrect);
+
+        int totalWrong = examNumberRepository.getExamNumberQuestionWrongByIdExamAndIdStudent(1L, 2L);
         System.out.println("totalWrong: "+ totalWrong);
 
         String nameExam = examNumberRepository.getExamNumberExamTitleById(1L);
