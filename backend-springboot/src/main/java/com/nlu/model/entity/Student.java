@@ -2,6 +2,8 @@ package com.nlu.model.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,15 +38,15 @@ public class Student {
 	private String fullname;
 	private String email;
 	private Boolean active;
-	
+	@JsonIgnore
 	@ManyToOne(optional = false)
 	@JoinColumn(name="teacher_id")
 	private User teacher;
 	
-	@OneToMany(mappedBy = "student")
-	private Set<UserAnswer> listUserAnswers;
-	
-	@OneToMany(mappedBy = "student")
-	private Set<WorkTime> lisWorkTimes;
+//	@OneToMany(mappedBy = "student")
+//	private Set<UserAnswer> listUserAnswers;
+//	
+//	@OneToMany(mappedBy = "student")
+//	private Set<WorkTime> lisWorkTimes;
 	
 }

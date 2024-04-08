@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nlu.exception.NotFoundException;
 import com.nlu.model.entity.Student;
 import com.nlu.model.entity.User;
 import com.nlu.repository.StudentRepository;
@@ -21,8 +22,9 @@ public class StudentServiceImp implements StudentService{
 	@Autowired
 	private StudentRepository studentRepository;
 	
-	@Autowired
-	private UserRepository userRepository;
+	@Autowired private UserRepository userRepository;
+	@Autowired private PasswordEncoder passwordEncoder;
+	
 	@Override
 	public void save(MultipartFile file,String codeGroup) {
 		try {
@@ -30,7 +32,7 @@ public class StudentServiceImp implements StudentService{
 			System.out.println("size: "+(double)file.getSize()/1024.0);
 			
 			User teacher = userRepository.findById(AuthenticationUtils.extractUserId())
-					.orElseThrow(() -> new RuntimeException("teacher not found!"));
+					.orElseThrow(() -> new NotFoundException("teacher not found!"));
 			
 			List<Student> listStudents = ExcelUtils.toListStudents(file.getInputStream());
 			
@@ -52,7 +54,7 @@ public class StudentServiceImp implements StudentService{
 			student.setCodeGroup(codeGroup);
 			student.setTeacher(teacher);
 			student.setUsername(student.getCode());
-			student.setPassword(student.getCode());
+			student.setPassword(passwordEncoder.encode(student.getCode()));
 			student.setActive(true);
 			studentRepository.save(student);
 		});

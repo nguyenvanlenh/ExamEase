@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import com.nlu.exception.NotFoundException;
 import com.nlu.model.dto.request.ExamRequest;
@@ -58,6 +58,10 @@ public class ExamServiceImp implements ExamService {
 	@Transactional
 	@Override
 	public ExamResponse createExam(ExamRequest request) {
+		
+		if(ObjectUtils.isEmpty(request))
+			return ExamResponse.builder().build();
+		
 		TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
 				.orElseThrow(() -> new NotFoundException("time not found"));
 		User user = userRepository.findById(AuthenticationUtils.extractUserId())
@@ -65,6 +69,7 @@ public class ExamServiceImp implements ExamService {
 		/**
 		 * sequence: save exam -> save question(shuffled) -> save option -> save exam number
 		 */
+		
 		Exam exam = new Exam();
 		exam.setTimeExam(timeExam);
 		exam.setTitle(request.getTitle());
@@ -73,6 +78,8 @@ public class ExamServiceImp implements ExamService {
 		exam.setQuantityQuestion(request.getQuantityQuestion());
 		exam.setPublic(request.getIsPublic());
 		exam.setTeacher(user);
+		exam.setStartTime(request.getStartTime());
+		exam.setEndTime(request.getEndTime());
 		Exam examSaved = examRepository.save(exam);
 
 		List<ExamNumber> listExamNumbers = request.getLisExamNumberRequests().stream().map(itemExamNumber -> {
@@ -127,16 +134,32 @@ public class ExamServiceImp implements ExamService {
 	 * @return An ExamResponse object representing the updated exam.
 	 * @throws NotFoundException if the exam with the specified ID is not found.
 	 */
+	@Transactional
 	@Override
 	public ExamResponse updateExam(Long examId, ExamRequest request) {
-		Exam exam = examRepository.findById(examId)
-				.orElseThrow(()-> new NotFoundException("Exam not found"));
-		ExamRequest.setForEntity(exam, request);
-		return ExamResponse.fromEntity(exam);
+		
+		if(!ObjectUtils.isEmpty(request)) {
+		
+			Exam exam = examRepository.findById(examId)
+					.orElseThrow(()-> new NotFoundException("Exam not found"));
+			ExamRequest.setForEntity(exam, request);
+		
+			if(exam.getTimeExam().getId() != request.getTimeId()) {
+				TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
+						.orElseThrow(() -> new NotFoundException("time exam not found"));
+				exam.setTimeExam(timeExam);
+			}
+		
+		return ExamResponse.fromEntity(examRepository.save(exam));
+		}
+		
+		return ExamResponse.builder().build();
 	}
 
 	@Override
 	public void deleteExam(Long id) {
+		Exam exam = examRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("exam not found"));
 		examRepository.deleteById(id);
 	}
 
