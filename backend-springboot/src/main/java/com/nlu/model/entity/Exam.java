@@ -64,6 +64,11 @@ public class Exam implements Serializable{
 	@ManyToOne(optional = false)
 	@JoinColumn(name="teacher_id")
 	private User teacher;
-	
 
+	public Exam(String title, String description, int quantityQuestion, TimeExam timeExam) {
+		this.title = title;
+		this.description = description;
+		this.quantityQuestion = quantityQuestion;
+		this.timeExam = timeExam;
+	}
 }

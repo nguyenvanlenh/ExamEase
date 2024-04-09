@@ -1,10 +1,11 @@
 package com.nlu.service.imp;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -205,5 +206,31 @@ public class ExamServiceImp implements ExamService {
 				.orElseThrow(() -> new NotFoundException("exam not found"));
 		return ExamResponse.fromEntity(exam);
 	}
+
+	@Override
+	public ResponseEntity<Map<String, Object>> getExamsByTitle(String title, Pageable pageable) {
+		try {
+			List<Exam> exams = new ArrayList<Exam>();
+			Page<Exam> pageExams;
+			if(title == null) {
+				pageExams = examRepository.findByIsPublic(true, pageable);
+			}else {
+				pageExams = examRepository.findByTitleContainingIgnoreCaseAndIsPublic(title, true, pageable);
+			}
+			exams = pageExams.getContent();
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("exams", exams);
+			response.put("currentPage", pageExams.getNumber());
+			response.put("totalItems", pageExams.getTotalElements());
+			response.put("totalPages", pageExams.getTotalPages());
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
 
 }

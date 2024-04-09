@@ -1,10 +1,13 @@
 
 package com.nlu.service;
 
-import java.util.List;
-
 import com.nlu.model.dto.request.ExamRequest;
 import com.nlu.model.dto.response.ExamResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+import java.util.Map;
 
 public interface ExamService {
 
@@ -15,4 +18,6 @@ public interface ExamService {
 
 	List<ExamResponse> getAllExams();
 	ExamResponse getExamById(Long id);
+
+	ResponseEntity<Map<String, Object>> getExamsByTitle(String title, Pageable pageable);
 }
