@@ -14,11 +14,11 @@ public interface ExamRepository extends JpaRepository<Exam, Long>{
 
     Exam findByCodeGroup(String codeGroup);
 
-    @Query("SELECT new Exam(e.title, e.description, e.quantityQuestion, e.timeExam) " +
+    @Query("SELECT new Exam(e.id, e.title, e.description, e.quantityQuestion, e.timeExam) " +
             "FROM Exam e " +
             "WHERE e.isPublic = :isPublic")
     Page<Exam> findByIsPublic(boolean isPublic, Pageable pageable);
-    @Query("SELECT new Exam(e.title, e.description, e.quantityQuestion, e.timeExam) " +
+    @Query("SELECT new Exam(e.id, e.title, e.description, e.quantityQuestion, e.timeExam) " +
             "FROM Exam e " +
             "WHERE e.title = :title " +
             "AND e.isPublic = :isPublic")

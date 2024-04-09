@@ -65,7 +65,8 @@ public class Exam implements Serializable{
 	@JoinColumn(name="teacher_id")
 	private User teacher;
 
-	public Exam(String title, String description, int quantityQuestion, TimeExam timeExam) {
+	public Exam(Long id, String title, String description, int quantityQuestion, TimeExam timeExam) {
+		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.quantityQuestion = quantityQuestion;

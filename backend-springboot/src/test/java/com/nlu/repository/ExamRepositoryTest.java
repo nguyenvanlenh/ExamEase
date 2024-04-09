@@ -18,11 +18,12 @@ class ExamRepositoryTest {
     private ExamRepository examRepository;
     @Test
     public void testGetExams() {
-            Pageable pageable = PageRequest.of(0,3);
+            Pageable pageable = PageRequest.of(1,3);
             Page<Exam> pageExams = examRepository.findByIsPublic(true, pageable);
             List<Exam> exams = new ArrayList<Exam>();
             exams = pageExams.getContent();
             for(Exam exam : exams) {
+                System.out.println(exam.getId());
                 System.out.print(exam.getTitle());
                 System.out.print(exam.getDescription());
                 System.out.print(exam.getTimeExam().getName());
