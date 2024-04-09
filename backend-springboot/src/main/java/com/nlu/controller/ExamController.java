@@ -70,9 +70,21 @@ public class ExamController {
 			@RequestParam(required = false) String title,
 			@RequestParam(defaultValue = "0" ) int page,
 			@RequestParam(defaultValue = "3") int size
-		) {
+		)
+	{
 		Pageable paging = PageRequest.of(page, size);
 		return examService.getExamsByTitle(title, paging);
 	}
 
+	@GetMapping("/search")
+	public ResponseEntity<Map<String, Object>>
+	searchExamsByKeyWord(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+        )
+	{
+		Pageable paging = PageRequest.of(page, size);
+		return examService.searchExamsByKeyWord(keyword, paging);
+	}
 }

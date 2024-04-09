@@ -215,7 +215,7 @@ public class ExamServiceImp implements ExamService {
 			if(title == null) {
 				pageExams = examRepository.findByIsPublic(true, pageable);
 			}else {
-				pageExams = examRepository.findByTitleContainingIgnoreCaseAndIsPublic(title, true, pageable);
+				pageExams = examRepository.findByTitleAndIsPublic(title, true, pageable);
 			}
 			exams = pageExams.getContent();
 
@@ -230,6 +230,24 @@ public class ExamServiceImp implements ExamService {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+
+	@Override
+	public ResponseEntity<Map<String, Object>> searchExamsByKeyWord(String keyword, Pageable pageable) {
+		try {
+			Page<Exam> pageExams = examRepository.findByLikeKeyWorkAndIsPublic(keyword, true, pageable);
+			List<Exam> exams = pageExams.getContent();
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("exams", exams);
+			response.put("currentPage", pageExams.getNumber());
+			response.put("totalItems", pageExams.getTotalElements());
+			response.put("totalPages", pageExams.getTotalPages());
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 

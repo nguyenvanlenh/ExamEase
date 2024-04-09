@@ -20,4 +20,5 @@ public interface ExamService {
 	ExamResponse getExamById(Long id);
 
 	ResponseEntity<Map<String, Object>> getExamsByTitle(String title, Pageable pageable);
+	ResponseEntity<Map<String, Object>> searchExamsByKeyWord(String keyword, Pageable pageable);
 }
