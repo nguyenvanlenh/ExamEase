@@ -12,9 +12,9 @@ import java.util.Map;
 public interface ExamService {
 
 	Long createExam(ExamRequest request);
-	Long updateExam(Long examId, ExamRequest request);
+	void updateExam(Long examId, ExamRequest request);
 	void deleteExam(Long id);
-	Long updatePublicExam(Long examId,boolean request);
+	void updatePublicExam(Long examId,boolean request);
 
 	List<ExamResponse> getAllExams();
 	ExamResponse getExamById(Long id);

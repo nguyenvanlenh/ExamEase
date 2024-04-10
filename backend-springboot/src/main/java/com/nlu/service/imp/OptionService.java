@@ -1,7 +1,6 @@
 package com.nlu.service.imp;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,7 @@ import com.nlu.repository.OptionRepository;
 public class OptionService {
 
 	@Autowired private OptionRepository optionRepository;
-	@Modifying
+	
 	@Transactional
 	public OptionResponse updateOption(Long optionId, OptionRequest request) {
 		Option option = optionRepository.findById(optionId)
