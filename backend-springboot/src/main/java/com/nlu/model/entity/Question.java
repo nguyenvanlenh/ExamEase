@@ -42,7 +42,15 @@ public class Question {
 	@OneToMany(mappedBy = "question",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Option> options;
 	@JsonIgnore
-	@ManyToMany(mappedBy = "listQuestions")
-	private Set<ExamNumber> listExamNumbers;
+	@ManyToMany(mappedBy = "listQuestions", fetch = FetchType.EAGER)
+    private Set<ExamNumber> listExamNumbers;
+	
+	public Question(Long id, String nameQuestion, Set<Option> options) {
+	    this.id = id;
+	    this.nameQuestion = nameQuestion;
+	    this.options = options;
+	}
+	
+	
 	
 }

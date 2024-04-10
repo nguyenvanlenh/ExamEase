@@ -13,6 +13,6 @@ import lombok.experimental.FieldDefaults;
 public class QuestionRequest{
 	Long id;
 	String question;
-	List<OptionRequest> lisOptionRequests;
+	List<OptionRequest> listOptionRequests;
 	
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nlu.model.entity.Option;
 
 import lombok.Builder;
@@ -17,7 +16,6 @@ import lombok.Setter;
 @Builder
 public class OptionResponse {
 	private Long id;
-	@JsonProperty("name_option")
 	private String nameOption;
 
 	public static OptionResponse fromEntity(Option option) {

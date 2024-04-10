@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nlu.model.entity.Role;
 import com.nlu.model.entity.User;
 
@@ -27,7 +26,6 @@ public class UserResponse {
 	String code;
 	String fullname;
 	String emai;
-	@JsonProperty("list_roles")
 	Set<String> listRoles;
 	
 	public static UserResponse fromEntity(User user) {

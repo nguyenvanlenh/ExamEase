@@ -3,9 +3,7 @@ package com.nlu.model.dto.response;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nlu.model.entity.Question;
 
 import lombok.Builder;
@@ -16,7 +14,6 @@ import lombok.Setter;
 @Builder
 public class QuestionResponse {
 	private Long id;
-	@JsonProperty("name_question")
 	private String nameQuestion;
 	
 	private List<OptionResponse> options;
@@ -29,9 +26,9 @@ public class QuestionResponse {
 				.build();
 	}
 	
-	 public static List<QuestionResponse> fromEntities(Set<Question> questions) {
+	 public static List<QuestionResponse> fromEntities(List<Question> questions) {
 	        return Optional.ofNullable(questions)
-	        		.orElse(Collections.emptySet())
+	        		.orElse(Collections.emptyList())
 	        		.stream()
 	                .map(QuestionResponse::fromEntity)
 	                .toList();
