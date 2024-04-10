@@ -129,7 +129,7 @@ public class ExamServiceImp implements ExamService {
 			question.setNameQuestion(itemQuestion.getQuestion());
 			Question questionSaved = questionRepository.save(question);
 			// save list option
-			saveOption(questionSaved, itemQuestion.getLisOptionRequests());
+			saveOption(questionSaved, itemQuestion.getListOptionRequests());
 			return questionSaved;
 		}).toList();
 		return listQuestion;

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nlu.model.entity.Exam;
 
 import lombok.Builder;
@@ -18,24 +17,15 @@ import lombok.Setter;
 public class ExamResponse {
 	private Long id;
 	private String title;
-	@JsonProperty("code_group")
 	private String codeGroup;
-	@JsonProperty("short_description")
 	private String shortDescription;
 	private String description;
-	@JsonProperty("quantity_question")
 	private int quantityQuestion;
-	@JsonProperty("exam_numbers")
 	private List<ExamNumberResponse> examNumbers;
-	@JsonProperty("time_exam")
 	private String timeExam;
-	@JsonProperty("category")
 	private String category;
-	@JsonProperty("start_time")
 	private Timestamp startTime;
-	@JsonProperty("end_time")
 	private Timestamp endTime;
-	@JsonProperty("is_public")
 	private boolean isPublic;
 
 	public static ExamResponse fromEntity(Exam exam) {

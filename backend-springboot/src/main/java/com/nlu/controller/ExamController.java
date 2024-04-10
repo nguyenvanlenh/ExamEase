@@ -45,15 +45,15 @@ public class ExamController {
 		 examService.updatePublicExam(id, isPublic);
 	}
 
-	@GetMapping("/{id}")
-	public ExamResponse getExam(@PathVariable Long id) {
-		return examService.getExamById(id);
-	}
-
-	@GetMapping
-	public List<ExamResponse> getExams() {
-		return examService.getAllExams();
-	}
+//	@GetMapping("/{id}")
+//	public ExamResponse getExam(@PathVariable Long id) {
+//		return examService.getExamById(id);
+//	}
+//
+//	@GetMapping
+//	public List<ExamResponse> getExams() {
+//		return examService.getAllExams();
+//	}
 
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getExamsByTitle(
