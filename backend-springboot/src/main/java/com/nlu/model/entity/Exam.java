@@ -70,4 +70,12 @@ public class Exam implements Serializable{
 	private Category category;
 	
 
+
+	public Exam(Long id, String title, String description, int quantityQuestion, TimeExam timeExam) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.quantityQuestion = quantityQuestion;
+		this.timeExam = timeExam;
+	}
 }

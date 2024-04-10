@@ -20,8 +20,6 @@ public class TimeExam {
 	
 	@Id
 	private Integer id;
-	private String name;	
-	@OneToMany(mappedBy = "timeExam", cascade = CascadeType.ALL)
-	private Set<Exam> exams;
+	private String name;
 
 }

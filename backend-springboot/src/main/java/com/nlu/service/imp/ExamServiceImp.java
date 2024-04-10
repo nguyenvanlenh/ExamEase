@@ -1,10 +1,11 @@
 package com.nlu.service.imp;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -51,6 +52,7 @@ public class ExamServiceImp implements ExamService {
 	UserRepository userRepository;
 	CategoryRepository categoryRepository;
 
+
 	 /**
      * Creates an exam based on the provided request.
      * 
@@ -58,6 +60,7 @@ public class ExamServiceImp implements ExamService {
      * @return A Long representing the created exam.
      * @throws NotFoundException if time or user is not found.
      */
+
 	@Transactional
 	@Override
 	public Long createExam(ExamRequest request) {
@@ -107,7 +110,7 @@ public class ExamServiceImp implements ExamService {
 		return examSaved.getId();
 	}
 
-	// save options with related question 
+	// save options with related question
 	private List<Option> saveOption(Question question, List<OptionRequest> lisOptionRequests) {
 		List<Option> listOptions = lisOptionRequests.stream().map(itemOption -> {
 			Option option = new Option();
@@ -134,7 +137,7 @@ public class ExamServiceImp implements ExamService {
 
 	/**
 	 * Updates an existing exam based on the provided exam ID and request.
-	 * 
+	 *
 	 * @param examId The ID of the exam to update.
 	 * @param request The request containing updated exam details.
 	 * @return A Long representing the updated exam.
@@ -169,6 +172,7 @@ public class ExamServiceImp implements ExamService {
 	public void deleteExam(Long id) {
 		examRepository.deleteById(id);
 	}
+
 	
 	  /**
      * Updates the visibility of an exam.
@@ -178,6 +182,7 @@ public class ExamServiceImp implements ExamService {
      * @return A Long representing the updated exam.
      * @throws NotFoundException if the exam is not found.
      */
+
 	@Override
 	public Long updatePublicExam(Long examId, boolean request) {
 		Exam exam = examRepository.findById(examId)
@@ -186,25 +191,25 @@ public class ExamServiceImp implements ExamService {
 		examRepository.save(exam);
 		return exam.getId();
 	}
-	
-	 /**
-     * Retrieves all exams.
-     * 
-     * @return A Set of ExamResponse objects representing all exams.
-     */
+
+	/**
+	 * Retrieves all exams.
+	 *
+	 * @return A Set of ExamResponse objects representing all exams.
+	 */
 	@Transactional(readOnly = true)
 	@Override
 	public List<ExamResponse> getAllExams() {
 		return ExamResponse.fromEntities(examRepository.findAll());
 	}
 
-	 /**
-     * Retrieves an exam by its ID.
-     * 
-     * @param id The ID of the exam to retrieve.
-     * @return An ExamResponse object representing the retrieved exam.
-     * @throws RuntimeException if the exam is not found.
-     */
+	/**
+	 * Retrieves an exam by its ID.
+	 *
+	 * @param id The ID of the exam to retrieve.
+	 * @return An ExamResponse object representing the retrieved exam.
+	 * @throws RuntimeException if the exam is not found.
+	 */
 	@Transactional(readOnly = true)
 	@Override
 	public ExamResponse getExamById(Long id) {
@@ -212,5 +217,49 @@ public class ExamServiceImp implements ExamService {
 				.orElseThrow(() -> new NotFoundException("exam not found"));
 		return ExamResponse.fromEntity(exam);
 	}
+
+	@Override
+	public ResponseEntity<Map<String, Object>> getExamsByTitle(String title, Pageable pageable) {
+		try {
+			List<Exam> exams = new ArrayList<Exam>();
+			Page<Exam> pageExams;
+			if(title == null) {
+				pageExams = examRepository.findByIsPublic(true, pageable);
+			}else {
+				pageExams = examRepository.findByTitleAndIsPublic(title, true, pageable);
+			}
+			exams = pageExams.getContent();
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("exams", exams);
+			response.put("currentPage", pageExams.getNumber());
+			response.put("totalItems", pageExams.getTotalElements());
+			response.put("totalPages", pageExams.getTotalPages());
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@Override
+	public ResponseEntity<Map<String, Object>> searchExamsByKeyWord(String keyword, Pageable pageable) {
+		try {
+			Page<Exam> pageExams = examRepository.findByLikeKeyWorkAndIsPublic(keyword, true, pageable);
+			List<Exam> exams = pageExams.getContent();
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("exams", exams);
+			response.put("currentPage", pageExams.getNumber());
+			response.put("totalItems", pageExams.getTotalElements());
+			response.put("totalPages", pageExams.getTotalPages());
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 
 }
