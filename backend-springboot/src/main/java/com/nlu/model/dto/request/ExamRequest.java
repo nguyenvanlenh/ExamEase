@@ -20,6 +20,7 @@ public class ExamRequest {
 	String description;
 	Integer quantityQuestion;
 	Integer timeId;
+	Integer categoryId;
 	Timestamp startTime;
 	Timestamp endTime;
 	Boolean isPublic;

@@ -15,12 +15,14 @@ import com.nlu.model.dto.request.ExamRequest;
 import com.nlu.model.dto.request.OptionRequest;
 import com.nlu.model.dto.request.QuestionRequest;
 import com.nlu.model.dto.response.ExamResponse;
+import com.nlu.model.entity.Category;
 import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.ExamNumber;
 import com.nlu.model.entity.Option;
 import com.nlu.model.entity.Question;
 import com.nlu.model.entity.TimeExam;
 import com.nlu.model.entity.User;
+import com.nlu.repository.CategoryRepository;
 import com.nlu.repository.ExamNumberRepository;
 import com.nlu.repository.ExamRepository;
 import com.nlu.repository.OptionRepository;
@@ -48,31 +50,37 @@ public class ExamServiceImp implements ExamService {
 	OptionRepository optionRepository;
 	ExamRepository examRepository;
 	UserRepository userRepository;
+	CategoryRepository categoryRepository;
 
-	/**
-	 * Creates an exam based on the provided request.
-	 *
-	 * @param request The request containing exam details.
-	 * @return An ExamResponse object representing the created exam.
-	 * @throws NotFoundException if time or user is not found.
-	 */
+
+	 /**
+     * Creates an exam based on the provided request.
+     * 
+     * @param request The request containing exam details.
+     * @return A Long representing the created exam.
+     * @throws NotFoundException if time or user is not found.
+     */
+
 	@Transactional
 	@Override
-	public ExamResponse createExam(ExamRequest request) {
+	public Long createExam(ExamRequest request) {
 		
 		if(ObjectUtils.isEmpty(request))
-			return ExamResponse.builder().build();
+			throw new RuntimeException("request is null");
 		
 		TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
 				.orElseThrow(() -> new NotFoundException("time not found"));
 		User user = userRepository.findById(AuthenticationUtils.extractUserId())
 				.orElseThrow(() -> new NotFoundException("user not found"));
+		Category category = categoryRepository.findById(request.getCategoryId())
+				.orElseThrow(() -> new NotFoundException("category not found") );
 		/**
 		 * sequence: save exam -> save question(shuffled) -> save option -> save exam number
 		 */
 		
 		Exam exam = new Exam();
 		exam.setTimeExam(timeExam);
+		exam.setCategory(category);
 		exam.setTitle(request.getTitle());
 		exam.setShortDescription(request.getShortDescription());
 		exam.setDescription(request.getDescription());
@@ -99,7 +107,7 @@ public class ExamServiceImp implements ExamService {
 		// save exam number
 		examNumberRepository.saveAll(listExamNumbers);
 
-		return ExamResponse.fromEntity(examSaved);
+		return examSaved.getId();
 	}
 
 	// save options with related question
@@ -132,53 +140,56 @@ public class ExamServiceImp implements ExamService {
 	 *
 	 * @param examId The ID of the exam to update.
 	 * @param request The request containing updated exam details.
-	 * @return An ExamResponse object representing the updated exam.
+	 * @return A Long representing the updated exam.
 	 * @throws NotFoundException if the exam with the specified ID is not found.
 	 */
 	@Transactional
 	@Override
-	public ExamResponse updateExam(Long examId, ExamRequest request) {
-		
-		if(!ObjectUtils.isEmpty(request)) {
-		
-			Exam exam = examRepository.findById(examId)
-					.orElseThrow(()-> new NotFoundException("Exam not found"));
-			ExamRequest.setForEntity(exam, request);
-		
-			if(exam.getTimeExam().getId() != request.getTimeId()) {
-				TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
-						.orElseThrow(() -> new NotFoundException("time exam not found"));
-				exam.setTimeExam(timeExam);
-			}
-		
-		return ExamResponse.fromEntity(examRepository.save(exam));
+	public Long updateExam(Long examId, ExamRequest request) {
+
+		if (ObjectUtils.isEmpty(request))
+			throw new RuntimeException("request is null");
+
+		Exam exam = examRepository.findById(examId).orElseThrow(() -> new NotFoundException("Exam not found"));
+		ExamRequest.setForEntity(exam, request);
+
+		if (exam.getTimeExam().getId() != request.getTimeId()) {
+			TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
+					.orElseThrow(() -> new NotFoundException("time exam not found"));
+			exam.setTimeExam(timeExam);
 		}
-		
-		return ExamResponse.builder().build();
+		if (exam.getCategory().getId() != request.getCategoryId()) {
+			Category category = categoryRepository.findById(request.getCategoryId())
+					.orElseThrow(() -> new NotFoundException("category not found"));
+			exam.setCategory(category);
+		}
+
+		return exam.getId();
+
 	}
 
 	@Override
 	public void deleteExam(Long id) {
-		Exam exam = examRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("exam not found"));
 		examRepository.deleteById(id);
 	}
 
-	/**
-	 * Updates the visibility of an exam.
-	 *
-	 * @param examId The ID of the exam to update.
-	 * @param request The boolean value indicating whether the exam is public or not.
-	 * @return An ExamResponse object representing the updated exam.
-	 * @throws NotFoundException if the exam is not found.
-	 */
+	
+	  /**
+     * Updates the visibility of an exam.
+     * 
+     * @param examId The ID of the exam to update.
+     * @param request The boolean value indicating whether the exam is public or not.
+     * @return A Long representing the updated exam.
+     * @throws NotFoundException if the exam is not found.
+     */
+
 	@Override
-	public ExamResponse updatePublicExam(Long examId, boolean request) {
+	public Long updatePublicExam(Long examId, boolean request) {
 		Exam exam = examRepository.findById(examId)
 				.orElseThrow(() -> new NotFoundException("exam not found"));
 		exam.setPublic(request);
 		examRepository.save(exam);
-		return ExamResponse.fromEntity(exam);
+		return exam.getId();
 	}
 
 	/**

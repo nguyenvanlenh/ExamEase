@@ -64,6 +64,12 @@ public class Exam implements Serializable{
 	@ManyToOne(optional = false)
 	@JoinColumn(name="teacher_id")
 	private User teacher;
+	
+	@ManyToOne(optional = true,fetch = FetchType.LAZY)
+	@JoinColumn(name="category_id")
+	private Category category;
+	
+
 
 	public Exam(Long id, String title, String description, int quantityQuestion, TimeExam timeExam) {
 		this.id = id;
