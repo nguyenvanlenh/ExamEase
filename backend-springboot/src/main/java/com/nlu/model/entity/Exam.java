@@ -65,5 +65,9 @@ public class Exam implements Serializable{
 	@JoinColumn(name="teacher_id")
 	private User teacher;
 	
+	@ManyToOne(optional = true,fetch = FetchType.LAZY)
+	@JoinColumn(name="category_id")
+	private Category category;
+	
 
 }

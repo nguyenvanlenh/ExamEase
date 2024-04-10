@@ -29,6 +29,8 @@ public class ExamResponse {
 	private List<ExamNumberResponse> examNumbers;
 	@JsonProperty("time_exam")
 	private String timeExam;
+	@JsonProperty("category")
+	private String category;
 	@JsonProperty("start_time")
 	private Timestamp startTime;
 	@JsonProperty("end_time")
@@ -46,6 +48,7 @@ public class ExamResponse {
 				.quantityQuestion(exam.getQuantityQuestion())
 				.examNumbers(ExamNumberResponse.fromEntities(exam.getExamNumbers()))
 				.timeExam(exam.getTimeExam().getName())
+				.category(exam.getCategory().getName())
 				.startTime(exam.getStartTime())
 				.endTime(exam.getEndTime())
 				.isPublic(exam.isPublic())
