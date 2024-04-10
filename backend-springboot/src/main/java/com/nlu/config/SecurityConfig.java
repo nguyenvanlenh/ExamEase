@@ -34,6 +34,7 @@ public class SecurityConfig{
 			"/api/exams/**",
 			"/api/exam-numbers/**",
 			"/api/user_answers/**",
+			"/api/students/**"
 	};
 	private final String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",

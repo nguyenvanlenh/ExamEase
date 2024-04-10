@@ -27,6 +27,6 @@ public class UserAnswerController {
     @PutMapping("/students/{idStudent}")
     public void updateAnswerStudent
             (@PathVariable Long idStudent, @RequestParam Long idOptionFirst, @RequestParam Long idOptionLast) {
-        userAnswerService.updateAnswerUser(idStudent, idOptionFirst, idOptionLast);
+        userAnswerService.updateAnswerStudent(idStudent, idOptionFirst, idOptionLast);
     }
 }

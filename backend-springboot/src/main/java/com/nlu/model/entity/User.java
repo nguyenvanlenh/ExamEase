@@ -19,6 +19,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Entity
@@ -42,7 +43,7 @@ public class User {
 	private String email;
 	private Boolean active;
 	@JsonIgnore
-	@OneToMany(mappedBy = "teacher")
+	@OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
 	private Set<Student> listStudents;
 	
 	@OneToMany(mappedBy = "teacher")

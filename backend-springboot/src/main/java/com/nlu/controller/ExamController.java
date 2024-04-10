@@ -1,29 +1,19 @@
 package com.nlu.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.nlu.exception.NotFoundException;
 import com.nlu.model.dto.request.ExamRequest;
 import com.nlu.model.dto.response.ExamResponse;
-import com.nlu.model.dto.response.OptionResponse;
-import com.nlu.model.entity.Option;
-import com.nlu.model.entity.UserAnswer;
 import com.nlu.repository.OptionRepository;
 import com.nlu.repository.UserAnswerRepository;
 import com.nlu.service.ExamService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/exams")
@@ -57,21 +47,44 @@ public class ExamController {
 		return examService.getExamById(id);
 	}
 
-	@GetMapping
-	public List<ExamResponse> getExams() {
-		return examService.getAllExams();
-	}
+//	@GetMapping
+//	public List<ExamResponse> getExams() {
+//		return examService.getAllExams();
+//	}
 	
-	@PutMapping("/{idStudent}/{idOp}/{idOpNew}")
-	public UserAnswer getTestAnswer(@PathVariable("idStudent") Long idS 
-			, @PathVariable("idOp") Long idOp
-			, @PathVariable("idOpNew") Long idOpNew) {
-		
-				UserAnswer u =	userAnswerRepository.findByStudent_IdAndOption_Id(idS, idOp); 
-				Option newOption = optionRepository.findById(idOpNew)
-						.orElseThrow(()-> new NotFoundException("Option not found"));
-				u.setOption(newOption);
-				return userAnswerRepository.save(u);
+//	@PutMapping("/{idStudent}/{idOp}/{idOpNew}")
+//	public UserAnswer getTestAnswer(@PathVariable("idStudent") Long idS
+//			, @PathVariable("idOp") Long idOp
+//			, @PathVariable("idOpNew") Long idOpNew) {
+//
+//				UserAnswer u =	userAnswerRepository.findByStudent_IdAndOption_Id(idS, idOp);
+//				Option newOption = optionRepository.findById(idOpNew)
+//						.orElseThrow(()-> new NotFoundException("Option not found"));
+//				u.setOption(newOption);
+//				return userAnswerRepository.save(u);
+//	}
+
+	@GetMapping
+	public ResponseEntity<Map<String, Object>>
+	getExamsByTitle(
+			@RequestParam(required = false) String title,
+			@RequestParam(defaultValue = "0" ) int page,
+			@RequestParam(defaultValue = "3") int size
+		)
+	{
+		Pageable paging = PageRequest.of(page, size);
+		return examService.getExamsByTitle(title, paging);
 	}
 
+	@GetMapping("/search")
+	public ResponseEntity<Map<String, Object>>
+	searchExamsByKeyWord(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+        )
+	{
+		Pageable paging = PageRequest.of(page, size);
+		return examService.searchExamsByKeyWord(keyword, paging);
+	}
 }
