@@ -53,13 +53,13 @@ public class ExamServiceImp implements ExamService {
 	CategoryRepository categoryRepository;
 
 
-	 /**
-     * Creates an exam based on the provided request.
-     * 
-     * @param request The request containing exam details.
-     * @return A Long representing the created exam.
-     * @throws NotFoundException if time or user is not found.
-     */
+	/**
+	 * Creates an exam based on the provided request.
+	 *
+	 * @param request The request containing exam details.
+	 * @return The ID of the created exam as a Long.
+	 * @throws NotFoundException if the time, user, or category specified in the request is not found.
+	 */
 
 	@Transactional
 	@Override
@@ -140,12 +140,11 @@ public class ExamServiceImp implements ExamService {
 	 *
 	 * @param examId The ID of the exam to update.
 	 * @param request The request containing updated exam details.
-	 * @return A Long representing the updated exam.
 	 * @throws NotFoundException if the exam with the specified ID is not found.
 	 */
 	@Transactional
 	@Override
-	public Long updateExam(Long examId, ExamRequest request) {
+	public void updateExam(Long examId, ExamRequest request) {
 
 		if (ObjectUtils.isEmpty(request))
 			throw new RuntimeException("request is null");
@@ -164,8 +163,6 @@ public class ExamServiceImp implements ExamService {
 			exam.setCategory(category);
 		}
 
-		return exam.getId();
-
 	}
 
 	@Override
@@ -179,17 +176,15 @@ public class ExamServiceImp implements ExamService {
      * 
      * @param examId The ID of the exam to update.
      * @param request The boolean value indicating whether the exam is public or not.
-     * @return A Long representing the updated exam.
      * @throws NotFoundException if the exam is not found.
      */
 
 	@Override
-	public Long updatePublicExam(Long examId, boolean request) {
+	public void updatePublicExam(Long examId, boolean request) {
 		Exam exam = examRepository.findById(examId)
 				.orElseThrow(() -> new NotFoundException("exam not found"));
 		exam.setPublic(request);
 		examRepository.save(exam);
-		return exam.getId();
 	}
 
 	/**
