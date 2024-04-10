@@ -13,10 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name ="students")
@@ -49,5 +46,10 @@ public class Student {
 //	
 //	@OneToMany(mappedBy = "student")
 //	private Set<WorkTime> lisWorkTimes;
-	
+	public Student(Long id, String code, String fullname, String email) {
+		this.id = id;
+		this.code = code;
+		this.email = email;
+		this.fullname = fullname;
+	}
 }

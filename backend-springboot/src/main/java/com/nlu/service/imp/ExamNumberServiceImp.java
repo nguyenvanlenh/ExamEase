@@ -67,7 +67,7 @@ public class ExamNumberServiceImp implements ExamNumberService {
     }
 
     @Override
-    public ExamResultResponse getExamResultUser(Long idExamNumber, Long idUser, Long totalTime) {
+    public ExamResultResponse getExamResultUser(Long idExamNumber, Long idUser) {
         int totalQuestion, totalCorrect, totalWrong, totalSkipped = 0;
         String examName;
         try {
@@ -89,12 +89,12 @@ public class ExamNumberServiceImp implements ExamNumberService {
                 .totalWrong(totalWrong)
                 .totalQuestion(totalQuestion)
                 .totalSkipped(totalSkipped)
-                .totalTime(totalTime)
+//                .totalTime(totalTime)
                 .build();
     }
 
     @Override
-    public ExamResultResponse getExamResultStudent(Long idExamNumber, Long idStudent, Long totalTime) {
+    public ExamResultResponse getExamResultStudent(Long idExamNumber, Long idStudent) {
         int totalQuestion, totalCorrect, totalWrong, totalSkipped = 0;
         String examName;
         try {
@@ -116,7 +116,7 @@ public class ExamNumberServiceImp implements ExamNumberService {
                 .totalWrong(totalWrong)
                 .totalQuestion(totalQuestion)
                 .totalSkipped(totalSkipped)
-                .totalTime(totalTime)
+//                .totalTime(totalTime)
                 .build();
     }
 }

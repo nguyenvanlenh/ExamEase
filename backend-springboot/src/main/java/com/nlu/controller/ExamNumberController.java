@@ -27,15 +27,13 @@ public class ExamNumberController {
     @GetMapping("/users/submit/{idExamNumber}")
     public ExamResultResponse
     getExamResultUser(@PathVariable Long idExamNumber,
-                  @RequestParam Long idUser,
-                  @RequestParam(required = false) Long totalTime) {
-        return examNumberService.getExamResultUser(idExamNumber, idUser, totalTime);
+                  @RequestParam Long idUser) {
+        return examNumberService.getExamResultUser(idExamNumber, idUser);
     }
     @GetMapping("/students/submit/{idExamNumber}")
     public ExamResultResponse
     getExamResultStudent(@PathVariable Long idExamNumber,
-                  @RequestParam Long idStudent,
-                  @RequestParam(required = false) Long totalTime) {
-        return examNumberService.getExamResultStudent(idExamNumber, idStudent, totalTime);
+                  @RequestParam Long idStudent) {
+        return examNumberService.getExamResultStudent(idExamNumber, idStudent);
     }
 }

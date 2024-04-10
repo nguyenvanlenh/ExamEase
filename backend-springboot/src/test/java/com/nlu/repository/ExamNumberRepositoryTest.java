@@ -25,16 +25,16 @@ class ExamNumberRepositoryTest {
     }
     @Test
     public void testSubmitExamNumberStudent() {
-        int total = examNumberRepository.getExamNumberCountById(1L);
+        int total = examNumberRepository.getExamNumberCountById(3L);
         System.out.println("total: "+ total);
 
-        int totalCorrect = examNumberRepository.getExamNumberQuestionCorrectByIdExamAndIdStudent(1L, 2L);
+        int totalCorrect = examNumberRepository.getExamNumberQuestionCorrectByIdExamAndIdStudent(3L, 1L);
         System.out.println("totalCorrect: "+totalCorrect);
 
-        int totalWrong = examNumberRepository.getExamNumberQuestionWrongByIdExamAndIdStudent(1L, 2L);
+        int totalWrong = examNumberRepository.getExamNumberQuestionWrongByIdExamAndIdStudent(3L, 1L);
         System.out.println("totalWrong: "+ totalWrong);
 
-        String nameExam = examNumberRepository.getExamNumberExamTitleById(1L);
+        String nameExam = examNumberRepository.getExamNumberExamTitleById(3L);
         System.out.println("nameExam: "+nameExam);
     }
 

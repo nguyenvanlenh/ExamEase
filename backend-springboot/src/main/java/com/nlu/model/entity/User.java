@@ -43,7 +43,7 @@ public class User {
 	private String email;
 	private Boolean active;
 	@JsonIgnore
-	@OneToMany(mappedBy = "teacher")
+	@OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
 	private Set<Student> listStudents;
 	
 	@OneToMany(mappedBy = "teacher")
