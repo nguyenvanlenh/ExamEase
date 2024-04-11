@@ -3,6 +3,7 @@ package com.nlu.service;
 
 import com.nlu.model.dto.request.ExamRequest;
 import com.nlu.model.dto.response.ExamResponse;
+import com.nlu.model.dto.response.ExamResponses;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
@@ -19,6 +20,7 @@ public interface ExamService {
 	List<ExamResponse> getAllExams();
 	ExamResponse getExamById(Long id);
 
-	ResponseEntity<Map<String, Object>> getExamsByTitle(String title, Pageable pageable);
-	ResponseEntity<Map<String, Object>> searchExamsByKeyWord(String keyword, Pageable pageable);
+	ExamResponses
+		getExamsByCategoryAndKeyWord(String category, String keyword, Pageable pageable);
+
 }

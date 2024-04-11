@@ -3,6 +3,7 @@ package com.nlu.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.nlu.model.dto.response.ExamResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -56,19 +57,12 @@ public class ExamController {
 //	}
 
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getExamsByTitle(
-			@RequestParam(required = false) String title,
+	public ExamResponses getExamsByCategoryAndKeyWord(
+			@RequestParam(required = false) String category,
+			@RequestParam(required = false) String keyword,
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "3") int size) {
 		Pageable paging = PageRequest.of(page, size);
-		return examService.getExamsByTitle(title, paging);
-	}
-
-	@GetMapping("/search")
-	public ResponseEntity<Map<String, Object>> searchExamsByKeyWord(@RequestParam String keyword,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "3") int size) {
-		Pageable paging = PageRequest.of(page, size);
-		return examService.searchExamsByKeyWord(keyword, paging);
+		return examService.getExamsByCategoryAndKeyWord(category, keyword, paging);
 	}
 }

@@ -20,13 +20,19 @@ public interface ExamRepository extends JpaRepository<Exam, Long>{
     Page<Exam> findByIsPublic(boolean isPublic, Pageable pageable);
     @Query("SELECT new Exam(e.id, e.title, e.description, e.quantityQuestion, e.timeExam) " +
             "FROM Exam e " +
-            "WHERE e.title = :title " +
+            "WHERE e.category.name = :category " +
             "AND e.isPublic = :isPublic")
-    Page<Exam> findByTitleAndIsPublic(String title, boolean isPublic, Pageable pageable);
+    Page<Exam> findByCategoryAndIsPublic(String category, boolean isPublic, Pageable pageable);
     @Query("SELECT new Exam(e.id, e.title, e.description, e.quantityQuestion, e.timeExam) " +
             "FROM Exam e " +
             "WHERE e.title like concat('%', :keyword, '%') " +
             "AND e.isPublic = :isPublic")
     Page<Exam> findByLikeKeyWorkAndIsPublic(String keyword, boolean isPublic, Pageable pageable);
-
+    @Query("SELECT new Exam(e.id, e.title, e.description, e.quantityQuestion, e.timeExam) " +
+            "FROM Exam e " +
+            "WHERE e.title like concat('%', :keyword, '%') " +
+            "AND e.isPublic = :isPublic " +
+            "AND e.category.name = :category ")
+    Page<Exam> findByCategoryAndLikeKeyWorkAndIsPublic
+            (String category, String keyword, boolean isPublic, Pageable pageable);
 }
