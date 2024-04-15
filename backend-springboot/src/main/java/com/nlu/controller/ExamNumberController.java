@@ -1,10 +1,17 @@
 package com.nlu.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.nlu.model.dto.response.ExamResponse;
 import com.nlu.model.dto.response.ExamResultResponse;
+import com.nlu.model.dto.response.ResponseData;
 import com.nlu.service.ExamNumberService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/exam-numbers")
@@ -13,27 +20,48 @@ public class ExamNumberController {
     private ExamNumberService examNumberService;
 
     @GetMapping("/users/{id}")
-    public ExamResponse
+    public ResponseData
         getExamNumberUser(@PathVariable Integer id ,@RequestParam(required = false) Long idUser) {
-        return examNumberService.getExamNumberUser(id, idUser);
+    	ExamResponse data = examNumberService.getExamNumberUser(id, idUser);
+        return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Data exam by userId")
+				 .data(data)
+				 .build();
     }
 
     @GetMapping("/students/{idStudent}")
-    public ExamResponse
+    public ResponseData
     getExamNumberStudent(@PathVariable Long idStudent) {
-        return examNumberService.getExamNumberStudent(idStudent);
+    	ExamResponse data = examNumberService.getExamNumberStudent(idStudent);
+        return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Data exam by studentId")
+				 .data(data)
+				 .build();
     }
 
     @GetMapping("/users/submit/{idExamNumber}")
-    public ExamResultResponse
+    public ResponseData
     getExamResultUser(@PathVariable Long idExamNumber,
                   @RequestParam Long idUser) {
-        return examNumberService.getExamResultUser(idExamNumber, idUser);
+    	ExamResultResponse data =examNumberService.getExamResultUser(idExamNumber, idUser);
+        return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Data exam result of user")
+				 .data(data)
+				 .build();
     }
     @GetMapping("/students/submit/{idExamNumber}")
-    public ExamResultResponse
+    public ResponseData
     getExamResultStudent(@PathVariable Long idExamNumber,
                   @RequestParam Long idStudent) {
-        return examNumberService.getExamResultStudent(idExamNumber, idStudent);
+    	ExamResultResponse data =  examNumberService.getExamResultStudent(idExamNumber, idStudent);
+        
+        return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Data exam result of user")
+				 .data(data)
+				 .build();
     }
 }

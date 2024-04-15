@@ -1,14 +1,9 @@
 package com.nlu.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import com.nlu.model.dto.response.ExamResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nlu.model.dto.request.ExamRequest;
-import com.nlu.model.dto.response.ExamResponse;
+import com.nlu.model.dto.response.ExamResponses;
+import com.nlu.model.dto.response.ResponseData;
 import com.nlu.service.ExamService;
 
 @RestController
@@ -31,38 +27,47 @@ public class ExamController {
 	@Autowired private ExamService examService;
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public Long createExam(@RequestBody ExamRequest request) {
-		return examService.createExam(request);
+	@ResponseStatus()
+	public ResponseData createExam(@RequestBody ExamRequest request) {
+		Long data = examService.createExam(request);
+		return ResponseData.builder()
+				.status(HttpStatus.CREATED.value())
+				.message("Exam created successfully")
+				.data(data)
+				.build();
 	}
 
 	@PutMapping("/{id}")
-	public void updateExam(@PathVariable Long id, @RequestBody ExamRequest request) {
+	public ResponseData updateExam(@PathVariable Long id, @RequestBody ExamRequest request) {
 		 examService.updateExam(id, request);
+		 return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Exam updated successfully")
+				 .build();
 	}
 
 	@PatchMapping("/{id}")
-	public void updatePublicExam(@PathVariable Long id, @RequestParam Boolean isPublic) {
+	public ResponseData updatePublicExam(@PathVariable Long id, @RequestParam Boolean isPublic) {
 		 examService.updatePublicExam(id, isPublic);
+		 return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Public exam updated successfully")
+				 .build();
 	}
 
-//	@GetMapping("/{id}")
-//	public ExamResponse getExam(@PathVariable Long id) {
-//		return examService.getExamById(id);
-//	}
-//
-//	@GetMapping
-//	public List<ExamResponse> getExams() {
-//		return examService.getAllExams();
-//	}
 
 	@GetMapping
-	public ExamResponses getExamsByCategoryAndKeyWord(
+	public ResponseData getExamsByCategoryAndKeyWord(
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false) String keyword,
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "3") int size) {
 		Pageable paging = PageRequest.of(page, size);
-		return examService.getExamsByCategoryAndKeyWord(category, keyword, paging);
+		ExamResponses data = examService.getExamsByCategoryAndKeyWord(category, keyword, paging);
+		 return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Exam data by category & key word")
+				 .data(data)
+				 .build();
 	}
 }

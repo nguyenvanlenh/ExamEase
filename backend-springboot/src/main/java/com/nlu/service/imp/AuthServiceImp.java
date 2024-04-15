@@ -65,6 +65,7 @@ public class AuthServiceImp implements AuthService{
 
 		return AuthenticationResponse.builder()
 				.token(jwtToken)
+				.userId(customUserDetails.getId())
 				.authenticated(true)
 				.listRoles(listRoles)
 				.build();
