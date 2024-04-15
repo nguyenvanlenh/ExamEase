@@ -2,6 +2,7 @@ package com.nlu.service.imp;
 
 import java.util.*;
 
+import com.nlu.model.dto.response.ExamResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -214,47 +215,30 @@ public class ExamServiceImp implements ExamService {
 	}
 
 	@Override
-	public ResponseEntity<Map<String, Object>> getExamsByTitle(String title, Pageable pageable) {
+	public ExamResponses getExamsByCategoryAndKeyWord(String category, String keyword, Pageable pageable) {
+		List<Exam> exams = new ArrayList<Exam>();
+		Page<Exam> pageExams;
 		try {
-			List<Exam> exams = new ArrayList<Exam>();
-			Page<Exam> pageExams;
-			if(title == null) {
+			if(category == null && keyword == null) {
 				pageExams = examRepository.findByIsPublic(true, pageable);
+			}else if(keyword == null) {
+				pageExams = examRepository.findByCategoryAndIsPublic(category, true, pageable);
+			}else if(category == null) {
+				pageExams = examRepository.findByLikeKeyWorkAndIsPublic(keyword, true, pageable);
 			}else {
-				pageExams = examRepository.findByTitleAndIsPublic(title, true, pageable);
+				pageExams = examRepository.findByCategoryAndLikeKeyWorkAndIsPublic(category, keyword, true, pageable);
 			}
 			exams = pageExams.getContent();
 
-			Map<String, Object> response = new HashMap<>();
-			response.put("exams", exams);
-			response.put("currentPage", pageExams.getNumber());
-			response.put("totalItems", pageExams.getTotalElements());
-			response.put("totalPages", pageExams.getTotalPages());
 
-			return new ResponseEntity<>(response, HttpStatus.OK);
 		}catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new NotFoundException("Syntax error, please try again!");
 		}
-
+		return ExamResponses.builder()
+				.totalItems(pageExams.getTotalElements())
+				.totalPages(pageExams.getTotalPages())
+				.currentPage(pageExams.getNumber())
+				.exams(exams)
+				.build();
 	}
-
-	@Override
-	public ResponseEntity<Map<String, Object>> searchExamsByKeyWord(String keyword, Pageable pageable) {
-		try {
-			Page<Exam> pageExams = examRepository.findByLikeKeyWorkAndIsPublic(keyword, true, pageable);
-			List<Exam> exams = pageExams.getContent();
-
-			Map<String, Object> response = new HashMap<>();
-			response.put("exams", exams);
-			response.put("currentPage", pageExams.getNumber());
-			response.put("totalItems", pageExams.getTotalElements());
-			response.put("totalPages", pageExams.getTotalPages());
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		}catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-
 }
