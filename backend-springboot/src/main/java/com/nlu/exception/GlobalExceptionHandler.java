@@ -19,51 +19,47 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(UsernameNotFoundException.class)
-	ResponseEntity<String> handlingUsernameNotFoundException(UsernameNotFoundException e){
+	ResponseEntity<ErrorResponse> handlingUsernameNotFoundException(UsernameNotFoundException e){
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(e.getLocalizedMessage());
+				.body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),e.getMessage()));
 	}
 	@ExceptionHandler(AuthenticationException.class)
-	ResponseEntity<String> handlingAuthenticationException(AuthenticationException e){
+	ResponseEntity<ErrorResponse> handlingAuthenticationException(AuthenticationException e){
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(e.getMessage());
+				.body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),e.getMessage()));
 	}
 	@ExceptionHandler(ResourceExistedException.class)
-	ResponseEntity<String> handlingResourceExistedException(ResourceExistedException e){
+	ResponseEntity<ErrorResponse> handlingResourceExistedException(ResourceExistedException e){
 		return ResponseEntity.status(HttpStatus.CONFLICT)
-				.body(e.getLocalizedMessage());
+				.body(new ErrorResponse(HttpStatus.CONFLICT.value(),e.getMessage()));
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	ResponseEntity<?> handlingMethodArgumentNotValidException(MethodArgumentNotValidException e){
-		 Map<String, Object> responseBody = new LinkedHashMap<>();
-	        responseBody.put("timestamp", new Date());
-	         
-	        List<String> errors = e.getBindingResult().getFieldErrors()
+	ResponseEntity<ErrorResponse> handlingMethodArgumentNotValidException(MethodArgumentNotValidException e){
+	        String errors = e.getBindingResult().getFieldErrors()
 	            .stream()
 	            .map(x -> x.getDefaultMessage())
-	            .collect(Collectors.toList());
-	         
-	        responseBody.put("errors", errors);
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+	            .collect(Collectors.joining(","));
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	        		.body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),errors));
 		
 	}
 	@ExceptionHandler(NotFoundException.class)
-	ResponseEntity<?> handlingNotFoundException(NotFoundException e){
+	ResponseEntity<ErrorResponse> handlingNotFoundException(NotFoundException e){
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(e.getLocalizedMessage());
+				.body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),e.getMessage()));
 	}
 
 	@ExceptionHandler(ResourceNotExistException.class)
-	ResponseEntity<String> handlingResourceNotExistException(ResourceNotExistException e){
+	ResponseEntity<ErrorResponse> handlingResourceNotExistException(ResourceNotExistException e){
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(e.getMessage());
+				.body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),e.getMessage()));
 	}
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	ResponseEntity<String> handlingMissingServletRequestParameterException(MissingServletRequestParameterException e){
+	ResponseEntity<ErrorResponse> handlingMissingServletRequestParameterException(MissingServletRequestParameterException e){
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(e.getLocalizedMessage());
+				.body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage()));
 	}
 
 }
