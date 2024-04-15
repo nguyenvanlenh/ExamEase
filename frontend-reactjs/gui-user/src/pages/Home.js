@@ -1,6 +1,9 @@
 import React from 'react'
 import { Button, Col, Container, Row, Stack } from 'react-bootstrap';
 import { useSelector } from 'react-redux'
+import Header from '../components/Header';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
 
@@ -10,7 +13,7 @@ export default function Home() {
     console.log(todoList);
     return (
         <div>
-            <div>
+            <Header/>
             <Stack direction="horizontal" gap={2}>
                 <Button as="a" variant="primary">
                     Button as link
@@ -18,8 +21,8 @@ export default function Home() {
                 <Button as="a" variant="success">
                     Button as link
                 </Button>
+                <FontAwesomeIcon icon={fas.bars} />
             </Stack>
-            </div>
             {status === 'loading' ? <div>Đang load</div> :
                 todoList.map((todo) => (
                     <div key={todo.id}>{todo.title}</div>
