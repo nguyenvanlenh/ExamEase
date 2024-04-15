@@ -3,6 +3,7 @@ package com.nlu.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nlu.model.dto.request.OptionRequest;
 import com.nlu.model.dto.request.QuestionRequest;
 import com.nlu.model.dto.response.QuestionResponse;
-import com.nlu.repository.OptionRepository;
+import com.nlu.model.dto.response.ResponseData;
 import com.nlu.service.imp.QuestionService;
 
 
@@ -27,15 +27,29 @@ public class QuestionController {
 
 	
 	@GetMapping("/exam-number")
-	public List<QuestionResponse> getQuestionByExamNumberId(@RequestParam("examNumId") Integer examNumId) {
-		return questionService.getQuestionByExamNumberId(examNumId);
+	public ResponseData getQuestionByExamNumberId(@RequestParam("examNumId") Integer examNumId) {
+		List<QuestionResponse> data =  questionService.getQuestionByExamNumberId(examNumId);
+		return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Data questions")
+				 .data(data)
+				 .build();
 	}
 	@GetMapping("/{id}")
-	public QuestionResponse getQuesitonById(@PathVariable Long id) {
-		return questionService.getQuesitonById(id);
+	public ResponseData getQuesitonById(@PathVariable Long id) {
+		QuestionResponse data = questionService.getQuesitonById(id);
+		return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Data question")
+				 .data(data)
+				 .build();
 	}
 	@PutMapping("/{id}")
-	public void updateQuestionAndOptionRelate(@PathVariable("id") Long id,@RequestBody QuestionRequest request) {
+	public ResponseData updateQuestionAndOptionRelate(@PathVariable("id") Long id,@RequestBody QuestionRequest request) {
 		 questionService.updateQuestion(id,request);
+		 return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Question updated successfully")
+				 .build();
 	}
 }
