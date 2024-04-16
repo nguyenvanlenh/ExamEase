@@ -1,9 +1,7 @@
 import "../styles/header.scss";
 import React, { useState } from 'react'
-import { DropdownMenu, Nav, NavDropdown} from 'react-bootstrap'
+import {  Nav, NavDropdown} from 'react-bootstrap'
 import imgAccount from '../data/imgs/user_icon.webp'
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function Header() {
     const [isUserOpen, setIsUserOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import Footer from '../components/Footer';
 
 export default function Home() {
 
@@ -28,6 +29,7 @@ export default function Home() {
                     <div key={todo.id}>{todo.title}</div>
                 ))
             }
+            <Footer/>
         </div>
     )
 }

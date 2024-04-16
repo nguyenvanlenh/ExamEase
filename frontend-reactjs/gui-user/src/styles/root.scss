@@ -29,3 +29,10 @@ $fw-md: 500;
 $fw-lg: 600;
 $fw-xl: 800;
 $fw-xxl: 900;
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
