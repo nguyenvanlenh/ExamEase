@@ -1,10 +1,10 @@
 import React from 'react'
-import { Button, Col, Container, Row, Stack } from 'react-bootstrap';
+import { Button,  Stack } from 'react-bootstrap';
 import { useSelector } from 'react-redux'
-import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import Footer from '../components/Footer';
+import Footer from '../../components/footer/Footer';
+import Header from '../../components/header/Header';
 
 export default function Home() {
 
