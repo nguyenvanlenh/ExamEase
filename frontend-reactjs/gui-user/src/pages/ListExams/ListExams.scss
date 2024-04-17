@@ -1,18 +1,43 @@
 @import "../../styles/root.scss";
 
-// #list-exams-wrapper{
-   
-
     a {
         color: $color-black;
         text-decoration: none;
     }
-    .site-content-wrapper{
-        padding-top: 60px;
+    .site-content-wrapper, #list-exams-wrapper{
         position: relative;
         
         .content-header{
             background-color: $color-blue_four;
+
+            .user-target-info-box{
+                display: flex;
+                flex-direction: column;
+                background-color: #fff;
+                padding: 1.5rem 1rem;
+                border: 1px solid #efefef;
+                box-shadow: 0 2px 8px 0 rgba(0,0,0,.05);
+                border-radius: .65rem;
+                align-items: center;
+                justify-content: center;
+            }
+            .test-book {
+                padding: 5px;
+                border-radius: 2px;
+                border: 1px solid #dbdbdb;
+                text-align: center;
+                font-size: 14px;
+                color: $color-black;
+                margin-right: .65rem;
+                cursor: pointer;
+                background-color: #fff;
+                white-space: nowrap;
+            }
+            .nav-link{
+                color: $color-black;
+            }
+            
+            
         }
         .content-wrapper{
 
@@ -27,33 +52,4 @@
         }
     }
 
-
-// }
-.user-target-info-box{
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    padding: 1.5rem 1rem;
-    border: 1px solid #efefef;
-    box-shadow: 0 2px 8px 0 rgba(0,0,0,.05);
-    border-radius: .65rem;
-    align-items: center;
-    justify-content: center;
-}
-.account-profile-img.md {
-    width: 3.5rem;
-    height: 3.5rem;
-}
-.test-book {
-    padding: 5px;
-    border-radius: 2px;
-    border: 1px solid #dbdbdb;
-    text-align: center;
-    font-size: 14px;
-    color: #333;
-    margin-right: .65rem;
-    cursor: pointer;
-    background-color: #fff;
-    white-space: nowrap;
-}
 

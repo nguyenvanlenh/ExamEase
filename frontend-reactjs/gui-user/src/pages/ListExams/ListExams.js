@@ -1,345 +1,125 @@
 
 import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
-
 import Footer from "../../components/footer/Footer"
 import Header from "../../components/header/Header"
-import { Badge, Button, Card, Col, Form, Image, InputGroup, Row, Stack } from "react-bootstrap"
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { Button, Form, Image, InputGroup, Nav, Pagination, Row, Stack } from "react-bootstrap"
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
+import { CardItemExam } from "../../components/CardItemExam/CardItemExam"
+import { useState } from "react"
 export const ListExams = () => {
+
+    const listExam = [1, 2, 3, 4, 5, 6];
+    const [activeTab, setActiveTab] = useState(0);
+    const tabs = [
+        { label: "Tất cả", data: "" },
+        { label: "Đề rút gọn", data: "" },
+
+    ];
+
     const handleSearch = () => {
-        // Xử lý logic tìm kiếm ở đây khi người dùng nhấn nút "Search"
         console.log('Perform search...');
+    };
+
+    const handleTabChange = (tabIndex) => {
+        setActiveTab(tabIndex);
     };
     return (
         <>
             <Header />
-            <div className="site-content-wrapper pt-4" id="list-exams-wrapper">
-                <div className="content-header pd-0 gray-bg">
+            <div className="site-content-wrapper" id="list-exams-wrapper">
+                <div className="content-header pt-5">
                     <div className="container pb-0">
-                        <div className="row">
+                        <Row>
                             <div className="col-12 col-md-3 order-md-2">
-
                                 <div className="user-target-info-box">
-                                    <div className="user-target-user">
-                                        <Image src={UserImage} roundedCircle height={70} />
-                                        <div className="text-center font-weight-bold">
-                                            <strong>20130303</strong>
-                                        </div>
+                                    <Image src={UserImage} roundedCircle height={70} />
+                                    <div className="text-center">
+                                        <strong>20130303</strong>
                                     </div>
-                                    <div className="divider sm"></div>
                                     <div className="user-target-info">
-                                        <p className="user-target-text-sm">
-                                            <span className="far fa-exclamation-circle"></span>
+                                        <p>
                                             <i>Bạn chưa tạo mục tiêu cho quá trình luyện thi của mình.
                                                 <a href="/" >Tạo ngay</a>.
                                             </i>
                                         </p>
-
                                         <div className="mt-3">
                                             <Button className="w-100 mt-3"
                                                 variant="outline-secondary"><StackedLineChartIcon /> Thống kê kết quả</Button>
                                         </div>
-
                                     </div>
                                 </div>
-                                <br />
-
-
                             </div>
 
                             <div className="col-12 col-md-9 order-md-1">
-                                <h1 id="thư-viện-đề-thi">
+                                <h1>
                                     Thư viện đề thi
                                 </h1>
-                                {/* <br />
-                                <div className="test-exams">
-                                    <ul className="nav nav-pills flex-wrap">
+                                <Nav className="nav-pills flex-wrap" style={{ gap: '10px' }}>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">IELTS Academic</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">IELTS</Nav.Link>
+                                    </Nav.Item>
+                                </Nav>
 
-                                        <li className="nav-item w-auto">
-                                            <a className="nav-link " href="/tests/ielts/">IELTS Academic</a>
-                                        </li>
-
-                                        <li className="nav-item w-auto">
-                                            <a className="nav-link " href="/tests/ielts-general/">IELTS General</a>
-                                        </li>
-
-                                        <li className="nav-item w-auto">
-                                            <a className="nav-link" href="/tests/toeic/">TOEIC</a>
-                                        </li>
-
-                                    </ul>
-                                </div> */}
-                                <Stack direction="horizontal" gap={3}>
-                                    <div className="p-2"><a className="nav-link " href="/tests/ielts/">IELTS Academic</a></div>
-                                    <div className="p-2"><a className="nav-link " href="/tests/ielts/">IELTS Academic</a></div>
-                                    <div className="p-2"><a className="nav-link " href="/tests/ielts/">IELTS Academic</a></div>
-
-                                </Stack>
-
-                                <br />
-
-                                <div className="test-books nav-horizontal nav-horizontal-twolevels">
-
+                                <div className="
+                                test-books nav-horizontal nav-horizontal-twolevels
+                                pt-3 pb-3">
                                     <a className="test-book " href="/">2024</a>
-
                                     <a className="test-book " href="/">2023</a>
-
-                                    <a className="test-book " href="/">2022</a>
-
-
                                 </div>
-                                <br />
 
                                 <InputGroup className="mb-3">
                                     <Form.Control
                                         placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên sách, dạng câu hỏi ..."
-                                        aria-label="Search exam"
-                                        aria-describedby="basic-addon2"
                                     />
-                                    <Button variant="secondary" id="basic-addon2" onClick={handleSearch}>
-                                        Search
+                                    <Button variant="secondary" onClick={handleSearch}>
+                                        Tìm kiếm
                                     </Button>
                                 </InputGroup>
 
                             </div>
-                        </div>
-
-                        <ul className="nav nav-tabs">
-                            <li className="nav-item">
-                                <a className="nav-link active" href="/tests/toeic/">Tất cả</a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a className="nav-link " href="/tests/toeic/mini/">Đề rút gọn</a>
-                            </li>
-                        </ul>
+                        </Row>
+                        <Stack direction="horizontal" className="nav nav-tabs" gap={3}>
+                            {tabs.map((tab, index) => (
+                                <div key={index} className={`nav-item`}>
+                                    <button
+                                        className={`nav-link ${activeTab === index ? 'active' : ''}`}
+                                        onClick={() => handleTabChange(index)}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                </div>
+                            ))}
+                        </Stack>
                     </div>
-
                 </div>
                 <div className="content-wrapper">
                     <div className="container">
                         <div className="row pt-3 pb-3">
-                            {/* <div className="col-12 col-md-9 d-flex"> */}
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
+                            {listExam.map((exam, index) => {
 
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
+                                return <CardItemExam key={exam} />;
+                            })}
+                            <Pagination>
+                                <Pagination.First />
+                                <Pagination.Prev />
+                                <Pagination.Item>{1}</Pagination.Item>
+                                <Pagination.Ellipsis />
 
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
+                                <Pagination.Item>{10}</Pagination.Item>
+                                <Pagination.Item>{11}</Pagination.Item>
+                                <Pagination.Item active>{12}</Pagination.Item>
+                                <Pagination.Item>{13}</Pagination.Item>
+                                <Pagination.Item disabled>{14}</Pagination.Item>
 
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
-
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
-
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
-
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
-
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
-
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col md={3} className="pb-2">
-                                <Card>
-                                    <Card.Body>
-                                        <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                                        <Card.Text className="card-item-content">
-                                            <div className="wrap">
-                                                <span> <AccessTimeIcon /> 120 phút |</span>
-                                                <span> <PersonOutlineIcon /> 14000 |</span>
-                                                <span> <ChatBubbleOutlineIcon /> 30</span>
-                                            </div>
-                                            <div className="wrap">
-                                                <span>3 đề thi |</span>
-                                                <span> 40 câu hỏi</span>
-                                            </div>
-                                        </Card.Text>
-                                        <Badge pill bg="secondary">
-                                            #TOÁN
-                                        </Badge>
-
-                                        <Button className="w-100 mt-3"
-                                            variant="outline-secondary">Chi tiết</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
+                                <Pagination.Ellipsis />
+                                <Pagination.Item>{20}</Pagination.Item>
+                                <Pagination.Next />
+                                <Pagination.Last />
+                            </Pagination>
                         </div>
                     </div>
                 </div>
