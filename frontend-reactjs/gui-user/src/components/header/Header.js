@@ -1,7 +1,8 @@
-import "../styles/header.scss";
+import "./header.scss";
 import React, { useState } from 'react'
 import {  Nav, NavDropdown} from 'react-bootstrap'
-import imgAccount from '../data/imgs/user_icon.webp'
+import imgAccount from '../../data/imgs/user_icon.webp'
+
 function Header() {
     const [isUserOpen, setIsUserOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
