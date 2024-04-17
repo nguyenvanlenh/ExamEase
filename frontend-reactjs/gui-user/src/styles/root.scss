@@ -1,6 +1,7 @@
 $color-blue_global: #35509A;
 $color-blue_second: #E8F2FF;
-$color-blue_third: #edf7ff;
+$color-blue_third: hsl(207, 100%, 96%);
+$color-blue_four: #f8f9fa;
 $color-while: #fff;
 $color-black: #000;
 $color-red: #F79321;
@@ -23,6 +24,7 @@ $fs-22: 22px;
 $fs-20: 20px;
 $fs-18: 18px;
 $fs-16: 16px;
+$fs-14: 14px;
 
 $fw-sm: 300;
 $fw-md: 500;
@@ -35,4 +37,8 @@ $fw-xxl: 900;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    
+    a {
+        text-decoration: none !important;
+    }
 }
