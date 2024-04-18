@@ -1,0 +1,41 @@
+@import "../../styles/root.scss";
+
+#id-home {
+    background-color: $color-blue_second;
+    .wrap-welcom {
+        padding-top: 64px;
+        padding-bottom: 64px;
+        .title1 {
+            
+        }
+    }
+    .title2 {
+        margin-bottom: 12px;
+        font-size: 26px;
+        font-weight: 700;
+        color: $color-blue_global;
+    }
+    .wrap-cards {
+        margin-bottom: 42px;
+    }
+    .link-chart {
+        display: flex;
+        align-items: center;
+        border-radius: 24px;
+        border: solid 1px $color-blue_global;
+        background-color: $color-blue_second;
+        margin-left: 12px;
+        padding: 2px 8px;
+        text-decoration: none;
+        color: $color-blue_global;
+        &:hover {
+            background-color: $color-blue_global;
+            color: #fff; 
+        }
+    }
+    .text-chart {
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+}
