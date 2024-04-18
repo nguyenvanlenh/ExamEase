@@ -9,6 +9,10 @@
             
         }
     }
+    .part {
+        margin-bottom: 12px;
+        margin-top: 42px;
+    }
     .title2 {
         margin-bottom: 12px;
         font-size: 26px;
@@ -16,7 +20,7 @@
         color: $color-blue_global;
     }
     .wrap-cards {
-        margin-bottom: 42px;
+        // margin-bottom: 42px;
     }
     .link-chart {
         display: flex;
@@ -36,6 +40,23 @@
     .text-chart {
         font-size: 13px;
         font-weight: 600;
+    }
+    .view-all {
+        padding: 12px 0;
+        a, a b{
+            color: $color-blue_global;
+            font-weight: 400;
+            font-size: 16px;
+        }
+    }
+    .exam-bottom {
+        width: 100%;
+        background-color: #fff;
+        .title {
+            text-align: center;
+            padding-top: 36px;
+            font-size: 32px;
+        }
     }
     
 }
