@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Login from "./pages/Login";
+import { ListExams } from "./pages/ListExams/ListExams";
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />
+        element: <ListExams />
     },
     {
         path: "/home",
