@@ -1,12 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Login from "./pages/Login";
+import { FormQuestion } from "./pages/FormQuestion/FormQuestion";
+import { CreateExam } from "./pages/CreateExam/CreateExam";
+import { CreateStudent } from "./pages/CreateStudent/CreateStudent";
 import { ListExams } from "./pages/ListExams/ListExams";
+import { ResultStatistics } from "./pages/Statistics/ResultStatistics";
+
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <ListExams />
+        element: <Home />
     },
     {
         path: "/home",
@@ -15,6 +20,24 @@ export const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    }
+    ,
+    {
+        path: "/create-exam",
+        element: <CreateExam />
+    }
+    ,
+    {
+        path: "/form-question",
+        element: <FormQuestion />
+    },
+    {
+        path: "/create-student",
+        element: <CreateStudent />
+    },
+    {
+        path: "/list-exams",
+        element: <ListExams />
     }
 ]);
 

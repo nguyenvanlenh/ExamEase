@@ -6,7 +6,7 @@ import { useState } from "react";
 export const CardItemExam = (data) => {
     const [exam, setExam] = useState(null)
     return (
-        <Col md={3} className="pb-2">
+        <Col md={3} className="pb-4">
             <Card>
                 <Card.Body>
                     <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>

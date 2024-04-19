@@ -3,7 +3,7 @@ import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
 import Footer from "../../components/footer/Footer"
 import Header from "../../components/header/Header"
-import { Button, Form, Image, InputGroup, Nav, Pagination, Row, Stack } from "react-bootstrap"
+import { Button, Form, Image, InputGroup, Nav, NavDropdown, Pagination, Row, Stack } from "react-bootstrap"
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam"
 import { useState } from "react"
@@ -57,10 +57,28 @@ export const ListExams = () => {
                                 </h1>
                                 <Nav className="nav-pills flex-wrap" style={{ gap: '10px' }}>
                                     <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">IELTS Academic</Nav.Link>
+                                        <Nav.Link href="/tests/ielts/">Toán</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">IELTS</Nav.Link>
+                                        <Nav.Link href="/tests/ielts/">Vật lý</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">Hóa học</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">Tiếng anh</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">Ngữ văn</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">Sinh học</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">Lịch sử</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/tests/ielts/">Khác</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
 
@@ -69,11 +87,13 @@ export const ListExams = () => {
                                 pt-3 pb-3">
                                     <a className="test-book " href="/">2024</a>
                                     <a className="test-book " href="/">2023</a>
+                                    <a className="test-book " href="/">2022</a>
+                                    <a className="test-book " href="/">2021</a>
                                 </div>
 
                                 <InputGroup className="mb-3">
                                     <Form.Control
-                                        placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên sách, dạng câu hỏi ..."
+                                        placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên đề thi ..."
                                     />
                                     <Button variant="secondary" onClick={handleSearch}>
                                         Tìm kiếm
