@@ -5,17 +5,22 @@ import {
   Col,
   Container,
   Form,
+  Image,
   InputGroup,
   Row,
   Stack,
   Tab,
   Tabs,
 } from "react-bootstrap";
+import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
+import UserImage from "../../data/imgs/user_icon.webp";
 import "./examdetail.scss";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonIcon from "@mui/icons-material/Person";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import { Link } from "react-router-dom";
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 function Examdetail() {
   const [tabNumber, setTabNumber] = useState(0);
   const handleTabNumber = (number) => {
@@ -26,7 +31,7 @@ function Examdetail() {
       <Header />
       <Container className="wrap">
         <Row>
-          <Col md={9}>
+          <Col md={9} xs={12} >
             <div className="content-block">
               <Stack direction="horizontal" gap={2}>
                 <Badge pill bg="secondary">
@@ -112,7 +117,7 @@ function Examdetail() {
                         </div>
                       </Stack>
                     </Tab>
-                    <Tab eventKey="Thảo luân" title="Thảo luân">
+                    <Tab eventKey="Thảo luận" title="Thảo luận">
                       Tab content for Profile
                     </Tab>
                     <Tab eventKey="contact" title="Contact">
@@ -121,12 +126,47 @@ function Examdetail() {
                   </Tabs>
                 </div>
                 <div className={`tab-content ${tabNumber === 1 || "d-none"}`}>
-                  tab2
+                  <span>Các phần thi:</span>
+                  <ul>
+                    <li>
+                      <Link className="p-2">Đề 1</Link>
+                    </li>
+                    <li>
+                      <Link className="p-2">Đề 2</Link>
+                    </li>
+                    <li>
+                      <Link className="p-2">Đề 3</Link>
+                    </li>
+                    <li>
+                      <Link className="p-2">Đề 4</Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </Col>
-          <Col md={3}>3</Col>
+          <Col md={3} xs={12} >
+            <div className="user-target-info-box">
+              <Image src={UserImage} roundedCircle height={70} />
+              <div className="text-center">
+                <strong>20130302</strong>
+              </div>
+              <div className="user-target-info">
+                <p>
+                  <i className="user-sub">
+                    <ErrorOutlineIcon className="icon" /> 
+                    <span>Bạn chưa tạo mục tiêu cho quá trình luyện thi của mình.</span>
+                    <Link className="link" href="/">Tạo ngay</Link>.
+                  </i>
+                </p>
+                <div className="mt-3">
+                  <Button className="w-100 mt-3 btn-custom" variant="outline-secondary">
+                    <StackedLineChartIcon /> Thống kê kết quả
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Col>
         </Row>
       </Container>
       <Footer />

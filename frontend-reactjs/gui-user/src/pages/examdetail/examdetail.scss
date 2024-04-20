@@ -84,5 +84,44 @@
 
         }
     }
+    .user-target-info-box {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        padding: 1.5rem 1rem;
+        border: 1px solid #efefef;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .05);
+        border-radius: .65rem;
+        align-items: center;
+        justify-content: center;
+        .text-center {
+            margin-bottom: 12px;
+        }
+        .user-target-info {
+            border-top: 1px solid #ccc;
+            padding-top: 12px;
+            .user-sub {
+                color: $color-gray;
+                .icon {
+                    font-size: 18px;
+                    padding-bottom: 2px;
+                }
+            }
+            .link {
+                color: $color-blue_global;
+            }
+            .btn-custom {
+                border-radius: 60px;
+                padding: 4px 12px;
+                border-color: $color-blue_global;
+                background-color: $color-blue_second;
+                color: #000;
+                &:hover {
+                    background-color: $color-blue_global;
+                    color: #fff;
+                }
+            }
+        }
 
+    }
 }
