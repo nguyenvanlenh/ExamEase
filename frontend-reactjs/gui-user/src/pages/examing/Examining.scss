@@ -1,0 +1,124 @@
+@import "../../styles/root.scss";
+
+#examining {
+    background-color: $color-blue_four;
+
+    .wrap-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 28px 0 16px;
+
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .btn-custom {
+            border: 1px solid $color-blue_global;
+            background-color: $color-blue_second;
+            color: $color-black;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px 8px;
+            margin-left: 8px;
+
+            &:hover {
+                background-color: $color-blue_global;
+                color: #fff;
+            }
+        }
+    }
+
+    .wrap-content {
+        display: flex;
+        flex-direction: row;
+        padding-right: .75rem;
+        padding-left: .75rem;
+        padding-bottom: 3rem;
+
+        .container-left {
+            width: 100%;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: .65rem;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 0 0 rgba(143, 156, 173, .2);
+
+            .content {}
+        }
+
+        .container-right {
+            position: relative;
+            width: 220px;
+            min-width: 220px;
+
+            .wrap {
+                position: fixed;
+                // bottom: 0px;
+                z-index: 10;
+                margin-left: 1rem;
+                margin-right: 1rem;
+                will-change: position, transform;
+                padding: 1rem;
+                background-color: #fff;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 4px 12px rgba(0, 0, 0, .08);
+
+                .content {
+                    display: flex;
+                    flex-direction: column;
+
+
+                    .text-time {
+                        font-size: 16px;
+                    }
+
+                    #timeelapsed {
+                        font-size: 20px;
+                        font-weight: 600;
+                        margin-bottom: 14px;
+                    }
+
+                    .btn-submit {
+                        border: 1px solid $color-blue_global;
+                        background-color: #fff;
+                        color: $color-blue_global;
+                        font-weight: 600;
+
+                        &:hover {
+                            background-color: $color-blue_global;
+                            color: #fff;
+                        }
+                    }
+
+                    .note {
+                        color: $color-orange;
+                        font-weight: 600;
+                        font-size: 14px;
+                        margin-top: 14px;
+                    }
+
+                    strong {
+                        margin: 16px 0 8px;
+                    }
+                }
+            }
+
+            .set-top {
+                top: 80px;
+            }
+
+            .set-top2 {
+                top: auto;
+                bottom: 0px;
+            }
+        }
+
+        @media screen and (max-width: 780px) {
+            .d-b {
+                display: none;
+            }
+        }
+
+    }
+}

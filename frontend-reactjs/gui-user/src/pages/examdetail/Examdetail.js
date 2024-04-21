@@ -80,12 +80,12 @@ function Examdetail() {
                     làm FULL TEST.
                   </div>
                   <Tabs
-                    defaultActiveKey="profile"
+                    defaultActiveKey="luyentap"
                     id="uncontrolled-tab-example"
                     className="mb-3 custom-tabs"
                     variant="underline"
                   >
-                    <Tab eventKey="home" title="Home">
+                    <Tab eventKey="luyentap" title="Luyện tập">
                       <Stack>
                         <Form>
                           <Form.Check

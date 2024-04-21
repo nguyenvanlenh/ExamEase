@@ -3,6 +3,7 @@ import Home from "./pages/home/Home";
 import Login from "./pages/Login";
 import { ListExams } from "./pages/ListExams/ListExams";
 import Examdetail from "./pages/examdetail/Examdetail";
+import Examining from "./pages/examing/Examining";
 
 export const router = createBrowserRouter([
     {
@@ -20,7 +21,11 @@ export const router = createBrowserRouter([
     {
         path: "/exam-detail",
         element: <Examdetail />
-    }
+    },
+     {
+        path: "examining",
+        element: <Examining />
+     }
 ]);
 
 if (import.meta.hot) {
