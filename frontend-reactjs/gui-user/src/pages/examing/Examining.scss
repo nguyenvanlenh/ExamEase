@@ -197,11 +197,14 @@
     .note-top {
         color: $color-orange;
         margin: 0 12px 12px;
-        display: block;
+        display: none;
         font-weight: 600;
     }
     @media screen and (max-width: 780px) {
-        .contaner-bottom, .center-part, .center-part-content {
+        .contaner-bottom, 
+        .center-part, 
+        .center-part-content,
+        .note-top {
             display: block;
         }
     }

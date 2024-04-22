@@ -5,7 +5,9 @@
 
     .wrap {
         padding: 32px 12px 48px;
-        margin: 0 17.8px;
+        .mg {
+            margin: 0 17.8px;
+        }
     }
 
     .content-block {
@@ -94,6 +96,7 @@
         border-radius: .65rem;
         align-items: center;
         justify-content: center;
+        margin-left: 17.8px;
         .text-center {
             margin-bottom: 12px;
         }
@@ -123,5 +126,22 @@
             }
         }
 
+    }
+    @media screen and (max-width: 780px) {
+        .wrap .mg {
+            margin: 0;
+            .row>* {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        .content-block {
+            .title {
+                font-size: 24px;
+            }
+        }
+        .user-target-info-box {
+            margin-left: 0;
+        }
     }
 }

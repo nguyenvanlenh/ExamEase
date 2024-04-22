@@ -12,6 +12,9 @@
         width: 100%;
         padding-top: 2rem;
         padding-bottom: 3rem;
+        .ml-row {
+            margin-left: 12px;
+        }
         .title-footer {
             font-size: 28px;
             font-weight: 600;
@@ -39,6 +42,7 @@
         .copyright {
             margin-top: 12px;
             color: $color-text;
+            margin-left: 12px;
         }
     }
 }

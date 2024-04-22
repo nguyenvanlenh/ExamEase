@@ -20,7 +20,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 function Examdetail() {
   const [tabNumber, setTabNumber] = useState(0);
   const handleTabNumber = (number) => {
@@ -29,9 +29,9 @@ function Examdetail() {
   return (
     <div id="id-examdetail">
       <Header />
-      <Container className="wrap">
-        <Row>
-          <Col md={9} xs={12} >
+      <Container className="wrap" fluid>
+        <Row className="mg">
+          <Col md={9} xs={12}>
             <div className="content-block">
               <Stack direction="horizontal" gap={2}>
                 <Badge pill bg="secondary">
@@ -145,7 +145,7 @@ function Examdetail() {
               </div>
             </div>
           </Col>
-          <Col md={3} xs={12} >
+          <Col md={3} xs={12}>
             <div className="user-target-info-box">
               <Image src={UserImage} roundedCircle height={70} />
               <div className="text-center">
@@ -154,13 +154,21 @@ function Examdetail() {
               <div className="user-target-info">
                 <p>
                   <i className="user-sub">
-                    <ErrorOutlineIcon className="icon" /> 
-                    <span>Bạn chưa tạo mục tiêu cho quá trình luyện thi của mình.</span>
-                    <Link className="link" href="/">Tạo ngay</Link>.
+                    <ErrorOutlineIcon className="icon" />
+                    <span>
+                      Bạn chưa tạo mục tiêu cho quá trình luyện thi của mình.
+                    </span>
+                    <Link className="link" href="/">
+                      Tạo ngay
+                    </Link>
+                    .
                   </i>
                 </p>
                 <div className="mt-3">
-                  <Button className="w-100 mt-3 btn-custom" variant="outline-secondary">
+                  <Button
+                    className="w-100 mt-3 btn-custom"
+                    variant="outline-secondary"
+                  >
                     <StackedLineChartIcon /> Thống kê kết quả
                   </Button>
                 </div>
