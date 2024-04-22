@@ -24,6 +24,9 @@
         .content-question {
             margin-bottom: 24px;
         }
+        .form-check-input, .form-check-label {
+            cursor: pointer;
+        }
     }
     @media screen and (max-width: 780px) {
         .wrap-number {
