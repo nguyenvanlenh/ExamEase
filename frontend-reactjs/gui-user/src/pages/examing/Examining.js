@@ -5,18 +5,18 @@ import { Stack } from "@mui/material";
 import { Button } from "react-bootstrap";
 import ListQuestion from "../../components/listQuestion/ListQuestion";
 import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
+import { dataListQuestion } from "../../data/SampleData";
 function Examining() {
   const [move, setMove] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      window.scrollY > 32 ? setMove(true): setMove(false)
+      window.scrollY > 32 ? setMove(true) : setMove(false);
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
 
   return (
     <>
@@ -50,6 +50,9 @@ function Examining() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="contaner-bottom">
+          Nội dung ghi ở đây
         </div>
       </div>
     </>

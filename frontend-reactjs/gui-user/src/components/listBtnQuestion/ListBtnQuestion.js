@@ -1,21 +1,35 @@
 import React from "react";
-import "./ListBtnQuestion.scss"
+import "./ListBtnQuestion.scss";
+import { dataListQuestion } from "../../data/SampleData";
 
 function ListBtnQuestion() {
+  const handleClick = (questionId) => {
+    const questionElement = document.getElementById(`q-${questionId}`);
+    if (questionElement) {
+      const headerHeight = document.getElementById("id-header").offsetHeight; // Lấy chiều cao của thanh header
+      const targetPosition =
+        questionElement.getBoundingClientRect().top +
+        window.scrollY -
+        headerHeight +
+        -20;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
   return (
     <div className="wrap-question">
-      <span className="question-item done">1</span>
-      <span className="question-item">2</span>
-      <span className="question-item">3</span>
-      <span className="question-item">4</span>
-      <span className="question-item">5</span>
-      <span className="question-item">6</span>
-      <span className="question-item">7</span>
-      <span className="question-item">8</span>
-      <span className="question-item">9</span>
-      <span className="question-item">10</span>
-      <span className="question-item">10</span>
-      <span className="question-item">10</span>
+      {dataListQuestion &&
+        dataListQuestion.map((question) => (
+          <span
+            key={question.id}
+            className={`question-item ${question.done && "done"}`}
+            onClick={() => handleClick(question.id)}
+          >
+            {question.id}
+          </span>
+        ))}
     </div>
   );
 }

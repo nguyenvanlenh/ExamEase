@@ -1,40 +1,21 @@
 import React from 'react'
-import "./ListQuestion.scss"
 import Question from '../question/Question'
+import { dataListQuestion } from '../../data/SampleData'
 
 function ListQuestion() {
   return (
     <>
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
-      <Question />
+      {
+        dataListQuestion.length>0 && dataListQuestion.map((question, index) => (
+          <Question
+            key={question.id}
+            numberSentence={index}
+            id={question.id}
+            contentQuestion={question.contentQuestion}
+            listAnswers={question.listAnswers}
+          />
+        ))
+      }
     </>
   )
 }
