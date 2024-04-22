@@ -137,7 +137,32 @@
         }
         .content-block {
             .title {
-                font-size: 24px;
+                font-size: 22px;
+            }
+            .tab-container {
+                .tab-pill {
+                    font-size: 12px;
+                }
+                .custom-tabs {
+                    .nav-link {
+                        font-size: 12px;
+                        padding: 4px 6px;
+                    }
+                }
+            }
+            .tab-content {
+                .list-sub li {
+                    font-size: 12px;
+                    svg {
+                        width: 16px;
+                    }
+                }
+                .notify {
+                    margin: 12px 0 28px;
+                    color: $color-text-red;
+                    font-style: italic;
+                    font-size: 12px;
+                }
             }
         }
         .user-target-info-box {
