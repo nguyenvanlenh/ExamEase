@@ -1,0 +1,38 @@
+@import '../../styles/root.scss';
+
+#id-card {
+    margin-top: 12px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    .card-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .card-subtitle {
+        .text {
+            margin-left: 4px;
+        }
+    }
+    .text-sub {
+        margin: 6px;
+    }
+    .text-begin-day {
+
+    }
+    .text-end-day {
+
+    }
+    .card-button {
+        background-color: #fff;
+        color: $color-blue_global;
+        border: 1px solid $color-blue_global;
+        width: 100%;
+        &:hover {
+            background-color: $color-blue_global;
+            color: #fff;
+        }
+    }
+    
+}
