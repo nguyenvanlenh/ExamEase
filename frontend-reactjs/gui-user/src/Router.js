@@ -45,8 +45,6 @@ export const router = createBrowserRouter([
     {
         path: "/list-exams",
         element: <ListExams />
-    }
-
     },
     {
         path: "/exam-detail",
