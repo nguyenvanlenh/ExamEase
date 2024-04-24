@@ -10,7 +10,7 @@ function Footer() {
   return (
     <div id='id-footer'>
       <Container className='container'>
-            <Row xs={12} lg={12}>
+            <Row xs={12} lg={12} className='ml-row'>
                 <Col sm={12} md={3}>
                     <Stack gap={9}>
                         <div className="title-footer">Study</div>
@@ -52,7 +52,7 @@ function Footer() {
                     </Stack>
                 </Col>
             </Row>
-            <Row>
+            <Row className='ml-row'>
                 <Stack gap={9}>
                     <div className="sub-title">Thông tin doanh nghiệp</div>
                     <div className="text">Công ty TNHH Công Nghệ A Plus</div>

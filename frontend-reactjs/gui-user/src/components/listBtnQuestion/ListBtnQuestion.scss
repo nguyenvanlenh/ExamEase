@@ -1,0 +1,33 @@
+@import "../../styles/root.scss";
+
+.wrap-question {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+
+    .question-item {
+        display: inline-flex;
+        border-radius: 3px;
+        border-color: #f7faff;
+        border: 1px solid;
+        font-weight: 600;
+        margin-right: 4px;
+        margin-bottom: 8px;
+        width: 28px;
+        height: 25px;
+        font-size: 11px;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $color-blue_global;
+            color: $color-while;
+        }
+    }
+    .done {
+        background-color: $color-blue_global;
+        color: $color-while;
+
+    }
+}
