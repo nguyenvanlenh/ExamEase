@@ -10,6 +10,7 @@ import { ResultStatistics } from "./pages/Statistics/ResultStatistics";
 
 import Examdetail from "./pages/examdetail/Examdetail";
 import Examining from "./pages/examing/Examining";
+import Result from "./pages/result/Result";
 
 
 export const router = createBrowserRouter([
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
      {
         path: "examining",
         element: <Examining />
+     },
+     {
+        path: "/result",
+        element: <Result />
      }
 
 ]);
