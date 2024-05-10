@@ -10,17 +10,17 @@ export const CardItemExam = (data) => {
             <Card>
                 <Card.Body>
                     <Card.Title>Đề thi môn Toán THPT 2023</Card.Title>
-                    <Card.Text className="card-item-content">
-                        <div className="wrap">
-                            <span> <AccessTimeIcon />{exam ? exam.time : "120 phút"} |</span>
-                            <span> <PersonOutlineIcon /> {exam ? exam.quantityPractice : "14000"} |</span>
-                            <span> <ChatBubbleOutlineIcon /> {exam ? exam.quantityComment : "30"}</span>
+                    <Card.Subtitle className="card-item-content">
+                        <div className="wrap d-flex">
+                            <div> <AccessTimeIcon />{exam ? exam.time : "120 phút"} |</div>
+                            <div> <PersonOutlineIcon /> {exam ? exam.quantityPractice : "14000"} |</div>
+                            <div> <ChatBubbleOutlineIcon /> {exam ? exam.quantityComment : "30"}</div>
                         </div>
-                        <div className="wrap">
-                            <span>{exam ? exam.quantityExamNumber : "3 đề thi"} |</span>
-                            <span> {exam ? exam.question : "40 câu hỏi"}</span>
+                        <div className="wrap d-flex">
+                            <div>{exam ? exam.quantityExamNumber : "3 đề thi"} |</div>
+                            <div> {exam ? exam.question : "40 câu hỏi"}</div>
                         </div>
-                    </Card.Text>
+                    </Card.Subtitle>
                     <Badge pill bg="secondary">
                         # {exam ? exam.category : "TOÁN"}
                     </Badge>
