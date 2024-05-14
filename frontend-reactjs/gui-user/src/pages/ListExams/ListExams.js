@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
 import Footer from "../../components/footer/Footer"
@@ -7,15 +7,60 @@ import { Button, Form, Image, InputGroup, Nav, NavDropdown, Pagination, Row, Sta
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam"
 import { useState } from "react"
+import { Link } from "react-router-dom"
+import { RequestData } from "../../utils/request"
+import { authService } from '../../services/authService';
+import { URL_PATH } from '../../utils/constants';
+import { examService } from '../../services/examService';
 export const ListExams = () => {
-
+    const requestData = RequestData();
     const listExam = [1, 2, 3, 4, 5, 6];
     const [activeTab, setActiveTab] = useState(0);
     const tabs = [
         { label: "Tất cả", data: "" },
         { label: "Đề rút gọn", data: "" },
-
     ];
+
+
+
+    const loginRequest = requestData.LoginRequest("teacher", "12345678")
+
+    const handleLogin = async (requestData) => {
+        const data = await authService.login(requestData)
+        if (data?.status < 400) {
+            console.log(data.data)
+        } else {
+            console.error(data.data)
+        }
+    }
+
+    // handleLogin(loginRequest)
+
+    const registerRequest = requestData.RegisterRequest(
+        "nguyenvanlenh",
+        "123456789",
+        "vanlenh2k@gmail.com",
+        []);
+    const handleRegister = async (requestData) => {
+        const data = await authService.register(requestData);
+        if (data?.status < 400) {
+            console.log(data.data.data)
+        } else {
+            console.table(data.data)
+        }
+    }
+
+    // handleRegister(registerRequest)
+    const [isPublic, setPublic] = useState(false);
+    const handleUpdatePublic = async (isPublic) => {
+        const data = await examService.updatePublic("ds", isPublic)
+        if (data?.status < 400) {
+            console.log(data)
+        } else {
+            console.error(data.data)
+        }
+    }
+    handleUpdatePublic(isPublic)
 
     const handleSearch = () => {
         console.log('Perform search...');
@@ -40,12 +85,12 @@ export const ListExams = () => {
                                     <div className="user-target-info">
                                         <p>
                                             <i>Bạn chưa tạo mục tiêu cho quá trình luyện thi của mình.
-                                                <a href="/" >Tạo ngay</a>.
+                                                <Link to="/" href="/" >Tạo ngay</Link>.
                                             </i>
                                         </p>
                                         <div className="mt-3">
-                                            <Button className="w-100 mt-3"
-                                                variant="outline-secondary"><StackedLineChartIcon /> Thống kê kết quả</Button>
+                                            <Link to="/statistics" className="w-100 mt-3 btn btn-outline-secondary"
+                                            ><StackedLineChartIcon /> Thống kê kết quả</Link>
                                         </div>
                                     </div>
                                 </div>
@@ -85,10 +130,10 @@ export const ListExams = () => {
                                 <div className="
                                 test-books nav-horizontal nav-horizontal-twolevels
                                 pt-3 pb-3">
-                                    <a className="test-book " href="/">2024</a>
-                                    <a className="test-book " href="/">2023</a>
-                                    <a className="test-book " href="/">2022</a>
-                                    <a className="test-book " href="/">2021</a>
+                                    <Link to="/" className="test-book " href="/">2024</Link>
+                                    <Link to="/" className="test-book " href="/">2023</Link>
+                                    <Link to="/" className="test-book " href="/">2022</Link>
+                                    <Link to="/" className="test-book " href="/">2021</Link>
                                 </div>
 
                                 <InputGroup className="mb-3">
@@ -120,8 +165,7 @@ export const ListExams = () => {
                     <div className="container">
                         <div className="row pt-3 pb-3">
                             {listExam.map((exam, index) => {
-
-                                return <CardItemExam key={exam} />;
+                                return <CardItemExam key={index} />;
                             })}
                             <Pagination>
                                 <Pagination.First />

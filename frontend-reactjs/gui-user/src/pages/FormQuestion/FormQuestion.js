@@ -4,10 +4,9 @@ import FormOption from '../../components/FormOption/FormOption';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { Link, useNavigate } from "react-router-dom";
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 export const FormQuestion = () => {
-    const arr = new Array(20).fill(0);
+    const arr = new Array(40).fill(0);
     const now = 60;
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
@@ -32,12 +31,24 @@ export const FormQuestion = () => {
         setIsSaving(false);
     };
 
+    const [completedQuestions, setCompletedQuestions] = useState(new Array(arr.length).fill(false));
+
+
+
     const scrollToElement = (id) => {
         const element = document.getElementById(id);
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            const { top, height } = element.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            const offset = top - (windowHeight - height) / 2;
+
+            window.scrollTo({
+                top: offset,
+                behavior: 'smooth'
+            });
         }
     };
+
 
     return (
         <>
@@ -56,7 +67,9 @@ export const FormQuestion = () => {
                         </Stack>
                     </Row>
                     <Row>
-                        <Col md={8} style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '20px' }}>
+                        <Col md={9}
+                        // style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '20px' }}
+                        >
                             <Row>
                                 {
                                     arr.map((item, index) => {
@@ -66,21 +79,28 @@ export const FormQuestion = () => {
                                                 handleQuestionSubmit={handleQuestionSubmit}
                                                 isSaving={isSaving}
                                                 handleQuestionSaved={handleQuestionSaved}
+                                                setCompleted={(isComplete) => {
+                                                    const updatedCompletedQuestions = [...completedQuestions];
+                                                    updatedCompletedQuestions[index] = isComplete;
+                                                    setCompletedQuestions(updatedCompletedQuestions);
+                                                }}
                                             />
                                         )
                                     })
                                 }
                             </Row>
                         </Col>
-                        <Col md={4}>
-                            <Row>
-                                {arr.map((item, index) => {
+                        <Col md={3}>
+                            <Row className='p-2 shadow-lg p- mb-5 bg-white rounded'>
+                                {arr?.map((item, index) => {
                                     const formId = `option${index + 1}`;
                                     return (
                                         <Col md={3} className="mb-3" key={index}>
                                             <Link to={`#${formId}`} onClick={() => scrollToElement(formId)}>
-                                                <Card border="success" className="p-3 d-flex flex-column justify-content-center align-items-center
-                                                text-success">
+                                                <Card
+                                                    border={completedQuestions[index] ? "success" : "secondary"}
+                                                    className={`p-3 d-flex flex-column justify-content-center align-items-center ${completedQuestions[index] ? "bg-success text-light" : "secondary"}`}
+                                                >
                                                     <Card.Subtitle>
                                                         {index + 1}
                                                     </Card.Subtitle>
@@ -89,11 +109,11 @@ export const FormQuestion = () => {
                                         </Col>
                                     );
                                 })}
-
                             </Row>
                         </Col>
+
                     </Row>
-                    <Row>
+                    <Row className='pt-4'>
                         <Col md={6}>
                             <Button
                                 type="button"
