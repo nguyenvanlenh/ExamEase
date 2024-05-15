@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./Examining.scss";
 import Header from "../../components/header/Header";
-import { Stack } from "@mui/material";
 import { Button, CloseButton } from "react-bootstrap";
 import ListQuestion from "../../components/listQuestion/ListQuestion";
 import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { examNumberService } from "../../services/examNumberService";
+import { useDispatch, useSelector } from "react-redux";
+import {  addListQuestion } from "../../redux/slices/listQuestionSlice";
 function Examining() {
+  const dispatch = useDispatch()
   const [move, setMove] = useState(false);
   const [part, setPart] = useState(false);
   useEffect(() => {
@@ -39,14 +42,27 @@ function Examining() {
       }
     });
   };
+
+  const [examNumber, setExamNumber] = useState()
+
+  async function dataExamNumber(id) {
+    const data = await examNumberService.getExamNumberUser(id);
+    setExamNumber(data.data);
+    // fix chỗ này sau
+    dispatch(addListQuestion(data.data?.examNumbers[0]?.listQuestions));
+  }
+  useEffect(() => {
+    dataExamNumber(1)
+  }, [])
+  const listQuestion = useSelector((state) => state.listQuestion)
+  console.log(listQuestion);
   return (
     <>
       <Header />
       <div id="examining">
         <div direction="horizontal" className="wrap-title">
           <h1 className="title">
-            [2022-2023] Trường THPT Chu Văn An - Đề thi thử tốt nghiệp THPT môn
-            Sinh học năm 2022-2023
+            {examNumber?.title}
           </h1>
           <Button className="btn-custom">Thoát</Button>
         </div>
@@ -56,7 +72,7 @@ function Examining() {
         <div className="wrap-content">
           <div className="container-left">
             <div className="content">
-              <ListQuestion />
+              <ListQuestion listQuestion={listQuestion}/>
             </div>
           </div>
           <div className="container-right d-b">
@@ -72,7 +88,7 @@ function Examining() {
                   đánh dấu review
                 </i>
                 <strong>Part</strong>
-                <ListBtnQuestion />
+                <ListBtnQuestion listQuestion={listQuestion}/>
               </div>
             </div>
           </div>

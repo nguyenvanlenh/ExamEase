@@ -28,7 +28,7 @@ import com.nlu.security.jwt.JwtAuthenticationFilter;
 public class SecurityConfig{
 	
 	
-	private final String[] PUBLIC_ENDPOINTS = {
+	private final static String[] PUBLIC_ENDPOINTS = {
 			"/api/auth/login",
 			"/api/auth/register",
 			"/api/exams/**",
@@ -36,7 +36,7 @@ public class SecurityConfig{
 			"/api/user_answers/**",
 			"/api/students/**"
 	};
-	private final String[] SWAGGER_ENDPOINTS = {
+	private final static String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
 			"/swagger-ui/**",
 			"/v3/api-docs/**",

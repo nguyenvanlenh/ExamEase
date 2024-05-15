@@ -11,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -56,8 +58,17 @@ public class GlobalExceptionHandler {
 				.body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),e.getMessage()));
 	}
 	
+	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	ResponseEntity<ErrorResponse> handlingMissingServletRequestParameterException(MissingServletRequestParameterException e){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage()));
+	}
+	@ExceptionHandler({
+		MissingPathVariableException.class,
+		MethodArgumentTypeMismatchException.class,
+		})
+	ResponseEntity<ErrorResponse> handlingMissingPathVariableException(Exception e){
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage()));
 	}

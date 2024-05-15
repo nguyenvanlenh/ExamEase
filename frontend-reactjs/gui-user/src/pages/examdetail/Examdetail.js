@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -21,11 +21,25 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { examNumberService } from "../../services/examNumberService";
 function Examdetail() {
   const [tabNumber, setTabNumber] = useState(0);
   const handleTabNumber = (number) => {
     setTabNumber(number);
   };
+  
+  
+  const [examNumber, setExamNumber] = useState()
+
+  async function dataExamNumber(id) {
+    const data = await examNumberService.getExamNumberUser(id);
+    setExamNumber(data.data);
+    console.log(data.data)
+  }
+  useEffect(() => {
+    dataExamNumber(1)
+  }, [])
+
   return (
     <div id="id-examdetail">
       <Header />
@@ -41,7 +55,7 @@ function Examdetail() {
                   # IELTS Academic
                 </Badge>
               </Stack>
-              <h1 className="title">IELTS Simulation Listening test 2</h1>
+              <h1 className="title">{examNumber?.title}</h1>
               <div className="tab-container">
                 <Stack direction="horizontal" gap={2}>
                   <Button
@@ -63,10 +77,10 @@ function Examdetail() {
                       <AccessTimeIcon />
                     </li>
                     <li>Thời gian làm bài: </li>
-                    <li>40 phút |</li>
-                    <li>4 phần thi |</li>
-                    <li>40 câu hỏi |</li>
-                    <li>244 bình luận</li>
+                    <li>{examNumber?.timeExam} |</li>
+                    {/* <li>4 phần thi |</li> */}
+                    <li>{examNumber?.quantityQuestion} câu hỏi </li>
+                    {/* <li>244 bình luận</li> */}
                   </ul>
                   <ul className="list-sub">
                     <li>
@@ -74,11 +88,15 @@ function Examdetail() {
                     </li>
                     <li>105537 người đã luyện tập đề thi này</li>
                   </ul>
-                  <div className="notify">
+                  {
+                    examNumber?.category === "Anh văn" && 
+                    (<div className="notify">
                     Chú ý: để được quy đổi sang scaled score (ví dụ trên thang
                     điểm 990 cho TOEIC hoặc 9.0 cho IELTS), vui lòng chọn chế độ
                     làm FULL TEST.
-                  </div>
+                  </div>)
+                  }
+                  
                   <Tabs
                     defaultActiveKey="luyentap"
                     id="uncontrolled-tab-example"
