@@ -27,8 +27,8 @@ public class ExamController {
 	@Autowired private ExamService examService;
 
 	@PostMapping
-	@ResponseStatus()
 	public ResponseData createExam(@RequestBody ExamRequest request) {
+		System.out.println(request.getListExamNumberRequests().size());
 		Long data = examService.createExam(request);
 		return ResponseData.builder()
 				.status(HttpStatus.CREATED.value())
