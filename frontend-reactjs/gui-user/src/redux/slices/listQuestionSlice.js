@@ -5,7 +5,7 @@ const listQuestionSlice = createSlice({
     initialState: [],
     reducers: {
         addListQuestion(state, action) {
-            action.payload.map((question, index) => {
+            action.payload.map((question, index) => (
                 state.push({
                     id: index+1,
                     idReal: question.id,
@@ -17,7 +17,7 @@ const listQuestionSlice = createSlice({
                         value: option.nameOption,
                       }))
                   })
-            })
+            ))
         },
         updateQuestion(state, action) {
             const { idQuestion, idAnswer } = action.payload;
