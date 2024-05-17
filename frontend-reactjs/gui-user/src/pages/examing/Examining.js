@@ -52,6 +52,7 @@ function Examining() {
     dispatch(addListQuestion(data.data?.examNumbers[0]?.listQuestions));
   }
   useEffect(() => {
+    // truyền vào id của exam
     dataExamNumber(1)
   }, [])
   const listQuestion = useSelector((state) => state.listQuestion)
@@ -113,7 +114,7 @@ function Examining() {
             <strong>Part</strong>
             <CloseButton onClick={() => handleHidden()} />
           </div>
-          <ListBtnQuestion />
+          <ListBtnQuestion listQuestion={listQuestion}/>
         </div>
       </div>
     </>

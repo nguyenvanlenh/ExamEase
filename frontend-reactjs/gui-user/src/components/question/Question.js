@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Question.scss";
 import { Form } from "react-bootstrap";
 import { TYPE_ANSWERS } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { updateQuestion } from "../../redux/slices/listQuestionSlice";
+import { userAnswerService } from "../../services/userAnswerService";
 
 function Question(prop) {
+  const [auth, setAuth] = useState(false);
+  useEffect(() => {
+    const authLocal = JSON.parse(localStorage.getItem('auth'));
+    if (authLocal) {
+      setAuth(authLocal);
+    }
+  }, []);
   const [selectedExam, setSelectedExam] = useState(""); // State để lưu trữ giá trị của radio button được chọn
   const dispatch = useDispatch()
   const handleExamChange = (event) => {
@@ -13,8 +21,12 @@ function Question(prop) {
     console.log("selectedExam", event.target.value);
     const selected = { idQuestion: prop.id, idAnswer: event.target.value}
     dispatch(updateQuestion(selected))
+
+    // nộp từng câu(idUser, idOption)
+    // check thêm mới hay là update ở đây
+    userAnswerService.postUserAnswer(auth?.userId, event.target.value)
   };
-  
+
   return (
     <div id={"q-"+prop.id} className="question-container">
       <div className="wrap-number">
