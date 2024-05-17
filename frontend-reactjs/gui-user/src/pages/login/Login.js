@@ -20,10 +20,8 @@ const Login = () => {
     event.preventDefault();
     setLoading(true);
     await delay(500);
-    console.log(`Username :${inputUsername}, Password :${inputPassword}`);
 
     const data =  await authService.login(RequestData().LoginRequest(inputUsername, inputPassword))
-    console.log(data.data);
     if (data.status >= 400) {
       setShow(true);
     }else {

@@ -4,11 +4,12 @@ import "./Register.scss";
 
 import BackgroundImage from "../../data/imgs/backgroud.jpg";
 import Logo from "../../data/imgs/user_icon.webp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RequestData } from "../../utils/request";
 import { authService } from "../../services/authService";
 
 const Register = () => {
+  const navigation = useNavigate()
   const [inputUsername, setInputUsername] = useState("");
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
@@ -18,20 +19,13 @@ const Register = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showMute, setShowMute] = useState(false);
+  const [showMuteUser, setShowMuteUser] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     await delay(500);
-    console.log(`Username :${inputUsername}, Password :${inputPassword}`);
-    if (inputPassword !== inputRePassword) {
-      setShowMute(true);
-    }
-    if (inputPassword === inputRePassword) {
-      setShowMute(false);
-      // nhận dữ liệu về kiểm tra đăng kí thành công không
-      // const auth
-      // setShow(true);
+    if (handleValidation()) {
       const data = RequestData().RegisterRequest(
         inputUsername,
         inputPassword,
@@ -39,13 +33,27 @@ const Register = () => {
         selectRole === "STUDENT" ? [] : [selectRole]
       );
       const register = await authService.register(data);
-      console.log(selectRole);
-      console.log(inputEmail);
-      console.log(register);
-      console.log("OK");
+      register.status === 201 ? navigation("/login") : setShow(true);
     }
     setLoading(false);
   };
+  
+  function handleValidation() {
+    let count = 0;
+    if(inputRePassword !== inputPassword || inputPassword.length < 8 || inputPassword.length > 20) {
+      setShowMute(true)
+      count++;
+    }else {
+      setShowMute(false)
+    }
+    if(inputUsername.length < 8 || inputUsername.length > 20) {
+      setShowMuteUser(true)
+      count++;
+    }else{
+      setShowMuteUser(false)
+    }
+    return count === 0
+  }
 
   function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -75,7 +83,7 @@ const Register = () => {
             onClose={() => setShow(false)}
             dismissible
           >
-            Tài khoản đã tồn không đúng.
+            Tài khoản đã tồn tại.
           </Alert>
         ) : (
           <div />
@@ -89,6 +97,13 @@ const Register = () => {
             onChange={(e) => setInputUsername(e.target.value)}
             required
           />
+          <Form.Text
+            className="text-danger"
+            id="repassword"
+            style={{ display: showMuteUser ? "block" : "none" }}
+          >
+           Tài khoản phải từ 8 đến 20 kí tự.
+          </Form.Text>
         </Form.Group>
         <Form.Group className="mb-2" controlId="email">
           <Form.Label>Email</Form.Label>
