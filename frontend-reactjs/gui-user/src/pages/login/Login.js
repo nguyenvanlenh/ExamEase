@@ -4,8 +4,12 @@ import "./Login.scss";
 
 import BackgroundImage from "../../data/imgs/backgroud.jpg";
 import Logo from "../../data/imgs/user_icon.webp";
+import { authService } from "../../services/authService";
+import { RequestData } from "../../utils/request";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigation = useNavigate()
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
@@ -17,13 +21,19 @@ const Login = () => {
     setLoading(true);
     await delay(500);
     console.log(`Username :${inputUsername}, Password :${inputPassword}`);
-    if (inputUsername !== "admin" || inputPassword !== "admin") {
+
+    const data =  await authService.login(RequestData().LoginRequest(inputUsername, inputPassword))
+    console.log(data.data);
+    if (data.status >= 400) {
       setShow(true);
+    }else {
+      localStorage.setItem('auth', JSON.stringify(data.data));
+      navigation("/")
     }
     setLoading(false);
   };
 
-  const handlePassword = () => {};
+
 
   function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -53,7 +63,7 @@ const Login = () => {
             onClose={() => setShow(false)}
             dismissible
           >
-            Incorrect username or password.
+            Tài khoản hoặc mật khẩu không đúng.
           </Alert>
         ) : (
           <div />
@@ -78,9 +88,6 @@ const Login = () => {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-2" controlId="checkbox">
-          <Form.Check type="checkbox" label="Remember me" />
-        </Form.Group>
         {!loading ? (
           <Button className="w-100" variant="primary" type="submit">
             Đăng nhập
@@ -90,11 +97,11 @@ const Login = () => {
             Đang đăng nhập...
           </Button>
         )}
-        <div className="d-grid justify-content-end">
+        <div className="d-flex justify-content-between">
+          <Link to={"/register"} className="mt-2">Đăng ký?</Link>
           <Button
             className="text-muted px-0"
             variant="link"
-            onClick={handlePassword}
           >
             Quên mật khẩu?
           </Button>
