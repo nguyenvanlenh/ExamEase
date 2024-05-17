@@ -26,6 +26,7 @@ const Login = () => {
       setShow(true);
     }else {
       localStorage.setItem('auth', JSON.stringify(data.data));
+      localStorage.setItem('username', JSON.stringify(inputUsername))
       navigation("/")
     }
     setLoading(false);

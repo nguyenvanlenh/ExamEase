@@ -1,20 +1,30 @@
 import "./header.scss";
-import React, { useState } from 'react'
-import { Nav, NavDropdown } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { Button, Nav, NavDropdown } from 'react-bootstrap'
 import imgAccount from '../../data/imgs/user_icon.webp'
 import { Link } from "react-router-dom";
 
 function Header() {
-    const [isUserOpen, setIsUserOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    const handleUserToggle = () => {
-        setIsUserOpen(!isUserOpen);
-    };
 
     const handleMenuToggle = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+    const [auth, setAuth] = useState(false);
+    useEffect(() => {
+      const authLocal = JSON.parse(localStorage.getItem('auth'));
+      if (authLocal?.authenticated) {
+        setAuth(authLocal?.authenticated);
+      }
+    }, []);
+
+    const handleLogOut = () => {
+        localStorage.removeItem('auth');
+        localStorage.removeItem('username');
+        setAuth(false); 
+        setIsMenuOpen(false)
+    }
+    
     return (
         <>
             <div id="id-header" style={{ height: isMenuOpen ? 'auto' : '64px' }}>
@@ -36,7 +46,9 @@ function Header() {
                             <Nav.Link href="#home" className="text-item">Liên hệ</Nav.Link>
                         </div>
                         <div className="p-3">
-                            <NavDropdown className="text-item"
+                            {
+                                auth ? (
+<NavDropdown className="text-item"
                                 title={<span><img className="img-account"
                                     src={imgAccount} alt="Avatar" /></span>}
                                 id="basic-nav-dropdown">
@@ -47,8 +59,12 @@ function Header() {
                                 </NavDropdown.ItemText>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item href="account">Trang cá nhân</NavDropdown.Item>
-                                <NavDropdown.Item href="">Đăng xuất</NavDropdown.Item>
+                                <NavDropdown.ItemText onClick={handleLogOut}>Đăng xuất</NavDropdown.ItemText>
                             </NavDropdown>
+                                ) : 
+                                (<Button className="btn-login"><Link to={"/login"}>Đăng nhập</Link></Button>)
+                            }
+                            
                         </div>
                     </div>
                     <div className="container-menu" onClick={handleMenuToggle}>
@@ -72,7 +88,7 @@ function Header() {
                         <Nav.Link href="#home" className="text-item">Trang cá nhân</Nav.Link>
                     </div>
                     <div className="p-2">
-                        <Nav.Link href="#home" className="text-item">Đăng xuất</Nav.Link>
+                        <Nav.Link onClick={handleLogOut} className="text-item">Đăng xuất</Nav.Link>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import Footer from "../../components/footer/Footer";
 import Header from "../../components/header/Header";
@@ -10,6 +10,15 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam";
 
 export default function Home() {
+  const [username, setUsername] = useState(null);
+  useEffect(() => {
+    const usernameLocal = JSON.parse(localStorage.getItem('username'))
+    if (usernameLocal) {
+      setUsername(usernameLocal);
+    }else {
+      setUsername(null)
+    }
+  }, []);
   const listExam = [
     {
       id: 1,
@@ -60,7 +69,7 @@ export default function Home() {
       <Header />
       <Container>
         <div className="wrap-welcom">
-          <h1 className="title1">Xin chào, ndl22012002!</h1>
+          <h1 className="title1">Xin chào, {username || "bạn"}!</h1>
         </div>
         <div className="part">
           <h2 className="title2">Lịch học hôm nay</h2>
