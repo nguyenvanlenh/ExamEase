@@ -23,6 +23,12 @@ import { Link } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { examNumberService } from "../../services/examNumberService";
 function Examdetail() {
+  const times = {
+    timeExam: [
+      10, 15, 20, 25, 30, 40, 50, 60
+    ]
+  }
+
   const [tabNumber, setTabNumber] = useState(0);
   const handleTabNumber = (number) => {
     setTabNumber(number);
@@ -30,6 +36,12 @@ function Examdetail() {
   
   
   const [examNumber, setExamNumber] = useState()
+  const [time, setTime] = useState(45)
+
+  let data = {
+    id: 1,
+    timeExam: time
+  }
 
   async function dataExamNumber(id) {
     const data = await examNumberService.getExamNumberUser(id);
@@ -121,18 +133,23 @@ function Examdetail() {
                           />
                         </Form>
                         <span className="note">
-                          Giới hạn thời gian để trống để làm bài không giới hạn
+                          Giới hạn thời gian để trống mặc định là 45 phút
                         </span>
 
-                        <Form.Select aria-label="Default select example">
+                        <Form.Select 
+                          aria-label="Default select example"
+                          onChange={(e) => setTime(e.target.value)}
+                          >
                           <option>-- Chọn thời gian --</option>
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
+                          {
+                            times.timeExam.map((item, index) => (
+                              <option key={index} value={item}>{item} phút</option>
+                            ))
+                          }
                         </Form.Select>
-                        <div>
-                          <Button className="btn-custom">Luyện tập</Button>
-                        </div>
+                        
+                        <Link to="/examining" state={data} className="btn-custom">Luyện tập</Link>
+                        
                       </Stack>
                     </Tab>
                     <Tab eventKey="Thảo luận" title="Thảo luận">

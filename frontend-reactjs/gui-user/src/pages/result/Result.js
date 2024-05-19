@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Image, Row, Stack } from "react-bootstrap";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
 import "./Result.scss";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
@@ -13,7 +13,30 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import DangerousIcon from "@mui/icons-material/Dangerous";
+import { examNumberService } from "../../services/examNumberService";
+import { authLocalStorage } from "../../utils/localStorage";
+import { formatTimeHMS } from "../../utils/utilsFunction";
 function Result() {
+  const location = useLocation();
+  const auth = authLocalStorage.get()
+  const { idExamNumber, totalTime } = location.state || {};
+  const [result, setResult] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await examNumberService.submitExamNumberUser(idExamNumber, auth?.userId, totalTime);
+        setResult(data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    
+    console.log(totalTime)
+    console.log(idExamNumber)
+    console.log(formatTimeHMS(totalTime))
+    fetchData();
+  }, [idExamNumber, totalTime, auth?.userId]);
+
   const handleTabNumber = (number) => {};
   return (
     <div id="id-result">
@@ -23,7 +46,7 @@ function Result() {
           <Col md={9} xs={12}>
             <div className="content-block">
               <h1 className="title">
-                Kết quả luyện tập: Practice Set 2023 TOEIC Test 10
+                Kết quả luyện tập: {result?.examName}
               </h1>
               <div className="tab-container">
                 <Stack direction="horizontal" gap={2}>
@@ -51,7 +74,7 @@ function Result() {
                               Kết quả bài thi
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              1/40
+                              {result?.totalCorrect}/{result?.totalQuestion}
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -60,7 +83,7 @@ function Result() {
                               Độ chính xác (#đúng/#tổng)
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              25.0%
+                              {(result?.totalCorrect/ result?.totalQuestion)*100.0}%
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -69,7 +92,7 @@ function Result() {
                               Thời gian hoàn thành
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              0:00:17
+                              {formatTimeHMS(totalTime)}
                             </div>
                           </div>
                         </div>
@@ -78,7 +101,7 @@ function Result() {
                         <div className="d-flex flex-column justify-content-center c2">
                           <CheckCircleIcon className="w-100 my-2 color-done" />
                           <div className="h6 py-1 color-done">Trả lời đúng</div>
-                          <div className="h4 py-1">1</div>
+                          <div className="h4 py-1">{result?.totalCorrect}</div>
                           <div className="h6 py-1">câu hỏi</div>
                         </div>
                       </Col>
@@ -86,7 +109,7 @@ function Result() {
                         <div className="d-flex flex-column justify-content-center c2">
                           <DangerousIcon className="w-100 my-2 color-error" />
                           <div className="h6 py-1 color-error">Trả lời sai</div>
-                          <div className="h4 py-1">1</div>
+                          <div className="h4 py-1">{result?.totalWrong}</div>
                           <div className="h6 py-1">câu hỏi</div>
                         </div>
                       </Col>
@@ -94,15 +117,15 @@ function Result() {
                         <div className="d-flex flex-column justify-content-center c2">
                           <ErrorIcon className="w-100 my-2 color-pass" />
                           <div className="h6 py-1 color-pass">Bỏ qua</div>
-                          <div className="h4 py-1">1</div>
+                          <div className="h4 py-1">{result?.totalSkipped}</div>
                           <div className="h6 py-1">câu hỏi</div>
                         </div>
                       </Col>
                     </Row>
                   </Container>
                   <div className="title-center">Phân tích chi tiết</div>
-                  <div class="table-wrapper">
-                    <table class="table table-striped">
+                  <div className="table-wrapper">
+                    <table className="table table-striped">
                       <thead>
                         <tr>
                           <th style={{ minWidth: "200px" }}>
@@ -120,10 +143,10 @@ function Result() {
                       <tbody>
                         <tr>
                           <td>N/A</td>
-                          <td>1</td>
-                          <td>3</td>
-                          <td>36</td>
-                          <td>25.00%</td>
+                          <td>{result?.totalCorrect}</td>
+                          <td>{result?.totalWrong}</td>
+                          <td>{result?.totalSkipped}</td>
+                          <td>{(result?.totalCorrect/ result?.totalQuestion)*100.0}%</td>
                           <td className="d-flex flex-wrap">
                             <div className="wrap-question color-error">
                               <div className="question">1</div>

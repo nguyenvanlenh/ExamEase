@@ -82,6 +82,14 @@
                 font-size: 18px;
                 background-color: $color-blue_global;
                 margin-top: 18px;
+                color: #fff;
+                padding: 6px 12px;
+                width: 120px;
+                text-align: center;
+                border-radius: 8px;
+                &:hover {
+                    opacity: 0.8;
+                }
             }
 
         }

@@ -42,3 +42,15 @@ export const examiningLocalStorage = {
         localStorage.removeItem('examining');
     }
 }
+
+export const authLocalStorage = {
+    save: (object) => {
+        localStorage.setItem('auth', JSON.stringify(object));
+    },
+    get: () => {
+        return JSON.parse(localStorage.getItem('auth'));
+    },
+    remove: () => {
+        localStorage.removeItem('auth');
+    }
+}

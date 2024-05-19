@@ -5,12 +5,12 @@ import { TYPE_ANSWERS } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { updateQuestion } from "../../redux/slices/listQuestionSlice";
 import { userAnswerService } from "../../services/userAnswerService";
-import { listQuestionLocalStorage } from "../../utils/localStorage";
+import { authLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
 
 function Question(prop) {
   const [auth, setAuth] = useState(false);
   useEffect(() => {
-    const authLocal = JSON.parse(localStorage.getItem('auth'));
+    const authLocal = authLocalStorage.get();
     if (authLocal) {
       setAuth(authLocal);
     }

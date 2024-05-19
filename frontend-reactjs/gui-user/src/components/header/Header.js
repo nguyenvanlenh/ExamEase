@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Nav, NavDropdown } from 'react-bootstrap'
 import imgAccount from '../../data/imgs/user_icon.webp'
 import { Link } from "react-router-dom";
+import { authLocalStorage } from "../../utils/localStorage";
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +13,7 @@ function Header() {
     };
     const [auth, setAuth] = useState(false);
     useEffect(() => {
-      const authLocal = JSON.parse(localStorage.getItem('auth'));
+      const authLocal = authLocalStorage.get();
       if (authLocal?.authenticated) {
         setAuth(authLocal?.authenticated);
       }
