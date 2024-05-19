@@ -5,6 +5,7 @@ import { TYPE_ANSWERS } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { updateQuestion } from "../../redux/slices/listQuestionSlice";
 import { userAnswerService } from "../../services/userAnswerService";
+import { listQuestionLocalStorage } from "../../utils/localStorage";
 
 function Question(prop) {
   const [auth, setAuth] = useState(false);
@@ -13,19 +14,35 @@ function Question(prop) {
     if (authLocal) {
       setAuth(authLocal);
     }
+    setSelectedExam(prop.idAnswerSelected)
   }, []);
-  const [selectedExam, setSelectedExam] = useState(""); // State để lưu trữ giá trị của radio button được chọn
+  const [selectedExam, setSelectedExam] = useState(null); // State để lưu trữ giá trị của radio button được chọn
   const dispatch = useDispatch()
-  const handleExamChange = (event) => {
-    setSelectedExam(event.target.value); // Cập nhật giá trị của state khi người dùng thay đổi radio button
-    console.log("selectedExam", event.target.value);
-    const selected = { idQuestion: prop.id, idAnswer: event.target.value}
-    dispatch(updateQuestion(selected))
 
-    // nộp từng câu(idUser, idOption)
-    // check thêm mới hay là update ở đây
-    userAnswerService.postUserAnswer(auth?.userId, event.target.value)
+  const handleExamChange = (event) => {
+    const idOption = event.target.value
+    const idQuestion = prop.id
+     // Cập nhật giá trị của state khi người dùng thay đổi radio button
+    
+    handleUpdateRedux(idQuestion, idOption)
+    handleRequest(idQuestion, idOption)
+    setSelectedExam(idOption);
   };
+
+  function handleUpdateRedux(idQuestion, idOption) {
+    const selected = { idQuestion: idQuestion, idAnswer: idOption}
+    dispatch(updateQuestion(selected))
+  }
+
+  function handleRequest(idQuestion, idOption) {
+    const question = listQuestionLocalStorage.getById(idQuestion)
+    if(question && selectedExam) {
+      userAnswerService.updateAnswer(auth?.userId, selectedExam, idOption)
+    }else {
+      userAnswerService.postUserAnswer(auth?.userId, idOption)
+    }
+
+  }
 
   return (
     <div id={"q-"+prop.id} className="question-container">
@@ -44,7 +61,7 @@ function Question(prop) {
                 name="answers"
                 id={answer.id}
                 label={TYPE_ANSWERS[index]+". "+ answer.value}
-                // checked={answer.select}s
+                checked={answer.id === prop.idAnswerSelected}
                 onChange={handleExamChange}
                 />
               ))

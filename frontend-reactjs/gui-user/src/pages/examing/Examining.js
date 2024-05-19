@@ -8,7 +8,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { examNumberService } from "../../services/examNumberService";
 import { useDispatch, useSelector } from "react-redux";
-import {  addListQuestion } from "../../redux/slices/listQuestionSlice";
+import {  addListQuestion, addedListQuestion } from "../../redux/slices/listQuestionSlice";
+import { examiningLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
 function Examining() {
   const dispatch = useDispatch()
   const [move, setMove] = useState(false);
@@ -44,19 +45,32 @@ function Examining() {
   };
 
   const [examNumber, setExamNumber] = useState()
-
+  const listQuestion = useSelector((state) => state.listQuestion)
+  // console.log(listQuestion);
   async function dataExamNumber(id) {
+    console.log("goi api")
+
     const data = await examNumberService.getExamNumberUser(id);
+    // setData cho useState, redux, localStorage
     setExamNumber(data.data);
+    examiningLocalStorage.save(data.data);
+
     // fix chỗ này sau
     dispatch(addListQuestion(data.data?.examNumbers[0]?.listQuestions));
   }
   useEffect(() => {
-    // truyền vào id của exam
-    dataExamNumber(1)
+    const id = 1
+    const questions = listQuestionLocalStorage.get();
+    const data = examiningLocalStorage.get();
+    if (questions && data && data.id === id) {
+      setExamNumber(data)
+      dispatch(addedListQuestion(questions))
+    }else {
+      dataExamNumber(id)
+    }
   }, [])
-  const listQuestion = useSelector((state) => state.listQuestion)
-  console.log(listQuestion);
+
+
   return (
     <>
       <Header />

@@ -12,6 +12,7 @@ function ListQuestion(props) {
             id={question.id}
             contentQuestion={question.contentQuestion}
             listAnswers={question.listAnswers}
+            idAnswerSelected={question.idAnswerSelected}
           />
         ))
       }
