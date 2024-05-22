@@ -1,26 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, InputGroup, ProgressBar, Row, Table, FormControl } from 'react-bootstrap';
 import Footer from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
 import { useNavigate } from 'react-router-dom';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { examService } from '../../services/examService';
+import { getDataByKeyLS } from '../../utils/common';
+import { studentService } from '../../services/studentService';
 export const CreateStudent = () => {
     const now = 90;
     const navigate = useNavigate();
-
+    let examSavedId = getDataByKeyLS("examSavedId") ?? 16
+    const [codeGroup, setCodeGroup] = useState("")
     const [file, setFile] = useState(null); // State to track selected file
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
 
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
-            // Handle form submission here (e.g., file upload)
             if (file) {
-                // File handling logic
-                alert(`File "${file.name}" submitted successfully.`);
+                try {
+                    const response = await studentService.createStudent(file, codeGroup);
+                    if (response.status === 201) {
+                        console.log('File uploaded successfully.');
+
+                        // Call createWorkTime if the student file upload is successful
+                        try {
+                            const workTimeResponse = await studentService.createWorkTime(examSavedId);
+                            if (workTimeResponse.status === 200) {
+                                alert(workTimeResponse.message);
+                                // navigate('/');
+                            } else {
+                                alert('Failed to create WorkTime. Please try again.');
+                            }
+                        } catch (error) {
+                            console.error('Error creating WorkTime:', error);
+                            alert('An error occurred while creating WorkTime. Please try again.');
+                        }
+                    } else {
+                        alert('Failed to upload file. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error uploading file:', error);
+                    alert('An error occurred while uploading the file. Please try again.');
+                }
             } else {
                 alert('Please select a file.');
             }
@@ -31,6 +57,33 @@ export const CreateStudent = () => {
         const selectedFile = event.target.files[0];
         setFile(selectedFile);
     };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const data = await examService.getExamById(examSavedId);
+    //         if (data?.status < 400) {
+    //             console.table(data.data);
+    //             setCodeGroup(data.data.codeGroup);
+    //         } else {
+    //             console.table(data.data)
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, [examSavedId]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await studentService.createWorkTime(examSavedId);
+            if (data?.status < 400) {
+                console.table(data.data);
+                setCodeGroup(data.data.codeGroup);
+            } else {
+                console.table(data.data)
+            }
+        };
+
+        fetchData();
+    }, [examSavedId]);
 
     return (
         <>
