@@ -1,8 +1,7 @@
 import React from "react";
 import "./ListBtnQuestion.scss";
-import { dataListQuestion } from "../../data/SampleData";
 
-function ListBtnQuestion() {
+function ListBtnQuestion(props) {
   const handleClick = (questionId) => {
     const questionElement = document.getElementById(`q-${questionId}`);
     if (questionElement) {
@@ -18,10 +17,11 @@ function ListBtnQuestion() {
       });
     }
   };
+  
   return (
     <div className="wrap-question">
-      {dataListQuestion &&
-        dataListQuestion.map((question) => (
+      {props.listQuestion &&
+        props.listQuestion.map((question) => (
           <span
             key={question.id}
             className={`question-item ${question.done && "done"}`}

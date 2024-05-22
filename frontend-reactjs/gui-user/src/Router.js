@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/home/Home";
-import Login from "./pages/Login";
+import Login from "./pages/login/Login";
 import { FormQuestion } from "./pages/FormQuestion/FormQuestion";
 import { CreateExam } from "./pages/CreateExam/CreateExam";
 import { CreateStudent } from "./pages/CreateStudent/CreateStudent";
@@ -10,13 +10,15 @@ import { ResultStatistics } from "./pages/Statistics/ResultStatistics";
 
 import Examdetail from "./pages/examdetail/Examdetail";
 import Examining from "./pages/examing/Examining";
+import Result from "./pages/result/Result";
+import Register from "./pages/register/Register";
 
 
 export const router = createBrowserRouter([
     {
         path: "/",
 
-        element: <FormQuestion />
+        element: <Home />
 
     },
     {
@@ -26,6 +28,11 @@ export const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+
+    },
+    {
+        path: "/register",
+        element: <Register />
 
     }
     ,
@@ -57,6 +64,10 @@ export const router = createBrowserRouter([
     {
         path: "examining",
         element: <Examining />
+     },
+     {
+        path: "/result",
+        element: <Result />
     }
 
 ]);

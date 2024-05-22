@@ -1,18 +1,18 @@
 import React from 'react'
 import Question from '../question/Question'
-import { dataListQuestion } from '../../data/SampleData'
 
-function ListQuestion() {
+function ListQuestion(props) {
   return (
     <>
       {
-        dataListQuestion.length>0 && dataListQuestion.map((question, index) => (
+        props.listQuestion.length>0 && props.listQuestion.map((question, index) => (
           <Question
             key={question.id}
             numberSentence={index}
             id={question.id}
             contentQuestion={question.contentQuestion}
             listAnswers={question.listAnswers}
+            idAnswerSelected={question.idAnswerSelected}
           />
         ))
       }

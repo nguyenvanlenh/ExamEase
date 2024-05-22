@@ -11,6 +11,31 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        .btn-login {
+            background-color: $color-blue_global;
+            border-radius: 20px;
+            padding-top: 4px;
+            a {
+                color: white;
+                text-decoration: none;
+                font-weight: 600;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+    .btn-login-menu {
+        background-color: $color-blue_global;
+        border-radius: 20px;
+        a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        &:hover {
+            opacity: 0.8;
+        }
     }
     .text-item {
         color: $color-gray;
@@ -31,6 +56,9 @@
         display: none;
         padding: 12px 24px;
 
+    }
+    .btn-login-menu {
+        padding: 6px 12px;
     }
     .container-menu:hover {
         opacity: 0.8;
