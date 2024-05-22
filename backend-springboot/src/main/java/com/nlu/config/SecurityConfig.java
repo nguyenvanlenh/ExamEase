@@ -3,10 +3,10 @@ package com.nlu.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;	
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,8 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.nlu.model.enumeration.ERole;
 import com.nlu.security.jwt.JwtAuthenticationFilter;
 
 @Configuration
@@ -34,7 +34,8 @@ public class SecurityConfig{
 			"/api/exams/**",
 			"/api/exam-numbers/**",
 			"/api/user_answers/**",
-			"/api/students/**"
+//			"/api/worktimes/**",
+//			"/api/user_answers/**",
 	};
 	private final static String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
@@ -44,7 +45,7 @@ public class SecurityConfig{
 	};
 	
 	@Autowired private UserDetailsService userDetailsService;
-	
+	@Autowired private CorsConfigurationSource corsConfigurationSource; 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -68,18 +69,15 @@ public class SecurityConfig{
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.disable())
-                .csrf(csrf -> csrf.disable())
-                // không lưu trữ phiên người dùng trên server
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers( PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/students/import")
-                                .hasAnyRole(ERole.TEACHER.toString(), ERole.ROOT.toString())
-                                .anyRequest().authenticated()
-                )
+		 http
+		 	.cors(cors -> cors.configurationSource(corsConfigurationSource))
+			.csrf(csrf -> csrf.disable())
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+			.authorizeHttpRequests(authorize ->
+					authorize.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+							.anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
                 // thêm filter jwt trước usernamepasswordAuthenticationFilter nhằm ưu tiên cho jwt hơn là username - password
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 

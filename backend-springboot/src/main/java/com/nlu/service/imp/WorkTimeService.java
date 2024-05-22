@@ -30,7 +30,7 @@ public class WorkTimeService {
 	private WorkTimeRepository workTimeRepository;
 
 	@Transactional
-	public List<WorkTime> createWorkTime(Long examId) {
+	public boolean createWorkTime(Long examId) {
 		// Lấy thông tin về kỳ thi từ examId
 		Exam exam = examRepository.findById(examId).orElseThrow(() -> new NotFoundException("Exam not found"));
 
@@ -55,7 +55,7 @@ public class WorkTimeService {
 			examNumberIndex = (examNumberIndex + 1) % listExamNumbers.size();
 		}
 
-		return workTimes;
+		return true;
 	}
 
 	private WorkTime createWorkTime(Student student, ExamNumber examNumber) {

@@ -44,6 +44,6 @@ public class ExamNumber {
 	inverseJoinColumns = @JoinColumn(name = "question_id"))
 	private Set<Question> listQuestions;
 	
-	@OneToMany(mappedBy = "examNumber")
+	@OneToMany(mappedBy = "examNumber",cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<WorkTime> listWorkTimes;
 }

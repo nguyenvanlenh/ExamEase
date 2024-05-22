@@ -5,8 +5,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,7 +17,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -54,7 +52,7 @@ public class Exam implements Serializable{
 	@Column(name = "is_public")
 	private boolean isPublic;
 	
-	@OneToMany(mappedBy = "exam",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "exam",fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ExamNumber> examNumbers;
 	
 	@ManyToOne(optional = false)
