@@ -1,6 +1,6 @@
 export const RequestData = () => {
 
-    const ExamRequest = (teacherId, title, shortDescription, description, quantityQuestion, timeId, categoryId, startTime, endTime, isPublic, lisExamNumberRequests, listQuestionRequests) => {
+    const ExamRequest = (teacherId, title, shortDescription, description, quantityQuestion, timeId, categoryId, startTime, endTime, isPublic, listExamNumberRequests, listQuestionRequests) => {
         return {
             teacherId: teacherId,
             title: title,
@@ -12,33 +12,30 @@ export const RequestData = () => {
             startTime: startTime,
             endTime: endTime,
             isPublic: isPublic,
-            lisExamNumberRequests: lisExamNumberRequests,
+            listExamNumberRequests: listExamNumberRequests,
             listQuestionRequests: listQuestionRequests
         };
     }
 
-    const ExamNumberRequest = (id, name) => {
+    const ExamNumberRequest = (name) => {
         return {
-            id: id,
             name: name
         };
     }
-
-    const OptionRequest = (id, content, isCorrect) => {
+    const QuestionRequest = (question, listOptionRequests) => {
         return {
-            id: id,
+            question: question,
+            listOptionRequests: listOptionRequests
+        };
+    }
+    const OptionRequest = (content, isCorrect) => {
+        return {
             content: content,
             isCorrect: isCorrect
         };
     }
 
-    const QuestionRequest = (id, question, listOptionRequests) => {
-        return {
-            id: id,
-            question: question,
-            listOptionRequests: listOptionRequests
-        };
-    }
+
 
     const LoginRequest = (username, password) => {
         return {

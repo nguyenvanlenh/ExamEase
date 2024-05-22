@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +28,8 @@ public class ExamController {
 	@Autowired private ExamService examService;
 
 	@PostMapping
-	@ResponseStatus()
 	public ResponseData createExam(@RequestBody ExamRequest request) {
+		System.out.println(request.getListExamNumberRequests().size());
 		Long data = examService.createExam(request);
 		return ResponseData.builder()
 				.status(HttpStatus.CREATED.value())
@@ -68,6 +69,31 @@ public class ExamController {
 				 .status(HttpStatus.OK.value())
 				 .message("Exam data by category & key word")
 				 .data(data)
+				 .build();
+	}
+	@GetMapping("/{id}")
+	public ResponseData getExam(@PathVariable Long id) {
+		 return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Exam data")
+				 .data(examService.getExamById(id))
+				 .build();
+	}
+
+	@GetMapping("/all")
+	public ResponseData getExams() {
+		return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Exams data")
+				 .data(examService.getAllExams())
+				 .build();
+	}
+	@DeleteMapping("/{examId}")
+	public ResponseData deleteExam(@PathVariable Long examId) {
+		examService.deleteExam(examId);
+		return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Exams deleted successfully")
 				 .build();
 	}
 }
