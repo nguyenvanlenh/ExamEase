@@ -1,29 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, ProgressBar, Row, Stack } from 'react-bootstrap';
 import FormOption from '../../components/FormOption/FormOption';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { Link, useNavigate } from "react-router-dom";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { RequestData } from '../../utils/request';
+import { useSelector, useDispatch } from 'react-redux';
+import { scrollToElement, setDataByKeyLS } from '../../utils/common';
+import { updateCreateExamRequest } from '../../redux/slices/examSlice';
+import { examService } from '../../services/examService';
 export const FormQuestion = () => {
-    const arr = new Array(40).fill(0);
     const now = 60;
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
+    const requestData = RequestData();
+    const dispatch = useDispatch();
+    const examRequest = useSelector(state => state.exams);
+    let examTemp = examRequest[0];
+    const arr = new Array(examRequest[0]?.quantityQuestion).fill(0);
 
-    // Handler to collect form data from FormOption and add to questions array
     const handleQuestionSubmit = (questionData) => {
-        setQuestions((prevQuestions) => [...prevQuestions, questionData]);
+        const question = requestData.QuestionRequest(
+            questionData.question,
+            [requestData.OptionRequest(questionData.correctAnswer, true),
+            requestData.OptionRequest(questionData.incorrectAnswers[0] ?? "", false),
+            requestData.OptionRequest(questionData.incorrectAnswers[1] ?? "", false),
+            requestData.OptionRequest(questionData.incorrectAnswers[2] ?? "", false),
+            ]
+        );
+        setQuestions((prevQuestions) => [...prevQuestions, question]);
     };
 
     // Handler to save all questions
-    const handleSaveAllQuestions = () => {
-        // Update state to indicate saving process has started
+    const handleSaveAllQuestions = async () => {
+        examTemp = {
+            ...examTemp,
+            listQuestionRequests: questions
+        }
         setIsSaving(true);
-        navigate("/create-student")
-    };
+        if (questions.length === examRequest[0]?.quantityQuestion)
+            dispatch(updateCreateExamRequest(questions))
 
+        const data = await examService.createExam(examTemp)
+        if (data?.status < 400) {
+            console.log("Data saved: " + data.data)
+            setDataByKeyLS("examSavedId", data.data)
+            // navigate("/create-student")
+        } else {
+            console.error(data.data)
+        }
+    };
     // Handler to be called by FormOption components to notify that they have saved a question
     const handleQuestionSaved = () => {
         // Perform any additional actions after a question is saved
@@ -32,24 +60,6 @@ export const FormQuestion = () => {
     };
 
     const [completedQuestions, setCompletedQuestions] = useState(new Array(arr.length).fill(false));
-
-
-
-    const scrollToElement = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            const { top, height } = element.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-            const offset = top - (windowHeight - height) / 2;
-
-            window.scrollTo({
-                top: offset,
-                behavior: 'smooth'
-            });
-        }
-    };
-
-
     return (
         <>
             <Header />
@@ -67,14 +77,13 @@ export const FormQuestion = () => {
                         </Stack>
                     </Row>
                     <Row>
-                        <Col md={9}
-                        // style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '20px' }}
-                        >
+                        <Col md={9}>
                             <Row>
                                 {
-                                    arr.map((item, index) => {
+                                    arr?.map((item, index) => {
                                         return (
                                             <FormOption
+                                                key={index}
                                                 questionNumber={index + 1}
                                                 handleQuestionSubmit={handleQuestionSubmit}
                                                 isSaving={isSaving}

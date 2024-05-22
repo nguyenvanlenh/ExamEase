@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
     {
         path: "/",
 
-        element: <Home />
+        element: <FormQuestion />
 
     },
     {
@@ -43,6 +43,10 @@ export const router = createBrowserRouter([
         element: <CreateStudent />
     },
     {
+        path: "/statistics",
+        element: <ResultStatistics />
+    },
+    {
         path: "/list-exams",
         element: <ListExams />
     },
@@ -50,10 +54,10 @@ export const router = createBrowserRouter([
         path: "/exam-detail",
         element: <Examdetail />
     },
-     {
+    {
         path: "examining",
         element: <Examining />
-     }
+    }
 
 ]);
 

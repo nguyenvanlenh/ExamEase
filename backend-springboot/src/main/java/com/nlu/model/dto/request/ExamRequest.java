@@ -24,7 +24,7 @@ public class ExamRequest {
 	Timestamp startTime;
 	Timestamp endTime;
 	Boolean isPublic;
-	List<ExamNumberRequest> lisExamNumberRequests;
+	List<ExamNumberRequest> listExamNumberRequests;
 	List<QuestionRequest> listQuestionRequests;
 
 	public static void setForEntity(Exam exam, ExamRequest request) {
@@ -35,7 +35,7 @@ public class ExamRequest {
 		exam.setQuantityQuestion(request.getQuantityQuestion());
 		exam.setStartTime(request.getStartTime());
 		exam.setEndTime(request.getEndTime());
-		exam.setExamNumbers(ExamNumberRequest.toEntities(request.getLisExamNumberRequests()));
+		exam.setExamNumbers(ExamNumberRequest.toEntities(request.getListExamNumberRequests()));
 	}
 	
 	

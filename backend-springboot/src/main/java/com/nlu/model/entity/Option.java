@@ -2,8 +2,10 @@ package com.nlu.model.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,8 +41,8 @@ public class Option {
 	@ManyToOne
 	@JoinColumn(name="question_id")
 	private Question question;
-	
-//	@OneToMany(mappedBy = "option")
-//	private Set<UserAnswer> listUserAnswers;
+	@JsonBackReference
+	@OneToMany(mappedBy = "option",cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<UserAnswer> listUserAnswers;
 	
 }

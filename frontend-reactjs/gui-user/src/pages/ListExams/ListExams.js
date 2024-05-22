@@ -3,7 +3,7 @@ import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
 import Footer from "../../components/footer/Footer"
 import Header from "../../components/header/Header"
-import { Button, Form, Image, InputGroup, Nav, NavDropdown, Pagination, Row, Stack } from "react-bootstrap"
+import { Button, Form, Image, InputGroup, ListGroup, Nav, NavDropdown, Pagination, Row, Stack } from "react-bootstrap"
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam"
 import { useState } from "react"
@@ -20,6 +20,9 @@ export const ListExams = () => {
         { label: "Tất cả", data: "" },
         { label: "Đề rút gọn", data: "" },
     ];
+    const [searchQuery, setSearchQuery] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
 
 
@@ -34,33 +37,6 @@ export const ListExams = () => {
         }
     }
 
-    // handleLogin(loginRequest)
-
-    const registerRequest = requestData.RegisterRequest(
-        "nguyenvanlenh",
-        "123456789",
-        "vanlenh2k@gmail.com",
-        []);
-    const handleRegister = async (requestData) => {
-        const data = await authService.register(requestData);
-        if (data?.status < 400) {
-            console.log(data.data.data)
-        } else {
-            console.table(data.data)
-        }
-    }
-
-    // handleRegister(registerRequest)
-    const [isPublic, setPublic] = useState(false);
-    const handleUpdatePublic = async (isPublic) => {
-        const data = await examService.updatePublic("ds", isPublic)
-        if (data?.status < 400) {
-            console.log(data)
-        } else {
-            console.error(data.data)
-        }
-    }
-    handleUpdatePublic(isPublic)
 
     const handleSearch = () => {
         console.log('Perform search...');
@@ -68,6 +44,29 @@ export const ListExams = () => {
 
     const handleTabChange = (tabIndex) => {
         setActiveTab(tabIndex);
+    };
+    const fetchSuggestions = async (query) => {
+        // try {
+        //     const response = await axios.get(`/api/exams/suggestions?query=${query}`);
+        //     if (response.status === 200) {
+        //         setSuggestions(response.data);
+        //         setShowSuggestions(true);
+        //     }
+        // } catch (error) {
+        //     console.error('Error fetching suggestions:', error);
+        // }
+    };
+
+    const handleInputChange = (event) => {
+        const query = event.target.value;
+        setSearchQuery(query);
+        if (query.length > 0) {
+            // fetchSuggestions(query);
+            setShowSuggestions(true);
+        } else {
+            setSuggestions([]);
+            setShowSuggestions(false);
+        }
     };
     return (
         <>
@@ -135,15 +134,30 @@ export const ListExams = () => {
                                     <Link to="/" className="test-book " href="/">2022</Link>
                                     <Link to="/" className="test-book " href="/">2021</Link>
                                 </div>
-
-                                <InputGroup className="mb-3">
-                                    <Form.Control
-                                        placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên đề thi ..."
-                                    />
-                                    <Button variant="secondary" onClick={handleSearch}>
-                                        Tìm kiếm
-                                    </Button>
-                                </InputGroup>
+                                <div className="position-relative">
+                                    <InputGroup className="mb-3">
+                                        <Form.Control
+                                            placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên đề thi ..."
+                                            value={searchQuery}
+                                            onChange={handleInputChange}
+                                        />
+                                        <Button variant="secondary" onClick={handleSearch}>
+                                            Tìm kiếm
+                                        </Button>
+                                    </InputGroup>
+                                    {showSuggestions && (
+                                        <ListGroup className="position-absolute w-100" style={{ zIndex: 9999 }}>
+                                            {/* {suggestions.map((suggestion, index) => (
+                                                <ListGroup.Item key={index}>
+                                                    {suggestion.name}
+                                                </ListGroup.Item>
+                                            ))} */}
+                                            <ListGroup.Item>Bài thi môn toán</ListGroup.Item>
+                                            <ListGroup.Item>Đề toeic trung tâm đh Nông Lâm S306</ListGroup.Item>
+                                            <ListGroup.Item>Đề toeic trung tâm đh Nông Lâm S306</ListGroup.Item>
+                                        </ListGroup>
+                                    )}
+                                </div>
 
                             </div>
                         </Row>

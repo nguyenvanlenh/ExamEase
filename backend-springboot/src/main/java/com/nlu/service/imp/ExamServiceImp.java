@@ -92,7 +92,7 @@ public class ExamServiceImp implements ExamService {
 		exam.setEndTime(request.getEndTime());
 		Exam examSaved = examRepository.save(exam);
 
-		List<ExamNumber> listExamNumbers = request.getLisExamNumberRequests().stream().map(itemExamNumber -> {
+		List<ExamNumber> listExamNumbers = request.getListExamNumberRequests().stream().map(itemExamNumber -> {
 			ExamNumber examNumber = new ExamNumber();
 			examNumber.setName(itemExamNumber.getName());
 			examNumber.setExam(examSaved);
@@ -112,8 +112,8 @@ public class ExamServiceImp implements ExamService {
 	}
 
 	// save options with related question
-	private List<Option> saveOption(Question question, List<OptionRequest> lisOptionRequests) {
-		List<Option> listOptions = lisOptionRequests.stream().map(itemOption -> {
+	private List<Option> saveOption(Question question, List<OptionRequest> listOptionRequests) {
+		List<Option> listOptions = listOptionRequests.stream().map(itemOption -> {
 			Option option = new Option();
 			option.setQuestion(question);
 			option.setNameOption(itemOption.getContent());
