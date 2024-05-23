@@ -23,67 +23,74 @@ import { Link, useNavigate } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { examNumberService } from "../../services/examNumberService";
 import { workTimeService } from "../../services/workTimeService";
-import { authLocalStorage, examiningLocalStorage } from "../../utils/localStorage";
+import {
+  authLocalStorage,
+  examiningLocalStorage,
+} from "../../utils/localStorage";
 import { checkExaminingSwal } from "../../utils/mySwal";
 import { useDispatch } from "react-redux";
 import { addListQuestion } from "../../redux/slices/listQuestionSlice";
 function Examdetail() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const auth = authLocalStorage.get("auth");
   const times = {
-    timeExam: [
-      10, 15, 20, 25, 30, 40, 50, 60
-    ]
-  }
+    timeExam: [10, 15, 20, 25, 30, 40, 50, 60],
+  };
 
   const [tabNumber, setTabNumber] = useState(0);
   const handleTabNumber = (number) => {
     setTabNumber(number);
   };
-  
-  const [examNumber, setExamNumber] = useState()
-  const [time, setTime] = useState(45)
-  const id = 1
+
+  const [examNumber, setExamNumber] = useState();
+  const [time, setTime] = useState(45);
+  const id = 1;
 
   async function dataExamNumber(id) {
     const data = await examNumberService.getExamNumberUser(id);
     setExamNumber(data.data);
-    console.log(data.data)
+    console.log(data.data);
   }
   useEffect(() => {
-    dataExamNumber(id)
-  }, [])
+    dataExamNumber(id);
+  }, []);
 
   const handleSubmit = async () => {
     try {
       // Directly call the service and handle the result
-      const workTime = await workTimeService.addWorkTimeUser(auth?.userId, id, time);
+      const workTime = await workTimeService.addWorkTimeUser( auth?.userId, id, time );
       const data = await examNumberService.getExamNumberUser(id);
-      // setData cho redux, localStorage
-      examiningLocalStorage.save(data.data);
-  
-      // fix chỗ này sau
-      dispatch(addListQuestion(data.data?.examNumbers[0]?.listQuestions));
-      
+
       if (workTime?.data) {
         console.log("tao thanh cong");
-        navigate('/examining');
+        setData(data)
+        navigate("/examining");
       } else {
         console.log("Failed to add work time");
         const isConfirmed = await checkExaminingSwal();
         if (isConfirmed) {
-          console.log("xóa")
           // gọi api xóa dữ liệu
-          // navigate('/examining', { state: data });
+          await workTimeService.removeWorkTimeAndUserAnswerUser(id, auth?.userId);
+          await workTimeService.addWorkTimeUser(auth?.userId, id, time);
+          setData(data)
+          console.log("xóa");
+          
+          navigate("/examining");
         }
       }
     } catch (error) {
       console.error("Error adding work time:", error);
     }
   };
-  
-  
+
+  function setData(data) {
+    // setData cho redux, localStorage
+    examiningLocalStorage.save(data.data);
+    // fix chỗ này sau
+    dispatch(addListQuestion(data.data?.examNumbers[0]?.listQuestions));
+  }
+
   return (
     <div id="id-examdetail">
       <Header />
@@ -132,15 +139,14 @@ function Examdetail() {
                     </li>
                     <li>105537 người đã luyện tập đề thi này</li>
                   </ul>
-                  {
-                    examNumber?.category === "Anh văn" && 
-                    (<div className="notify">
-                    Chú ý: để được quy đổi sang scaled score (ví dụ trên thang
-                    điểm 990 cho TOEIC hoặc 9.0 cho IELTS), vui lòng chọn chế độ
-                    làm FULL TEST.
-                  </div>)
-                  }
-                  
+                  {examNumber?.category === "Anh văn" && (
+                    <div className="notify">
+                      Chú ý: để được quy đổi sang scaled score (ví dụ trên thang
+                      điểm 990 cho TOEIC hoặc 9.0 cho IELTS), vui lòng chọn chế
+                      độ làm FULL TEST.
+                    </div>
+                  )}
+
                   <Tabs
                     defaultActiveKey="luyentap"
                     id="uncontrolled-tab-example"
@@ -168,23 +174,21 @@ function Examdetail() {
                           Giới hạn thời gian để trống mặc định là 45 phút
                         </span>
 
-                        <Form.Select 
+                        <Form.Select
                           aria-label="Default select example"
                           onChange={(e) => setTime(e.target.value)}
-                          >
+                        >
                           <option>-- Chọn thời gian --</option>
-                          {
-                            times.timeExam.map((item, index) => (
-                              <option key={index} value={item}>{item} phút</option>
-                            ))
-                          }
+                          {times.timeExam.map((item, index) => (
+                            <option key={index} value={item}>
+                              {item} phút
+                            </option>
+                          ))}
                         </Form.Select>
-                        
-                        <Button 
-                          className="btn-custom"
-                          onClick={handleSubmit}
-                          >Luyện tập</Button>
-                        
+
+                        <Button className="btn-custom" onClick={handleSubmit}>
+                          Luyện tập
+                        </Button>
                       </Stack>
                     </Tab>
                     <Tab eventKey="Thảo luận" title="Thảo luận">

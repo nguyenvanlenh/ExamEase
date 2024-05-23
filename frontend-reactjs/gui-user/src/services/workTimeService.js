@@ -47,6 +47,21 @@ export const workTimeService = {
                 console.log(error.response?.data.message)
                 return error.response
             })
+    },
+    removeWorkTimeAndUserAnswerUser: (examNumberId, userId) => {
+        const url = `${URL_PATH}/api/worktimes/users/${userId}/exam-number/${examNumberId}`
+        return axios.delete(url, {
+            headers: {
+                Authorization: `Bearer ${auth?.token}`
+            }
+        })
+           .then(response => {
+                return response.data;
+            })
+           .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
     }
 
 }

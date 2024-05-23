@@ -75,7 +75,7 @@ function Result() {
                               Kết quả bài thi
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {result?.totalCorrect}/{result?.totalQuestion}
+                              {result ? result?.totalCorrect : 0}/{result ? result?.totalQuestion : 0}
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -84,7 +84,7 @@ function Result() {
                               Độ chính xác (#đúng/#tổng)
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {(result?.totalCorrect/ result?.totalQuestion)*100.0}%
+                              {result ? (result?.totalCorrect/ result?.totalQuestion)*100.0 : 0}%
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
