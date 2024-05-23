@@ -1,6 +1,8 @@
 package com.nlu.service.imp;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,9 @@ import com.nlu.exception.NotFoundException;
 import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.ExamNumber;
 import com.nlu.model.entity.Student;
+import com.nlu.model.entity.User;
 import com.nlu.model.entity.WorkTime;
+import com.nlu.repository.ExamNumberRepository;
 import com.nlu.repository.ExamRepository;
 import com.nlu.repository.StudentRepository;
 import com.nlu.repository.UserRepository;
@@ -28,6 +32,8 @@ public class WorkTimeService {
 	private StudentRepository studentRepository;
 	@Autowired
 	private WorkTimeRepository workTimeRepository;
+	@Autowired
+    private ExamNumberRepository examNumberRepository;
 
 	@Transactional
 	public boolean createWorkTime(Long examId) {
@@ -70,5 +76,49 @@ public class WorkTimeService {
 		return workTimeRepository.save(workTime);
 	}
 	
+	public boolean addWorkTimeByUser(Long userId, Integer examNumberId , Integer timeExam) {
+
+		WorkTime workTimeCheck = getWorkTimeByUser(userId, examNumberId);
+		if(workTimeCheck != null) return false;
+
+		Timestamp beginExam = new Timestamp(System.currentTimeMillis()); 
+		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("user not found"));
+		ExamNumber examNumber = examNumberRepository.findById(examNumberId).orElseThrow(() -> new RuntimeException("exam not found"));
+		WorkTime workTime = new WorkTime();
+		workTime.setUser(user);
+		workTime.setExamNumber(examNumber);
+		workTime.setBeginExam(beginExam);
+		workTime.setEndExam(new Timestamp(beginExam.getTime() + timeExam*60000));
+		return workTimeRepository.save(workTime) != null;
+	}
+
+	public WorkTime getWorkTimeByUser(Long userId, Integer examNumberId) {
+		return workTimeRepository.findByUser_IdAndExamNumber_Id(userId, examNumberId);
+	}
+
+	public boolean updateEndExamWorkTimeByUser(Long userId, Integer examNumberId, Timestamp endExam) {
+		    // Find the existing WorkTime entry
+			WorkTime workTime = getWorkTimeByUser(userId, examNumberId);
+    
+			if (workTime == null) {
+				return false;
+			}
+			workTime.setEndExam(endExam);
+			return workTimeRepository.save(workTime) != null;
+	}
+
+	public boolean removeWorkTimeByUser(Long userId, Integer examNumberId) {
+		 // Find the existing WorkTime entry
+		 WorkTime workTime = getWorkTimeByUser(userId, examNumberId);
+		 if (workTime == null) {
+			 return false;
+		 }
+		 try {
+			workTimeRepository.delete(workTime);
+		 } catch (Exception e) {
+			return false;
+		 }
+		 return true;
+	}
 
 }
