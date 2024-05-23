@@ -1,15 +1,12 @@
 package com.nlu.controller;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.List;
 
+import com.nlu.service.UserAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +20,6 @@ import com.nlu.service.imp.WorkTimeService;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -33,6 +29,8 @@ public class WorkTimeController {
 
 	@Autowired
 	private WorkTimeService workTimeService;
+	@Autowired
+	private UserAnswerService userAnswerService;
 
 	@PostMapping("/{examId}")
 	public ResponseData createWorkTime(@PathVariable(name = "examId") Long examId) {
@@ -97,18 +95,19 @@ public class WorkTimeController {
                 .build();
     }
 	@Transactional
+	@Modifying
 	@DeleteMapping("/users/{userId}/exam-number/{examNumberId}")
-	public ResponseData removeWorkTimeById(
+	public ResponseData removeWorkTimeAndUserAnswer(
 			@PathVariable(name = "userId") Long userId,
 			@PathVariable(name = "examNumberId") Integer examNumberId) {
 		// remove work time
-		boolean data = workTimeService.removeWorkTimeByUser(userId, examNumberId);
-		// remove user anwsers
-		
+		boolean removeWorkTime = workTimeService.removeWorkTimeByUser(userId, examNumberId);
+		// remove user answer
+		boolean removeUserAnswer = userAnswerService.removeAnswerUser(examNumberId, userId);
 		return ResponseData.builder()
 				.status(HttpStatus.OK.value())
-				.message("Data work time by id user and id exam number")
-				.data(data)
+				.message("Delete successfully!")
+				.data(removeWorkTime && removeUserAnswer)
 				.build();
 	}
 }
