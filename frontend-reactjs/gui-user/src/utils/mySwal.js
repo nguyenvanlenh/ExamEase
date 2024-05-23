@@ -15,3 +15,27 @@ export const submitExaminingSwal = () => {
       return result.isConfirmed; // Trả về kết quả từ SweetAlert2
   });
 };
+
+export const checkExaminingSwal = () => {
+  return MySwal.fire({
+      title: "Xác nhận làm lại",
+      text: "Bạn đã làm bài này rồi, có chắc chắn làm lại bài tập này?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Đồng ý",
+      cancelButtonText: "Hủy",
+      reverseButtons: true,
+  }).then((result) => {
+      return result.isConfirmed; // Trả về kết quả từ SweetAlert2
+  });
+};
+
+export const errorSwal = () => {
+  return MySwal.fire({
+      title: "Lỗi",
+      text: "Đã có lỗi xảy ra",
+      icon: "error",
+  }).then((result) => {
+      return result.isConfirmed; // Trả về kết quả từ SweetAlert2
+  });
+};

@@ -15,27 +15,28 @@ import ErrorIcon from "@mui/icons-material/Error";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { examNumberService } from "../../services/examNumberService";
 import { authLocalStorage } from "../../utils/localStorage";
-import { formatTimeHMS } from "../../utils/utilsFunction";
+import { calculateDurationInSeconds, formatTimeHMS } from "../../utils/utilsFunction";
+import { workTimeService } from "../../services/workTimeService";
 function Result() {
   const location = useLocation();
   const auth = authLocalStorage.get()
-  const { idExamNumber, totalTime } = location.state || {};
+  const { idExamNumber } = location.state || {};
   const [result, setResult] = useState(null);
+  const [totalTime, setTotalTime] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await examNumberService.submitExamNumberUser(idExamNumber, auth?.userId, totalTime);
+        const data = await examNumberService.getResultExamNumberUser(idExamNumber, auth?.userId);
         setResult(data.data);
+        const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber);
+        setTotalTime(calculateDurationInSeconds(workTime?.data.beginExam, workTime?.data.endExam))
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    
-    console.log(totalTime)
-    console.log(idExamNumber)
-    console.log(formatTimeHMS(totalTime))
     fetchData();
-  }, [idExamNumber, totalTime, auth?.userId]);
+    
+  }, []);
 
   const handleTabNumber = (number) => {};
   return (
