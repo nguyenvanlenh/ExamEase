@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nlu.model.dto.response.ResponseData;
+import com.nlu.model.entity.WorkTime;
 import com.nlu.service.imp.WorkTimeService;
 
 import jakarta.transaction.Transactional;
