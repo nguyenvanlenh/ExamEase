@@ -11,4 +11,12 @@ export const formatTimeMS = (seconds) => {
   
     return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
+
+  export const calculateDurationInSeconds = (beginExam, endExam) => {
+    const beginDate = new Date(beginExam);
+    const endDate = new Date(endExam);
+    const durationInMilliseconds = endDate - beginDate;
+    const durationInSeconds = Math.round(durationInMilliseconds / 1000);
+    return durationInSeconds;
+  };
   

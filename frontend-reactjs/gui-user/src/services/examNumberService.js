@@ -23,8 +23,8 @@ export const examNumberService = {
                 return error.response
             })
     },
-    submitExamNumberUser: (idExamNumber, idUser, totalTime) => {
-        const url = `${URL_PATH}/api/exam-numbers/users/submit/${idExamNumber}?idUser=${idUser}&totalTime=${totalTime}`
+    getResultExamNumberUser: (idExamNumber, idUser) => {
+        const url = `${URL_PATH}/api/exam-numbers/users/submit/${idExamNumber}?idUser=${idUser}`
         return axios.get(url)
             .then(response => {
                 return response.data;

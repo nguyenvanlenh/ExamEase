@@ -4,18 +4,25 @@ import Header from "../../components/header/Header";
 import { Button, CloseButton } from "react-bootstrap";
 import ListQuestion from "../../components/listQuestion/ListQuestion";
 import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
-import { examNumberService } from "../../services/examNumberService";
 import { useDispatch, useSelector } from "react-redux";
-import {  addListQuestion, addedListQuestion } from "../../redux/slices/listQuestionSlice";
-import { examiningLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
+import { addedListQuestion } from "../../redux/slices/listQuestionSlice";
+import { authLocalStorage, examiningLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
 import { submitExaminingSwal } from "../../utils/mySwal";
-import { useLocation, useNavigate } from "react-router-dom";
-import { formatTimeMS } from "../../utils/utilsFunction";
+import { useNavigate } from "react-router-dom";
+import { calculateDurationInSeconds, formatTimeMS } from "../../utils/utilsFunction";
+import { workTimeService } from "../../services/workTimeService";
 function Examining() {
+  const auth = authLocalStorage.get("auth");
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [move, setMove] = useState(false);
   const [part, setPart] = useState(false);
+    // set time vao day, 100 la phut mac dinh
+  const [time, setTime] = useState(100 * 60);
+  const [examNumber, setExamNumber] = useState()
+  const listQuestion = useSelector((state) => state.listQuestion)
+  const questions = listQuestionLocalStorage.get();
+  const data = examiningLocalStorage.get();
   useEffect(() => {
     const handleScroll = () => {
       window.scrollY > 32 ? setMove(true) : setMove(false);
@@ -29,43 +36,28 @@ function Examining() {
     setPart(!part);
   };
   const handleSubmit = async () => {
-    const totalTime = timeExam*60 - time
     const isConfirmed = await submitExaminingSwal();
     if (isConfirmed) {
-      navigate('/result', { state: { idExamNumber: id ,totalTime: totalTime} });
+      // update endExam workTime
+      await workTimeService.updateWorkTimeUser(auth?.userId, data.examNumbers[0].id,new Date().toISOString())
+      navigate('/result', { state: { idExamNumber: data.examNumbers[0].id } });
       examiningLocalStorage.remove();
       listQuestionLocalStorage.remove(); 
     }
   };
 
-  const location = useLocation();
-  const { id, timeExam } = location.state || {};
-
-  const [examNumber, setExamNumber] = useState()
-  const listQuestion = useSelector((state) => state.listQuestion)
-  // console.log(listQuestion);
-  async function dataExamNumber(id) {
-    console.log("goi api")
-
-    const data = await examNumberService.getExamNumberUser(id);
-    // setData cho useState, redux, localStorage
-    setExamNumber(data.data);
-    examiningLocalStorage.save(data.data);
-
-    // fix chỗ này sau
-    dispatch(addListQuestion(data.data?.examNumbers[0]?.listQuestions));
+  async function getTime(idUser, idExamNumber) { 
+    const workTime = await workTimeService.getWorkTimeUser(idUser, idExamNumber);
+    const now = new Date();
+    setTime(calculateDurationInSeconds(now, workTime?.data.endExam))
   }
+  
   useEffect(() => {
-    const questions = listQuestionLocalStorage.get();
-    const data = examiningLocalStorage.get();
-    if (questions && data && data.id === id) {
-      setExamNumber(data)
-      dispatch(addedListQuestion(questions))
-    }else {
-      dataExamNumber(id)
-    }
+    getTime(auth?.userId , data.examNumbers[0].id)
+    setExamNumber(data)
+    dispatch(addedListQuestion(questions))
   }, [])
-  const [time, setTime] = useState(timeExam * 60);
+
 
   useEffect(() => {
     if (time > 0) {
@@ -78,7 +70,7 @@ function Examining() {
     } else {
       // Hiển thị thông báo khi hết thời gian
       console.log("Hết giờ");
-      navigate('/result', { state: { idExamNumber: id ,totalTime: timeExam*60} });
+      navigate('/result', { state: { idExamNumber: data.examNumbers[0].id } });
       examiningLocalStorage.remove();
       listQuestionLocalStorage.remove();
     }

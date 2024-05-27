@@ -6,4 +6,6 @@ public interface UserAnswerService {
 
     void saveAnswerStudent(Long idStudent, Long idOption);
     void updateAnswerStudent(Long idStudent, Long idOptionFirst, Long idOptionLast);
+
+    boolean removeAnswerUser(Integer idExamNumber, Long idUser);
 }

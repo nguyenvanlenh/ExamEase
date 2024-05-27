@@ -15,27 +15,28 @@ import ErrorIcon from "@mui/icons-material/Error";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { examNumberService } from "../../services/examNumberService";
 import { authLocalStorage } from "../../utils/localStorage";
-import { formatTimeHMS } from "../../utils/utilsFunction";
+import { calculateDurationInSeconds, formatTimeHMS } from "../../utils/utilsFunction";
+import { workTimeService } from "../../services/workTimeService";
 function Result() {
   const location = useLocation();
   const auth = authLocalStorage.get()
-  const { idExamNumber, totalTime } = location.state || {};
+  const { idExamNumber } = location.state || {};
   const [result, setResult] = useState(null);
+  const [totalTime, setTotalTime] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await examNumberService.submitExamNumberUser(idExamNumber, auth?.userId, totalTime);
+        const data = await examNumberService.getResultExamNumberUser(idExamNumber, auth?.userId);
         setResult(data.data);
+        const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber);
+        setTotalTime(calculateDurationInSeconds(workTime?.data.beginExam, workTime?.data.endExam))
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    
-    console.log(totalTime)
-    console.log(idExamNumber)
-    console.log(formatTimeHMS(totalTime))
     fetchData();
-  }, [idExamNumber, totalTime, auth?.userId]);
+    
+  }, []);
 
   const handleTabNumber = (number) => {};
   return (
@@ -74,7 +75,7 @@ function Result() {
                               Kết quả bài thi
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {result?.totalCorrect}/{result?.totalQuestion}
+                              {result ? result?.totalCorrect : 0}/{result ? result?.totalQuestion : 0}
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -83,7 +84,7 @@ function Result() {
                               Độ chính xác (#đúng/#tổng)
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {(result?.totalCorrect/ result?.totalQuestion)*100.0}%
+                              {result ? (result?.totalCorrect/ result?.totalQuestion)*100.0 : 0}%
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
