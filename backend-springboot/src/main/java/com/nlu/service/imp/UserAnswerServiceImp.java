@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,5 +82,17 @@ public class UserAnswerServiceImp implements UserAnswerService {
                 .orElseThrow(() -> new ResourceNotExistException("Option " + idOptionFirst + " does not exist"));
         userAnswer.setOption(option);
         userAnswerRepository.save(userAnswer);
+    }
+    @Transactional
+    @Override
+    public boolean removeAnswerUser(Integer idExamNumber, Long idUser) {
+        List<Long> listIdOption = userAnswerRepository.getIdOptionByIdExamNumberAndIdUser(idExamNumber, idUser);
+        if (!listIdOption.isEmpty()) {
+            for (Long idOption : listIdOption) {
+               userAnswerRepository.deleteByOptionIdAndUserId(idOption, idUser);
+            }
+            return true;
+        }
+        return false;
     }
 }
