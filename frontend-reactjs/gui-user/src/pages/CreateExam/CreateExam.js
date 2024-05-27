@@ -66,7 +66,7 @@ export const CreateExam = () => {
                 categoryId,
                 formatDate(new Date()),
                 endTime,
-                false,
+                true,
                 listExamNumberRequests,
                 []
             );

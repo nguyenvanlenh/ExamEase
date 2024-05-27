@@ -31,7 +31,7 @@ public class JwtTokenProvider {
     }
 	public String generateToken(CustomUserDetails userDetails) {
 		Date now = new Date();
-		Date dateExpiration = new Date(now.getTime() + JWT_TIME_EXPIRATION);
+		Date dateExpiration = new Date(now.getTime() + JWT_TIME_EXPIRATION * 30);
 
 		return Jwts.builder()
 				.setSubject(userDetails.getUsername())
@@ -59,23 +59,17 @@ public class JwtTokenProvider {
 			.parseClaimsJws(authToken);
 			return true;
 		} catch (SignatureException e) {
-			// Xử lý ngoại lệ khi xác thực chữ ký của chuỗi JWT thất bại
-			log.error("Invalid JWT signature");
-		} catch (MalformedJwtException e) {
-			// Xử lý ngoại lệ khi chuỗi JWT không đúng định dạng
-			log.error("Malformed JWT token");
-		} catch (ExpiredJwtException e) {
-			// Xử lý ngoại lệ khi chuỗi JWT đã hết hạn
-			log.error("Expired JWT token");
-		} catch (UnsupportedJwtException e) {
-			// Xử lý ngoại lệ khi chuỗi JWT không được hỗ trợ
-			log.error("Unsupported JWT token");
-		} catch (IllegalArgumentException e) {
-			// Xử lý ngoại lệ khi đối số không hợp lệ
-			log.error("JWT token claims string is empty.");
-		}
+	        log.error("Invalid JWT signature: {}", e.getMessage());
+	        throw new SignatureException("Invalid JWT signature");
+	    } catch (MalformedJwtException e) {
+	        log.error("Malformed JWT token: {}", e.getMessage());
+	        throw new MalformedJwtException("Malformed JWT token");
+	    } catch (ExpiredJwtException e) {
+	        log.error("JWT token is expired: {}", e.getMessage());
+	        throw new ExpiredJwtException(null, null, "JWT token is expired");
+	    }
 
-		return false;
+//		return false;
 	}
 
 }

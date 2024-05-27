@@ -1,26 +1,25 @@
 
 package com.nlu.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+
 import com.nlu.model.dto.request.ExamRequest;
 import com.nlu.model.dto.response.ExamResponse;
-import com.nlu.model.dto.response.ExamResponses;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
-import java.util.Map;
+import com.nlu.model.dto.response.PageResponse;
 
 public interface ExamService {
 
-	Long createExam(ExamRequest request);
+	ExamResponse createExam(ExamRequest request);
 	void updateExam(Long examId, ExamRequest request);
 	void deleteExam(Long id);
 	void updatePublicExam(Long examId,boolean request);
 
-	List<ExamResponse> getAllExams();
+	PageResponse<List<ExamResponse>> getAllExams(Pageable pageable);
 	ExamResponse getExamById(Long id);
 
-	ExamResponses
+	PageResponse<List<ExamResponse>>
 		getExamsByCategoryAndKeyWord(String category, String keyword, Pageable pageable);
 
 }

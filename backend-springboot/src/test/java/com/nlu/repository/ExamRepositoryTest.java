@@ -40,7 +40,7 @@ class ExamRepositoryTest {
         String keyword = "Tôi";
         String category = "Tin học";
         Page<Exam> pageExams = examRepository
-                .findByCategoryAndLikeKeyWorkAndIsPublic(category, keyword, true, pageable);
+                .findByCategory_NameAndTitleContainingAndIsPublic(category, keyword, true, pageable);
         List<Exam> exams = new ArrayList<Exam>();
         exams = pageExams.getContent();
         for(Exam exam : exams) {
@@ -60,7 +60,7 @@ class ExamRepositoryTest {
         Pageable pageable = PageRequest.of(0,3);
         String category = "Tin học";
         Page<Exam> pageExams = examRepository
-                .findByCategoryAndIsPublic(category, true, pageable);
+                .findByCategory_NameAndIsPublic(category, true, pageable);
         List<Exam> exams = new ArrayList<Exam>();
         exams = pageExams.getContent();
         for(Exam exam : exams) {
@@ -80,7 +80,7 @@ class ExamRepositoryTest {
         Pageable pageable = PageRequest.of(0,3);
         String keyword = "Tôi";
         Page<Exam> pageExams = examRepository
-                .findByLikeKeyWorkAndIsPublic(keyword, true, pageable);
+                .findByTitleContainingAndIsPublic(keyword, true, pageable);
         List<Exam> exams = new ArrayList<Exam>();
         exams = pageExams.getContent();
         for(Exam exam : exams) {

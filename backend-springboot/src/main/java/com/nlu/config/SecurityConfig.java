@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.nlu.security.ExceptionHandlerFilter;
 import com.nlu.security.jwt.JwtAuthenticationFilter;
 
 @Configuration
@@ -34,8 +35,7 @@ public class SecurityConfig{
 			"/api/exams/**",
 			"/api/exam-numbers/**",
 			"/api/user_answers/**",
-//			"/api/worktimes/**",
-//			"/api/user_answers/**",
+			"/api/categories/**",
 	};
 	private final static String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
@@ -49,6 +49,11 @@ public class SecurityConfig{
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public ExceptionHandlerFilter exceptionHandlerFilter() {
+		return new ExceptionHandlerFilter();
 	}
 	
 	@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
@@ -78,12 +83,11 @@ public class SecurityConfig{
 					authorize.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
 							.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                // thêm filter jwt trước usernamepasswordAuthenticationFilter nhằm ưu tiên cho jwt hơn là username - password
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                
-//                .exceptionHandling(handling -> {
-//                handling.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
-//                })
+                .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationFilter.class)
+                .exceptionHandling(handling -> {
+                handling.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
+                })
                 ;
         
       return http.build();
