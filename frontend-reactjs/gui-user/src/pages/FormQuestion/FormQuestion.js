@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, ProgressBar, Row, Stack } from 'react-bootstrap';
+import { Alert, Button, Card, Col, ProgressBar, Row, Stack } from 'react-bootstrap';
 import FormOption from '../../components/FormOption/FormOption';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
@@ -15,12 +15,22 @@ export const FormQuestion = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState(null);
+
     const requestData = RequestData();
     const dispatch = useDispatch();
     const examRequest = useSelector(state => state.exams);
     let examTemp = examRequest[0];
-    const arr = new Array(examRequest[0]?.quantityQuestion).fill(0);
 
+    const arr = new Array(examRequest[0]?.quantityQuestion).fill(0);
+    // biến đánh dấu đã xong 1 câu hỏi
+    const [completedQuestions, setCompletedQuestions] = useState(new Array(arr.length).fill(false));
+    const [isAllQuestionsCompleted, setIsAllQuestionsCompleted] = useState(false); // Trạng thái để kiểm tra hoàn thành tất cả câu hỏi
+
+    useEffect(() => {
+        setIsAllQuestionsCompleted(completedQuestions.every(isCompleted => isCompleted));
+    }, [completedQuestions]);
+    // Xử lý khi xong 1 câu hỏi . Thêm vào danh sách câu hỏi
     const handleQuestionSubmit = (questionData) => {
         const question = requestData.QuestionRequest(
             questionData.question,
@@ -33,7 +43,9 @@ export const FormQuestion = () => {
         setQuestions((prevQuestions) => [...prevQuestions, question]);
     };
 
-    // Handler to save all questions
+
+
+    // Xử lý lưu tất cả câu hỏi vào redux
     const handleSaveAllQuestions = async () => {
         examTemp = {
             ...examTemp,
@@ -43,29 +55,32 @@ export const FormQuestion = () => {
         if (questions.length === examRequest[0]?.quantityQuestion)
             dispatch(updateCreateExamRequest(questions))
 
-        const data = await examService.createExam(examTemp)
+        const data = await examService.createExam(examTemp);
         if (data?.status < 400) {
-            console.log("Data saved: " + data.data)
-            setDataByKeyLS("examSavedId", data.data)
-            // navigate("/create-student")
+            setDataByKeyLS("examSaved", data.data);
+            navigate("/create-student");
         } else {
-            console.error(data.data)
+            setError(data.data.message);
         }
+
     };
-    // Handler to be called by FormOption components to notify that they have saved a question
+    // thông báo cho FormOption biết đã lưu
     const handleQuestionSaved = () => {
-        // Perform any additional actions after a question is saved
-        // In this example, we can reset the isSaving state to false
         setIsSaving(false);
     };
 
-    const [completedQuestions, setCompletedQuestions] = useState(new Array(arr.length).fill(false));
+
     return (
         <>
             <Header />
             <div id="form-question" className="pt-5 pb-5">
                 <div className="container">
                     <ProgressBar animated now={now} label={`${now}%`} className="mr-1 mb-4" />
+                    {error && (
+                        <Alert variant="danger" onClose={() => setError(null)} dismissible>
+                            {error}
+                        </Alert>
+                    )}
                     <h1 className="text-center mb-4">
                         Tạo câu hỏi bài thi
                     </h1>
@@ -139,6 +154,7 @@ export const FormQuestion = () => {
                                 className="w-100 pl-5 pr-5"
                                 variant="outline-success"
                                 onClick={handleSaveAllQuestions}
+                                disabled={!isAllQuestionsCompleted}
                             >
                                 Lưu tất cả câu hỏi
                             </Button>

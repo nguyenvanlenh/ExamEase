@@ -1,12 +1,12 @@
 import axios from "axios";
 import { URL_PATH } from "../utils/constants";
+import { getDataByKeyLS } from "../utils/common";
 
-const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZWFjaGVyIiwiaWF0IjoxNzE1ODc1NzgyLCJleHAiOjE3MTU5NjIxODJ9.il7mfPwWSJFQl5ZJ95-szMI200PEoZIFOFKhavsqId5nfB7rKIAqmn5U-nbBdutg-ulI77nAQhSS2sAZmCnq1A";
+const token = getDataByKeyLS("auth")?.token
 
 export const studentService = {
     createStudent: (file, code_group) => {
         const url = `${URL_PATH}/api/students/import`;
-
         // Tạo một đối tượng FormData để chứa tệp và code_group
         const formData = new FormData();
         formData.append('file', file);
@@ -21,10 +21,11 @@ export const studentService = {
 
         return axios.post(url, formData, config)
             .then(response => {
+                console.log(response.data);
                 return response.data;
             })
             .catch(error => {
-                console.log(error.response?.data.message);
+                console.log(error.response);
                 return error.response;
             });
     },

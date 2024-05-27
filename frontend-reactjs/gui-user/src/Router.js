@@ -17,9 +17,7 @@ import Register from "./pages/register/Register";
 export const router = createBrowserRouter([
     {
         path: "/",
-
         element: <Home />
-
     },
     {
         path: "/home",
@@ -64,8 +62,8 @@ export const router = createBrowserRouter([
     {
         path: "examining",
         element: <Examining />
-     },
-     {
+    },
+    {
         path: "/result",
         element: <Result />
     }

@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, InputGroup, ProgressBar, Row, Table, FormControl } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Col, Form, InputGroup, ProgressBar, Row, Table, FormControl, Alert, Modal } from 'react-bootstrap';
 import Footer from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
 import { useNavigate } from 'react-router-dom';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { examService } from '../../services/examService';
-import { getDataByKeyLS } from '../../utils/common';
+import { getDataByKeyLS, setDataByKeyLS } from '../../utils/common';
 import { studentService } from '../../services/studentService';
+
 export const CreateStudent = () => {
     const now = 90;
     const navigate = useNavigate();
-    let examSavedId = getDataByKeyLS("examSavedId") ?? 16
-    const [codeGroup, setCodeGroup] = useState("")
     const [file, setFile] = useState(null); // State to track selected file
+    const [error, setError] = useState(null); // State to track error messages
+    const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+    const examSaved = getDataByKeyLS("examSaved");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -21,77 +22,52 @@ export const CreateStudent = () => {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
-            if (file) {
-                try {
-                    const response = await studentService.createStudent(file, codeGroup);
-                    if (response.status === 201) {
-                        console.log('File uploaded successfully.');
+            const response = await studentService.createStudent(file, examSaved.codeGroup);
+            if (response.status === 201) {
+                console.log('File uploaded successfully.');
 
-                        // Call createWorkTime if the student file upload is successful
-                        try {
-                            const workTimeResponse = await studentService.createWorkTime(examSavedId);
-                            if (workTimeResponse.status === 200) {
-                                alert(workTimeResponse.message);
-                                // navigate('/');
-                            } else {
-                                alert('Failed to create WorkTime. Please try again.');
-                            }
-                        } catch (error) {
-                            console.error('Error creating WorkTime:', error);
-                            alert('An error occurred while creating WorkTime. Please try again.');
-                        }
-                    } else {
-                        alert('Failed to upload file. Please try again.');
-                    }
-                } catch (error) {
-                    console.error('Error uploading file:', error);
-                    alert('An error occurred while uploading the file. Please try again.');
+                // Call createWorkTime if the student file upload is successful
+                const workTimeResponse = await studentService.createWorkTime(examSaved.id);
+                if (workTimeResponse.status === 200) {
+                    console.log(workTimeResponse.data);
+                    setDataByKeyLS("examSaved", {});
+                    setShowModal(true); // Show modal on success
+                } else {
+                    setError('Lỗi khi tạo học sinh, Vui lòng kiểm tra lại file');
                 }
             } else {
-                alert('Please select a file.');
+                setError(response.data.message);
             }
         }
     };
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
-        setFile(selectedFile);
-    };
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const data = await examService.getExamById(examSavedId);
-    //         if (data?.status < 400) {
-    //             console.table(data.data);
-    //             setCodeGroup(data.data.codeGroup);
-    //         } else {
-    //             console.table(data.data)
-    //         }
-    //     };
+        const maxFileSize = 4 * 1024 * 1024; // 4MB
 
-    //     fetchData();
-    // }, [examSavedId]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await studentService.createWorkTime(examSavedId);
-            if (data?.status < 400) {
-                console.table(data.data);
-                setCodeGroup(data.data.codeGroup);
+        if (selectedFile) {
+            if (selectedFile.size > maxFileSize) {
+                setError('Kích thước tệp vượt quá 4 MB. Vui lòng chọn một tập tin nhỏ hơn.');
+                setFile(null);
+            } else if (!selectedFile.name.endsWith('.xlsx')) {
+                setError('Loại tệp không hợp lệ. Vui lòng chọn file Excel (.xlsx)');
+                setFile(null);
             } else {
-                console.table(data.data)
+                setError(null);
+                setFile(selectedFile);
             }
-        };
-
-        fetchData();
-    }, [examSavedId]);
+        }
+    };
 
     return (
         <>
             <Header />
+
             <div id="form-question" className="pt-5 pb-5">
                 <div className="container">
                     <ProgressBar animated now={now} label={`${now}%`} className="mr-1 mb-4" />
                     <h1 className="text-center mb-4">Thêm danh sách học sinh</h1>
+
                     <h4>Hướng dẫn</h4>
                     <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '20px' }}>
                         <p>Người dùng tạo file excel(.xlsx) có các cột như sau:</p>
@@ -126,6 +102,11 @@ export const CreateStudent = () => {
                             mới xử lý thành công.
                         </p>
                     </div>
+                    {error && (
+                        <Alert variant="danger" onClose={() => setError(null)} dismissible>
+                            {error}
+                        </Alert>
+                    )}
                     <Form onSubmit={handleSubmit}>
                         <Form.Label>Tải lên danh sách học sinh:</Form.Label>
                         <InputGroup className="mb-3">
@@ -134,7 +115,6 @@ export const CreateStudent = () => {
                                 type="file"
                                 onChange={handleFileChange}
                                 aria-label="Text input with file selection"
-                                // isInvalid={!file} // Use isInvalid to provide validation feedback
                                 required
                             />
                             <Form.Control.Feedback type="invalid">Bạn cần phải chọn file excel</Form.Control.Feedback>
@@ -165,6 +145,19 @@ export const CreateStudent = () => {
                 </div>
             </div>
             <Footer />
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Thông báo</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Danh sách học sinh đã được tạo thành công!</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => navigate('/')}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };
