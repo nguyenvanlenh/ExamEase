@@ -23,7 +23,7 @@ public class JwtAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
         		.authenticated(false)
-        		.error(authException.getMessage())
+        		.error("Unauthenticated")
         		.build();
 
         byte[] body = new ObjectMapper().writeValueAsBytes(authenticationResponse);

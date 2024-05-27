@@ -1,12 +1,12 @@
 package com.nlu.service.imp;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
-import com.nlu.model.dto.response.ExamResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -16,6 +16,7 @@ import com.nlu.model.dto.request.ExamRequest;
 import com.nlu.model.dto.request.OptionRequest;
 import com.nlu.model.dto.request.QuestionRequest;
 import com.nlu.model.dto.response.ExamResponse;
+import com.nlu.model.dto.response.PageResponse;
 import com.nlu.model.entity.Category;
 import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.ExamNumber;
@@ -64,7 +65,7 @@ public class ExamServiceImp implements ExamService {
 
 	@Transactional
 	@Override
-	public Long createExam(ExamRequest request) {
+	public ExamResponse createExam(ExamRequest request) {
 		
 		if(ObjectUtils.isEmpty(request))
 			throw new RuntimeException("request is null");
@@ -108,7 +109,7 @@ public class ExamServiceImp implements ExamService {
 		// save exam number
 		examNumberRepository.saveAll(listExamNumbers);
 
-		return examSaved.getId();
+		return ExamResponse.fromEntity(examSaved);
 	}
 
 	// save options with related question
@@ -195,8 +196,15 @@ public class ExamServiceImp implements ExamService {
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public List<ExamResponse> getAllExams() {
-		return ExamResponse.fromEntities(examRepository.findAll());
+	public PageResponse<List<ExamResponse>> getAllExams(Pageable pageable) {
+		Page<Exam> pageExam = examRepository.findAll(pageable);
+		return PageResponse.<List<ExamResponse>>builder()
+				.content(ExamResponse.fromEntities(pageExam.getContent()))
+				.totalPage(pageExam.getTotalPages())
+				.totalElement(pageExam.getTotalElements())
+				.size(pageExam.getSize())
+				.currentPage(pageExam.getPageable().getPageNumber())
+				.build();
 	}
 
 	/**
@@ -215,30 +223,24 @@ public class ExamServiceImp implements ExamService {
 	}
 
 	@Override
-	public ExamResponses getExamsByCategoryAndKeyWord(String category, String keyword, Pageable pageable) {
-		List<Exam> exams = new ArrayList<Exam>();
+	public PageResponse<List<ExamResponse>> getExamsByCategoryAndKeyWord(String category, String keyword, Pageable pageable) {
 		Page<Exam> pageExams;
-		try {
 			if(category == null && keyword == null) {
 				pageExams = examRepository.findByIsPublic(true, pageable);
 			}else if(keyword == null) {
-				pageExams = examRepository.findByCategoryAndIsPublic(category, true, pageable);
+				pageExams = examRepository.findByCategory_NameAndIsPublic(category, true, pageable);
 			}else if(category == null) {
-				pageExams = examRepository.findByLikeKeyWorkAndIsPublic(keyword, true, pageable);
+				pageExams = examRepository.findByTitleContainingAndIsPublic(keyword, true, pageable);
 			}else {
-				pageExams = examRepository.findByCategoryAndLikeKeyWorkAndIsPublic(category, keyword, true, pageable);
+				pageExams = examRepository.findByCategory_NameAndTitleContainingAndIsPublic(category, keyword, true, pageable);
 			}
-			exams = pageExams.getContent();
 
-
-		}catch (Exception e) {
-			throw new NotFoundException("Syntax error, please try again!");
-		}
-		return ExamResponses.builder()
-				.totalItems(pageExams.getTotalElements())
-				.totalPages(pageExams.getTotalPages())
-				.currentPage(pageExams.getNumber())
-				.exams(exams)
+		return PageResponse.<List<ExamResponse>>builder()
+				.content(ExamResponse.fromEntities(pageExams.getContent()))
+				.totalPage(pageExams.getTotalPages())
+				.totalElement(pageExams.getTotalElements())
+				.size(pageExams.getSize())
+				.currentPage(pageExams.getPageable().getPageNumber())
 				.build();
 	}
 }
