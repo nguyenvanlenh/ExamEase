@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.nlu.config.Translator;
 import com.nlu.security.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -13,7 +14,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -60,16 +60,14 @@ public class JwtTokenProvider {
 			return true;
 		} catch (SignatureException e) {
 	        log.error("Invalid JWT signature: {}", e.getMessage());
-	        throw new SignatureException("Invalid JWT signature");
+	        throw new SignatureException(Translator.toLocale("jwt_invalid"));
 	    } catch (MalformedJwtException e) {
 	        log.error("Malformed JWT token: {}", e.getMessage());
-	        throw new MalformedJwtException("Malformed JWT token");
+	        throw new MalformedJwtException(Translator.toLocale("jwt_malformed"));
 	    } catch (ExpiredJwtException e) {
 	        log.error("JWT token is expired: {}", e.getMessage());
-	        throw new ExpiredJwtException(null, null, "JWT token is expired");
+	        throw new ExpiredJwtException(null, null, Translator.toLocale("jwt_invalid"));
 	    }
-
-//		return false;
 	}
 
 }
