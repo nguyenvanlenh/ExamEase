@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
@@ -8,24 +7,14 @@ import { Button, Form, Image, InputGroup, ListGroup, Nav, NavDropdown, Paginatio
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { RequestData } from "../../utils/request"
-import { authService } from '../../services/authService';
-import { URL_PATH } from '../../utils/constants';
 import { examService } from '../../services/examService';
 import { getDataByKeyLS, setDataByKeyLS } from '../../utils/common';
 import { categoryService } from '../../services/categoryService';
-import { useTranslation } from 'react-i18next';
 
-const languages = [
-    { value: "", text: "Options" },
-    { value: "en", text: "English" },
-    { value: "vi", text: "Vietnamese" },
-];
 
 export const ListExams = () => {
-    const requestData = RequestData();
     const [listExams, setListExams] = useState([]);
     const [listCate, setListCate] = useState(getDataByKeyLS("category"));
     const [currentPage, setCurrentPage] = useState(0);
@@ -35,9 +24,6 @@ export const ListExams = () => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [category, setCategory] = useState("");
 
-    const { t } = useTranslation();
-
-    const [lang, setLang] = useState("vi");
 
 
     // tải dữ liệu lúc đầu và theo dõi khi chuyển trang hoặc là chọn danh mục
@@ -58,9 +44,15 @@ export const ListExams = () => {
 
     // xử lý khi click chọn category
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const handleCategoryClick = (category) => {
-        setCategory(category)
-        setSelectedCategory(category);
+    const handleCategoryClick = (cate) => {
+        if (category == cate) {
+            setCategory("")
+            setSelectedCategory(null);
+        }
+        else {
+            setCategory(cate)
+            setSelectedCategory(cate);
+        }
     };
     // xử lý tìm kiếm
     const handleSearch = async () => {
@@ -130,12 +122,12 @@ export const ListExams = () => {
                                             </i>
                                         </p>
                                         <div className="mt-3">
-                                            <Button
-                                                className="w-100 mt-3 btn-custom"
+                                            <Link to={"/statistics"}
+                                                className="w-100 mt-3 btn btn-custom"
                                                 variant="outline-secondary"
                                             >
                                                 <StackedLineChartIcon /> Thống kê kết quả
-                                            </Button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +135,7 @@ export const ListExams = () => {
 
                             <div className="col-12 col-md-9 order-md-1">
                                 <h1>
-                                    {t("Exam library")}
+                                    Thư viện đề thi
                                 </h1>
                                 <Nav className="nav-pills flex-wrap mt-2 mb-3" style={{ gap: '10px' }}>
                                     {listCate?.map((item, index) => (

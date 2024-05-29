@@ -114,7 +114,7 @@ const FormOption = ({
                                             incorrectAnswers[content]}
                                         onChange={(e) => {
                                             const updatedAnswers = [...incorrectAnswers];
-                                            updatedAnswers[index + 1] = e.target.value;
+                                            updatedAnswers[content] = e.target.value;
                                             setIncorrectAnswers(updatedAnswers);
                                         }}
                                     />

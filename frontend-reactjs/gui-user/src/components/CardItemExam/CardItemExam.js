@@ -9,10 +9,6 @@ export const CardItemExam = (data) => {
     const [exam, setExam] = useState(data.exam)
     const [examId, setExamId] = useState(data.exam.id)
     const [time, setTime] = useState(data.exam.timeExam.trim().split(" ")[0])
-    let item = {
-        id: examId,
-        timeExam: time
-    }
     return (
         <Col md={3} className="pb-4">
             <Card className="card-parent">
@@ -37,7 +33,7 @@ export const CardItemExam = (data) => {
                     </div>
 
                     <div className="btn-detail w-100 mt-3 ">
-                        <Link to="/e" state={item} className="w-100 btn detail-button"
+                        <Link to="/exam-detail" state={data?.exam?.id} className="w-100 btn detail-button"
                         >Chi tiết</Link>
                     </div>
                 </Card.Body>
