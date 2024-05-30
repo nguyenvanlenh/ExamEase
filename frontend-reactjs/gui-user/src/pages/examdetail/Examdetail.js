@@ -45,7 +45,7 @@ function Examdetail() {
 
   const [examNumber, setExamNumber] = useState();
   const [time, setTime] = useState(45);
-  const id = 1;
+  const id = 2;
 
   async function dataExamNumber(id) {
     const data = await examNumberService.getExamNumberUser(id);

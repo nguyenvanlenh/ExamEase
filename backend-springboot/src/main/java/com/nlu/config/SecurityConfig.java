@@ -36,6 +36,7 @@ public class SecurityConfig{
 			"/api/user_answers/**",
 //			"/api/worktimes/**",
 //			"/api/user_answers/**",
+			"/api/upload/**",
 	};
 	private final static String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
