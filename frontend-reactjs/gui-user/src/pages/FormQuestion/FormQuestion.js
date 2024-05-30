@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, ProgressBar, Row, Stack } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Modal, ProgressBar, Row, Stack } from 'react-bootstrap';
 import FormOption from '../../components/FormOption/FormOption';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
@@ -16,7 +16,7 @@ export const FormQuestion = () => {
     const [questions, setQuestions] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState(null);
-
+    const [showModal, setShowModal] = useState(false);
     const requestData = RequestData();
     const dispatch = useDispatch();
     const examRequest = useSelector(state => state.exams);
@@ -27,7 +27,11 @@ export const FormQuestion = () => {
     const [completedQuestions, setCompletedQuestions] = useState(new Array(arr.length).fill(false));
     const [isAllQuestionsCompleted, setIsAllQuestionsCompleted] = useState(false); // Trạng thái để kiểm tra hoàn thành tất cả câu hỏi
 
+
     useEffect(() => {
+        console.log(examRequest)
+        if (!examRequest || !examRequest?.length)
+            navigate("/create-exam")
         setIsAllQuestionsCompleted(completedQuestions.every(isCompleted => isCompleted));
     }, [completedQuestions]);
     // Xử lý khi xong 1 câu hỏi . Thêm vào danh sách câu hỏi
@@ -41,6 +45,8 @@ export const FormQuestion = () => {
             ]
         );
         setQuestions((prevQuestions) => [...prevQuestions, question]);
+
+        console.log(questions);
     };
 
 
@@ -58,7 +64,7 @@ export const FormQuestion = () => {
         const data = await examService.createExam(examTemp);
         if (data?.status < 400) {
             setDataByKeyLS("examSaved", data.data);
-            navigate("/create-student");
+            setShowModal(true);
         } else {
             setError(data.data.message);
         }
@@ -163,6 +169,23 @@ export const FormQuestion = () => {
                 </div>
             </div>
             <Footer />
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Thông báo</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
+                    <h5>Đề thi đã được tạo thành công!</h5>
+                    <p>Bạn có muốn <strong>tạo danh sách học sinh</strong> dành riêng cho đề thi này không?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => navigate('/list-exams')}>
+                        Không
+                    </Button>
+                    <Button variant="primary" onClick={() => navigate('/create-student')}>
+                        Có
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

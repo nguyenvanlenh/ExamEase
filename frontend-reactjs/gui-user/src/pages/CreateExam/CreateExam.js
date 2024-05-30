@@ -6,7 +6,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RequestData } from "../../utils/request";
 import { createExamRequest, removeExamRequest } from "../../redux/slices/examSlice";
-import { formatDate, parseDateString } from "../../utils/common";
+import { formatDate, getDataByKeyLS, parseDateString, setDataByKeyLS } from "../../utils/common";
+import { categoryService } from "../../services/categoryService";
+import { timeExamService } from "../../services/timeExamService";
 export const CreateExam = () => {
     const dispatch = useDispatch();
     const requestData = RequestData();
@@ -27,6 +29,26 @@ export const CreateExam = () => {
     const [categoryId, setCategoryId] = useState(1);
     const [endTime, setEndTime] = useState(null);
     const [quantityExamNumber, setQuantityExamNumber] = useState(1);
+    const [listCate, setListCate] = useState(getDataByKeyLS("category"))
+    const [listTime, setListTime] = useState(getDataByKeyLS("timeExam"))
+
+    useEffect(() => {
+        const fetching = async () => {
+            if (!getDataByKeyLS("category")) {
+                const categoryData = await categoryService.getAll()
+                setListCate(categoryData?.data)
+                setDataByKeyLS("category", categoryData?.data)
+            }
+            if (!getDataByKeyLS("timeExam")) {
+                const timeExamData = await timeExamService.getAll()
+                setListTime(timeExamData?.data)
+                console.log(timeExamData?.data);
+                setDataByKeyLS("timeExam", timeExamData?.data)
+            }
+        };
+        fetching();
+    });
+
 
     useEffect(() => {
         if (examRequest[0]) {
@@ -42,7 +64,7 @@ export const CreateExam = () => {
     }, [examRequest]);
     useEffect(() => {
         const checkFormValidity = () => {
-            if (title && description && categoryId && timeId && quantityQuestion) {
+            if (title && description && endTime && categoryId && timeId && quantityQuestion) {
                 setIsFormValid(true);
             } else {
                 setIsFormValid(false);
@@ -135,10 +157,11 @@ export const CreateExam = () => {
                                         onChange={(e) => setCategoryId(e.target.value)}
                                         value={categoryId}
                                     >
-                                        {/* <option>Chọn môn học</option> */}
-                                        <option value="1">Toán</option>
-                                        <option value="2">Văn</option>
-                                        <option value="3">Anh</option>
+                                        {
+                                            listCate?.map(cate => {
+                                                return <option value={cate.id}>{cate.name}</option>
+                                            })
+                                        }
                                     </Form.Select>
                                     <Form.Control.Feedback type="invalid">Bạn cần phải chọn môn học</Form.Control.Feedback>
                                 </Form.Group>
@@ -149,10 +172,11 @@ export const CreateExam = () => {
                                         onChange={(e) => setTimeId(e.target.value)}
                                         value={timeId}
                                     >
-                                        {/* <option>Chọn thời gian làm bài</option> */}
-                                        <option value="10">10 phút</option>
-                                        <option value="20">20 phút</option>
-                                        <option value="30">30 phút</option>
+                                        {
+                                            listTime?.map(time => {
+                                                return <option value={time.id}>{time.name}</option>
+                                            })
+                                        }
                                     </Form.Select>
                                     <Form.Control.Feedback type="invalid">Bạn cần phải thời gian làm bài</Form.Control.Feedback>
                                 </Form.Group>

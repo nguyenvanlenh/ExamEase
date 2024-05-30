@@ -59,7 +59,7 @@ function Examdetail() {
   const handleSubmit = async () => {
     try {
       // Directly call the service and handle the result
-      const workTime = await workTimeService.addWorkTimeUser( auth?.userId, id, time );
+      const workTime = await workTimeService.addWorkTimeUser(auth?.userId, id, time);
       const data = await examNumberService.getExamNumberUser(id);
 
       if (workTime?.data) {
@@ -75,7 +75,7 @@ function Examdetail() {
           await workTimeService.addWorkTimeUser(auth?.userId, id, time);
           setData(data)
           console.log("xóa");
-          
+
           navigate("/examining");
         }
       }
