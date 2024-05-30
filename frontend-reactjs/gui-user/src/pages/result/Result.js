@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Image, Row, Stack } from "react-bootstrap";
+import { Alert, Button, Col, Container, Image, Row, Stack } from "react-bootstrap";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
 import "./Result.scss";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate, useNavigation } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
@@ -17,7 +17,8 @@ import { examNumberService } from "../../services/examNumberService";
 import { authLocalStorage } from "../../utils/localStorage";
 import { calculateDurationInSeconds, formatTimeHMS } from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
-function Result() {
+
+function Result({ navigation }) {
   const location = useLocation();
   const auth = authLocalStorage.get()
   const { idExamNumber } = location.state || {};
@@ -38,6 +39,8 @@ function Result() {
     
   }, []);
 
+  
+
   const handleTabNumber = (number) => {};
   return (
     <div id="id-result">
@@ -57,12 +60,15 @@ function Result() {
                   >
                     Xem đáp án
                   </Button>
-                  <Button
-                    onClick={() => handleTabNumber(1)}
+                  <Link
+                    style={{ padding: '6px'}}
+                    to={{
+                      pathname: "/list-exams"
+                    }}
                     className={`tab-pill active2`}
                   >
                     Quay về trang đề
-                  </Button>
+                  </Link>
                 </Stack>
                 <div className={`tab-content`}>
                   <Container fluid>
