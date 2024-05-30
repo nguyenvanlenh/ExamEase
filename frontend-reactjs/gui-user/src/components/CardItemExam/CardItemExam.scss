@@ -1,0 +1,50 @@
+@import "../../styles/root.scss"; // Ensure the path is correct
+.card-parent {
+    box-shadow:
+        rgba(0, 0, 0, 0.16) 0px 3px 6px,
+        rgba(0, 0, 0, 0.23) 0px 3px 6px;
+
+    .card-item {
+        min-height: 200px;
+        position: relative; // Ensure positioning context for .btn-detail
+
+        .card-item-title-exam {
+            min-height: 45px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: calc(1.2em * 2); // Ensure 1.2em is the line-height
+        }
+
+        .card-item-content {
+            color: $color-gray;
+            font-size: $fs-14;
+            // display: flex; // Added display flex
+            // flex-direction: row;
+
+            .wrap {
+                display: inline-block;
+            }
+        }
+
+        .btn-detail {
+            .detail-button {
+                background-color: #fff;
+                color: $color-blue_global;
+                border: 1px solid $color-blue_global;
+                width: 100%;
+
+                &:hover {
+                    background-color: $color-blue_global;
+                    color: #fff;
+                }
+            }
+        }
+        .badge-course {
+            background-color: $color-blue_global !important;
+            color: #fff;
+        }
+    }
+}

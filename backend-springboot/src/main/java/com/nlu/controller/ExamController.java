@@ -1,8 +1,13 @@
 package com.nlu.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
+import org.springframework.data.web.SortDefault.SortDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +18,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nlu.model.dto.request.ExamRequest;
-import com.nlu.model.dto.response.ExamResponses;
+import com.nlu.model.dto.response.ExamResponse;
+import com.nlu.model.dto.response.PageResponse;
 import com.nlu.model.dto.response.ResponseData;
 import com.nlu.service.ExamService;
 
@@ -29,8 +34,7 @@ public class ExamController {
 
 	@PostMapping
 	public ResponseData createExam(@RequestBody ExamRequest request) {
-		System.out.println(request.getListExamNumberRequests().size());
-		Long data = examService.createExam(request);
+		ExamResponse data = examService.createExam(request);
 		return ResponseData.builder()
 				.status(HttpStatus.CREATED.value())
 				.message("Exam created successfully")
@@ -61,13 +65,14 @@ public class ExamController {
 	public ResponseData getExamsByCategoryAndKeyWord(
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false) String keyword,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "3") int size) {
-		Pageable paging = PageRequest.of(page, size);
-		ExamResponses data = examService.getExamsByCategoryAndKeyWord(category, keyword, paging);
+			@PageableDefault(page = 0, size = 4) 
+			@SortDefaults(
+			@SortDefault(direction = Sort.Direction.ASC, sort = {"title"})
+	) Pageable pageable) {
+		PageResponse<List<ExamResponse>> data = examService.getExamsByCategoryAndKeyWord(category, keyword, pageable);
 		 return ResponseData.builder()
 				 .status(HttpStatus.OK.value())
-				 .message("Exam data by category & key word")
+				 .message("Exam data by category & keyword")
 				 .data(data)
 				 .build();
 	}
@@ -81,11 +86,15 @@ public class ExamController {
 	}
 
 	@GetMapping("/all")
-	public ResponseData getExams() {
+	public ResponseData getExams(
+			@PageableDefault(page = 0, size = 4) 
+			@SortDefaults(
+			@SortDefault(direction = Sort.Direction.ASC, sort = {"title"})
+	) Pageable pageable) {
 		return ResponseData.builder()
 				 .status(HttpStatus.OK.value())
 				 .message("Exams data")
-				 .data(examService.getAllExams())
+				 .data(examService.getAllExams(pageable))
 				 .build();
 	}
 	@DeleteMapping("/{examId}")

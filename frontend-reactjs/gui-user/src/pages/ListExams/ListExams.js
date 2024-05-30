@@ -1,73 +1,100 @@
-import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
 import Footer from "../../components/footer/Footer"
 import Header from "../../components/header/Header"
-import { Button, Form, Image, InputGroup, ListGroup, Nav, NavDropdown, Pagination, Row, Stack } from "react-bootstrap"
+import { Button, Form, Image, InputGroup, ListGroup, Nav, NavDropdown, Pagination, Row, Spinner, Stack } from "react-bootstrap"
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { RequestData } from "../../utils/request"
-import { authService } from '../../services/authService';
-import { URL_PATH } from '../../utils/constants';
 import { examService } from '../../services/examService';
+import { getDataByKeyLS, setDataByKeyLS } from '../../utils/common';
+import { categoryService } from '../../services/categoryService';
+
+
 export const ListExams = () => {
-    const requestData = RequestData();
-    const listExam = [1, 2, 3, 4, 5, 6];
-    const [activeTab, setActiveTab] = useState(0);
-    const tabs = [
-        { label: "Tất cả", data: "" },
-        { label: "Đề rút gọn", data: "" },
-    ];
-    const [searchQuery, setSearchQuery] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
+    const [listExams, setListExams] = useState([]);
+    const [listCate, setListCate] = useState(getDataByKeyLS("category"));
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [suggestions, setSuggestions] = useState();
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [category, setCategory] = useState("");
 
 
 
-    const loginRequest = requestData.LoginRequest("teacher", "12345678")
+    // tải dữ liệu lúc đầu và theo dõi khi chuyển trang hoặc là chọn danh mục
+    useEffect(() => {
+        const fetching = async () => {
+            const response = await examService.searching(searchQuery, category, currentPage);
+            setListExams(response?.data.content);
+            setTotalPages(response?.data.totalPage);
 
-    const handleLogin = async (requestData) => {
-        const data = await authService.login(requestData)
-        if (data?.status < 400) {
-            console.log(data.data)
-        } else {
-            console.error(data.data)
+            if (!getDataByKeyLS("category")) {
+                const categoryData = await categoryService.getAll()
+                setListCate(categoryData?.data)
+                setDataByKeyLS("category", categoryData?.data)
+            }
+        };
+        fetching();
+    }, [currentPage, category]);
+
+    // xử lý khi click chọn category
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const handleCategoryClick = (cate) => {
+        if (category == cate) {
+            setCategory("")
+            setSelectedCategory(null);
         }
-    }
-
-
-    const handleSearch = () => {
-        console.log('Perform search...');
+        else {
+            setCategory(cate)
+            setSelectedCategory(cate);
+        }
+    };
+    // xử lý tìm kiếm
+    const handleSearch = async () => {
+        setShowSuggestions(false)
+        setSearchQuery(searchQuery)
+        const response = await examService.searching(searchQuery, category, currentPage);
+        setListExams(response?.data.content);
+        setTotalPages(response?.data.totalPage);
     };
 
-    const handleTabChange = (tabIndex) => {
-        setActiveTab(tabIndex);
-    };
-    const fetchSuggestions = async (query) => {
-        // try {
-        //     const response = await axios.get(`/api/exams/suggestions?query=${query}`);
-        //     if (response.status === 200) {
-        //         setSuggestions(response.data);
-        //         setShowSuggestions(true);
-        //     }
-        // } catch (error) {
-        //     console.error('Error fetching suggestions:', error);
-        // }
-    };
-
+    // xử lý auto complete search
     const handleInputChange = (event) => {
         const query = event.target.value;
         setSearchQuery(query);
         if (query.length > 0) {
-            // fetchSuggestions(query);
             setShowSuggestions(true);
+            const fetching = async () => {
+                const response = await examService.searching(query, category);
+                setSuggestions(response?.data.content)
+            }
+            fetching();
         } else {
-            setSuggestions([]);
             setShowSuggestions(false);
         }
     };
+    // xử lý phân trang
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // xử lý loading Spinner sau 2,5s không có kết quả thì trả về not found
+    const [timeoutReached, setTimeoutReached] = useState(false);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!listExams || listExams.length === 0) {
+                setTimeoutReached(true);
+            }
+        }, 4500);
+
+        return () => clearTimeout(timer);
+    }, [listExams]);
+
     return (
         <>
             <Header />
@@ -79,17 +106,28 @@ export const ListExams = () => {
                                 <div className="user-target-info-box">
                                     <Image src={UserImage} roundedCircle height={70} />
                                     <div className="text-center">
-                                        <strong>20130303</strong>
+                                        <strong>20130302</strong>
                                     </div>
                                     <div className="user-target-info">
                                         <p>
-                                            <i>Bạn chưa tạo mục tiêu cho quá trình luyện thi của mình.
-                                                <Link to="/" href="/" >Tạo ngay</Link>.
+                                            <i className="user-sub">
+                                                <ErrorOutlineIcon className="icon" />
+                                                <span>
+                                                    Bạn chưa tạo mục tiêu cho quá trình luyện thi của mình.
+                                                </span>
+                                                <Link className="link" href="/">
+                                                    Tạo ngay
+                                                </Link>
+                                                .
                                             </i>
                                         </p>
                                         <div className="mt-3">
-                                            <Link to="/statistics" className="w-100 mt-3 btn btn-outline-secondary"
-                                            ><StackedLineChartIcon /> Thống kê kết quả</Link>
+                                            <Link to={"/statistics"}
+                                                className="w-100 mt-3 btn btn-custom"
+                                                variant="outline-secondary"
+                                            >
+                                                <StackedLineChartIcon /> Thống kê kết quả
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
@@ -99,41 +137,29 @@ export const ListExams = () => {
                                 <h1>
                                     Thư viện đề thi
                                 </h1>
-                                <Nav className="nav-pills flex-wrap" style={{ gap: '10px' }}>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Toán</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Vật lý</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Hóa học</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Tiếng anh</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Ngữ văn</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Sinh học</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Lịch sử</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link href="/tests/ielts/">Khác</Nav.Link>
-                                    </Nav.Item>
+                                <Nav className="nav-pills flex-wrap mt-2 mb-3" style={{ gap: '10px' }}>
+                                    {listCate?.map((item, index) => (
+                                        <Nav.Item key={index}>
+                                            <Nav.Link
+                                                onClick={() => handleCategoryClick(item.name)}
+                                                style={{
+                                                    border: item.name === selectedCategory ? '1px solid gray' : 'none'
+                                                }}
+                                            >
+                                                {item.name}
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                    ))}
                                 </Nav>
 
-                                <div className="
+                                {/* <div className="
                                 test-books nav-horizontal nav-horizontal-twolevels
                                 pt-3 pb-3">
                                     <Link to="/" className="test-book " href="/">2024</Link>
                                     <Link to="/" className="test-book " href="/">2023</Link>
                                     <Link to="/" className="test-book " href="/">2022</Link>
                                     <Link to="/" className="test-book " href="/">2021</Link>
-                                </div>
+                                </div> */}
                                 <div className="position-relative">
                                     <InputGroup className="mb-3">
                                         <Form.Control
@@ -141,20 +167,15 @@ export const ListExams = () => {
                                             value={searchQuery}
                                             onChange={handleInputChange}
                                         />
-                                        <Button variant="secondary" onClick={handleSearch}>
+                                        <Button className="btn-search" onClick={handleSearch}>
                                             Tìm kiếm
                                         </Button>
                                     </InputGroup>
                                     {showSuggestions && (
                                         <ListGroup className="position-absolute w-100" style={{ zIndex: 9999 }}>
-                                            {/* {suggestions.map((suggestion, index) => (
-                                                <ListGroup.Item key={index}>
-                                                    {suggestion.name}
-                                                </ListGroup.Item>
-                                            ))} */}
-                                            <ListGroup.Item>Bài thi môn toán</ListGroup.Item>
-                                            <ListGroup.Item>Đề toeic trung tâm đh Nông Lâm S306</ListGroup.Item>
-                                            <ListGroup.Item>Đề toeic trung tâm đh Nông Lâm S306</ListGroup.Item>
+                                            {suggestions?.map((result) => {
+                                                return <ListGroup.Item> <Link to={"/"}  >{result.title}</Link></ListGroup.Item>
+                                            })}
                                         </ListGroup>
                                     )}
                                 </div>
@@ -162,41 +183,52 @@ export const ListExams = () => {
                             </div>
                         </Row>
                         <Stack direction="horizontal" className="nav nav-tabs" gap={3}>
-                            {tabs.map((tab, index) => (
-                                <div key={index} className={`nav-item`}>
-                                    <button
-                                        className={`nav-link ${activeTab === index ? 'active' : ''}`}
-                                        onClick={() => handleTabChange(index)}
-                                    >
-                                        {tab.label}
-                                    </button>
-                                </div>
-                            ))}
+                            <div className={`nav-item`}>
+                                <button className={`nav-link active`}>
+                                    Tất cả
+                                </button>
+                            </div>
                         </Stack>
                     </div>
                 </div>
                 <div className="content-wrapper">
                     <div className="container">
                         <div className="row pt-3 pb-3">
-                            {listExam.map((exam, index) => {
-                                return <CardItemExam key={index} />;
-                            })}
-                            <Pagination>
-                                <Pagination.First />
-                                <Pagination.Prev />
-                                <Pagination.Item>{1}</Pagination.Item>
-                                <Pagination.Ellipsis />
-
-                                <Pagination.Item>{10}</Pagination.Item>
-                                <Pagination.Item>{11}</Pagination.Item>
-                                <Pagination.Item active>{12}</Pagination.Item>
-                                <Pagination.Item>{13}</Pagination.Item>
-                                <Pagination.Item disabled>{14}</Pagination.Item>
-
-                                <Pagination.Ellipsis />
-                                <Pagination.Item>{20}</Pagination.Item>
-                                <Pagination.Next />
-                                <Pagination.Last />
+                            {listExams && listExams.length > 0 ? (
+                                listExams.map((exam) => (
+                                    <CardItemExam key={exam.id || uuidv4()} exam={exam} />
+                                ))
+                            ) : (
+                                timeoutReached ? (
+                                    <div className="d-flex justify-content-center">
+                                        Not found
+                                    </div>
+                                ) : (
+                                    <div className="d-flex justify-content-center">
+                                        <Spinner animation="border" />
+                                    </div>
+                                )
+                            )}
+                            <Pagination className="pagination">
+                                <Pagination.First onClick={() => handlePageChange(0)} />
+                                <Pagination.Prev
+                                    onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
+                                    disabled={currentPage === 0}
+                                />
+                                {Array.from({ length: totalPages }, (_, index) => (
+                                    <Pagination.Item
+                                        key={index}
+                                        active={index === currentPage}
+                                        onClick={() => handlePageChange(index)}
+                                    >
+                                        {index + 1}
+                                    </Pagination.Item>
+                                ))}
+                                <Pagination.Next
+                                    onClick={() => handlePageChange(Math.min(totalPages - 1, currentPage + 1))}
+                                    disabled={currentPage === totalPages - 1}
+                                />
+                                <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} />
                             </Pagination>
                         </div>
                     </div>
@@ -205,7 +237,4 @@ export const ListExams = () => {
             <Footer />
         </>
     )
-
-
-
 }

@@ -29,7 +29,6 @@ export const scrollToElement = (id) => {
 export const getDataByKeyLS = (key) => {
     try {
         const item = localStorage.getItem(key);
-        console.log(`Getting item with key "${key}":`, item);
         return JSON.parse(item);
     } catch (error) {
         console.error(`Error getting item with key "${key}":`, error);
@@ -40,7 +39,6 @@ export const getDataByKeyLS = (key) => {
 export const setDataByKeyLS = (key, data) => {
     try {
         const jsonData = JSON.stringify(data);
-        console.log(`Setting item with key "${key}" to:`, jsonData);
         localStorage.setItem(key, jsonData);
     } catch (error) {
         console.error(`Error setting item with key "${key}":`, error);

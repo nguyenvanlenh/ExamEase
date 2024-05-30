@@ -1,6 +1,8 @@
 import axios from "axios";
 import { URL_PATH } from "../utils/constants"
-const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZWFjaGVyIiwiaWF0IjoxNzE2MjIxNjkyLCJleHAiOjE3MTYzMDgwOTJ9.qzAnTcLNwrXsyym9Rj2vD3Vys5m8_l293m11c0PQzlQzxZImNW3Nger37LJQAZNZZucQUSWV_ZwT4uRJXO3MyA"
+import { getDataByKeyLS } from "../utils/common";
+const token = getDataByKeyLS("auth")?.token
+console.log(token);
 export const examService = {
     createExam: (data) => {
         const url = URL_PATH + "/api/exams"
@@ -52,7 +54,34 @@ export const examService = {
                 console.log(error?.response?.data);
                 return error.response;
             });
+    },
+    getAllExams: (currentPage) => {
+        const url = `${URL_PATH}/api/exams/all?page=${currentPage}`;
+        return axios.get(url)
+            .then(response => {
+                console.log(response.data.data.content);
+                return response.data;
+
+            })
+            .catch(error => {
+                console.log(error?.response?.data);
+                return error.response;
+            });
     }
-    
+    ,
+    searching: (keyword, category, currentPage, size) => {
+        const cateparam = category ? `&category=${category}` : ""
+        const url = `${URL_PATH}/api/exams?&keyword=${keyword}${cateparam}&page=${currentPage}&size=${size}`;
+        return axios.get(url)
+            .then(response => {
+                return response.data;
+
+            })
+            .catch(error => {
+                console.log(error?.response?.data);
+                return error.response;
+            });
+    }
+
 
 }
