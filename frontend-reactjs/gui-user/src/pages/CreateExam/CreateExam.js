@@ -33,6 +33,9 @@ export const CreateExam = () => {
     const [listTime, setListTime] = useState(getDataByKeyLS("timeExam"))
 
     useEffect(() => {
+        if (!getDataByKeyLS("auth"))
+            navigate("/login")
+
         const fetching = async () => {
             if (!getDataByKeyLS("category")) {
                 const categoryData = await categoryService.getAll()
@@ -182,7 +185,7 @@ export const CreateExam = () => {
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="quantityQuestion">
                                     <Form.Label>Số câu hỏi</Form.Label>
-                                    <Form.Control type="number" placeholder="" required min={0}
+                                    <Form.Control type="number" placeholder="" required min={0} max={200}
                                         onChange={(e) => setQuantityQuestion(e.target.value)}
                                         value={quantityQuestion ?? 0}
                                     />
@@ -190,7 +193,7 @@ export const CreateExam = () => {
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="quantityExam">
                                     <Form.Label>Số đề</Form.Label>
-                                    <Form.Control type="number" placeholder="" min={1}
+                                    <Form.Control type="number" placeholder="" min={1} max={5}
                                         onChange={(e) => setQuantityExamNumber(e.target.value)}
                                         value={quantityExamNumber}
                                     />

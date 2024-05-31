@@ -34,14 +34,14 @@ export const ResultStatistics = () => {
                                     <Form.Control
                                         placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên đề thi ..."
                                     />
-                                    <Button variant="primary" onClick={() => { }}>
+                                    <Button className="btn-search" variant="primary" onClick={() => { }}>
                                         Tìm kiếm
                                     </Button>
                                 </InputGroup>
                                 <Row>
                                     <Col md={4} className="mb-3">
-                                        <Card border="light" style={{ height: '13rem' }}>
-                                            <Card.Body className="border 
+                                        <Card border="light" className="card-statistics">
+                                            <Card.Body className=" 
                                     rounded 
                                     d-flex flex-column justify-content-center
                                     align-items-center">
@@ -53,8 +53,8 @@ export const ResultStatistics = () => {
                                         </Card>
                                     </Col>
                                     <Col md={4} className="mb-3">
-                                        <Card border="light" style={{ height: '13rem' }}>
-                                            <Card.Body className="border 
+                                        <Card border="light" className="card-statistics">
+                                            <Card.Body className=" 
                                     rounded 
                                     d-flex flex-column justify-content-center
                                     align-items-center">
@@ -66,14 +66,14 @@ export const ResultStatistics = () => {
                                         </Card>
                                     </Col>
                                     <Col md={4} className="mb-3">
-                                        <Card border="light" style={{ height: '13rem' }}>
-                                            <Card.Body className="border 
+                                        <Card border="light" className="card-statistics">
+                                            <Card.Body className=" 
                                     rounded 
                                     d-flex flex-column justify-content-center
                                     align-items-center">
                                                 <Card.Title className="text-secondary"><SportsScoreIcon /> </Card.Title>
                                                 <Card.Title className="text-secondary">Điểm cao nhất</Card.Title>
-                                                <Card.Title>97</Card.Title>
+                                                <Card.Title>97/100</Card.Title>
                                                 <Card.Subtitle>điểm</Card.Subtitle>
                                             </Card.Body>
                                         </Card>
