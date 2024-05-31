@@ -13,7 +13,7 @@ import { examService } from '../../services/examService';
 import { getDataByKeyLS, setDataByKeyLS } from '../../utils/common';
 import { categoryService } from '../../services/categoryService';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPage } from '../../redux/slices/pageSlice';
+import { removePage, setPage } from '../../redux/slices/pageSlice';
 
 
 export const ListExams = () => {
@@ -50,6 +50,8 @@ export const ListExams = () => {
     // xử lý khi click chọn category
     const [selectedCategory, setSelectedCategory] = useState(null);
     const handleCategoryClick = (cate) => {
+        dispatch(removePage())
+        setCurrentPage(0)
         if (category == cate) {
             setCategory("")
             setSelectedCategory(null);
@@ -169,7 +171,7 @@ export const ListExams = () => {
                                 <h1>
                                     Thư viện đề thi
                                 </h1>
-                                <Nav className="nav-pills flex-wrap mt-2 mb-3" style={{ gap: '10px' }}>
+                                <Nav className="nav-pills flex-wrap mt-4 mb-4" style={{ gap: '10px' }}>
                                     {listCate?.map((item, index) => (
                                         <Nav.Item key={index}>
                                             <Nav.Link
