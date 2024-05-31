@@ -68,14 +68,14 @@ public class ExamServiceImp implements ExamService {
 	public ExamResponse createExam(ExamRequest request) {
 		
 		if(ObjectUtils.isEmpty(request))
-			throw new RuntimeException("request is null");
+			throw new NotFoundException("data_null");
 		
 		TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
-				.orElseThrow(() -> new NotFoundException("time not found"));
+				.orElseThrow(() -> new NotFoundException("time_not_found",request.getTimeId()));
 		User user = userRepository.findById(AuthenticationUtils.extractUserId())
-				.orElseThrow(() -> new NotFoundException("user not found"));
+				.orElseThrow(() -> new NotFoundException("user_not_found",AuthenticationUtils.extractUserId()));
 		Category category = categoryRepository.findById(request.getCategoryId())
-				.orElseThrow(() -> new NotFoundException("category not found") );
+				.orElseThrow(() -> new NotFoundException("category_not_found",request.getCategoryId()));
 		/**
 		 * sequence: save exam -> save question(shuffled) -> save option -> save exam number
 		 */
@@ -149,19 +149,20 @@ public class ExamServiceImp implements ExamService {
 	public void updateExam(Long examId, ExamRequest request) {
 
 		if (ObjectUtils.isEmpty(request))
-			throw new RuntimeException("request is null");
+			throw new NotFoundException("data_null");
 
-		Exam exam = examRepository.findById(examId).orElseThrow(() -> new NotFoundException("Exam not found"));
+		Exam exam = examRepository.findById(examId)
+				.orElseThrow(() -> new NotFoundException("exam_not_found",examId));
 		ExamRequest.setForEntity(exam, request);
 
 		if (exam.getTimeExam().getId() != request.getTimeId()) {
 			TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
-					.orElseThrow(() -> new NotFoundException("time exam not found"));
+					.orElseThrow(() -> new NotFoundException("exam_number_not_found",request.getTimeId()));
 			exam.setTimeExam(timeExam);
 		}
 		if (exam.getCategory().getId() != request.getCategoryId()) {
 			Category category = categoryRepository.findById(request.getCategoryId())
-					.orElseThrow(() -> new NotFoundException("category not found"));
+					.orElseThrow(() -> new NotFoundException("category_not_found",request.getCategoryId()));
 			exam.setCategory(category);
 		}
 
@@ -184,7 +185,7 @@ public class ExamServiceImp implements ExamService {
 	@Override
 	public void updatePublicExam(Long examId, boolean request) {
 		Exam exam = examRepository.findById(examId)
-				.orElseThrow(() -> new NotFoundException("exam not found"));
+				.orElseThrow(() -> new NotFoundException("exam_not_found",examId));
 		exam.setPublic(request);
 		examRepository.save(exam);
 	}
@@ -218,7 +219,7 @@ public class ExamServiceImp implements ExamService {
 	@Override
 	public ExamResponse getExamById(Long id) {
 		Exam exam = examRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("exam not found"));
+				.orElseThrow(() -> new NotFoundException("exam_not_found",id));
 		return ExamResponse.fromEntity(exam);
 	}
 

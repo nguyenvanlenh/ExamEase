@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
 	        String errors = e.getBindingResult().getFieldErrors()
 	            .stream()
 	            .map(x -> x.getDefaultMessage())
-	            .collect(Collectors.joining(","));
+	            .collect(Collectors.joining(", "));
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	        		.body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),errors));
 		
