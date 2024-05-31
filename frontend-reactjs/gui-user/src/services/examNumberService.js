@@ -2,7 +2,7 @@ import axios from "axios";
 import { URL_PATH } from "../utils/constants"
 export const examNumberService = {
     getExamNumberUser: (id) => {
-        const url = `${URL_PATH}/api/exam-numbers/users/${id}`
+        const url = `${URL_PATH}/api/exams/${id}`
         return axios.get(url)
             .then(response => {
                 return response.data;

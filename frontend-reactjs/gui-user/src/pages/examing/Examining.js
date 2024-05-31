@@ -5,8 +5,8 @@ import { Button, CloseButton } from "react-bootstrap";
 import ListQuestion from "../../components/listQuestion/ListQuestion";
 import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
 import { useDispatch, useSelector } from "react-redux";
-import { addedListQuestion } from "../../redux/slices/listQuestionSlice";
-import { authLocalStorage, examiningLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
+import { addedListQuestion, removeQuestion } from "../../redux/slices/listQuestionSlice";
+import { authLocalStorage, examiningLocalStorage, idExamNumberLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
 import { submitExaminingSwal } from "../../utils/mySwal";
 import { useNavigate } from "react-router-dom";
 import { calculateDurationInSeconds, formatTimeMS } from "../../utils/utilsFunction";
@@ -23,6 +23,7 @@ function Examining() {
   const listQuestion = useSelector((state) => state.listQuestion)
   const questions = listQuestionLocalStorage.get();
   const data = examiningLocalStorage.get();
+  const idExamNumber = idExamNumberLocalStorage.get();
   useEffect(() => {
     const handleScroll = () => {
       window.scrollY > 32 ? setMove(true) : setMove(false);
@@ -39,21 +40,24 @@ function Examining() {
     const isConfirmed = await submitExaminingSwal();
     if (isConfirmed) {
       // update endExam workTime
-      await workTimeService.updateWorkTimeUser(auth?.userId, data.examNumbers[0].id,new Date().toISOString())
-      navigate('/result', { state: { idExamNumber: data.examNumbers[0].id } });
+      await workTimeService.updateWorkTimeUser(auth?.userId, idExamNumber,new Date().toISOString())
+      navigate('/result', { state: { idExamNumber: idExamNumber } });
       examiningLocalStorage.remove();
       listQuestionLocalStorage.remove(); 
+      dispatch(removeQuestion())
     }
   };
 
   async function getTime(idUser, idExamNumber) { 
+    console.log("idExamNumber: " + idExamNumber);
     const workTime = await workTimeService.getWorkTimeUser(idUser, idExamNumber);
+    console.log(workTime)
     const now = new Date();
     setTime(calculateDurationInSeconds(now, workTime?.data.endExam))
   }
   
   useEffect(() => {
-    getTime(auth?.userId , data.examNumbers[0].id)
+    getTime(auth?.userId , idExamNumber)
     setExamNumber(data)
     dispatch(addedListQuestion(questions))
   }, [])
@@ -70,9 +74,10 @@ function Examining() {
     } else {
       // Hiển thị thông báo khi hết thời gian
       console.log("Hết giờ");
-      navigate('/result', { state: { idExamNumber: data.examNumbers[0].id } });
+      navigate('/result', { state: { idExamNumber: idExamNumber } });
       examiningLocalStorage.remove();
       listQuestionLocalStorage.remove();
+      dispatch(removeQuestion())
     }
   }, [time]);
 

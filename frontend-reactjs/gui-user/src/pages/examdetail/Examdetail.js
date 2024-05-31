@@ -19,13 +19,14 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonIcon from "@mui/icons-material/Person";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { examNumberService } from "../../services/examNumberService";
 import { workTimeService } from "../../services/workTimeService";
 import {
   authLocalStorage,
   examiningLocalStorage,
+  idExamNumberLocalStorage,
 } from "../../utils/localStorage";
 import { checkExaminingSwal } from "../../utils/mySwal";
 import { useDispatch } from "react-redux";
@@ -34,6 +35,8 @@ function Examdetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = authLocalStorage.get("auth");
+  const location = useLocation();
+  const id = location.state;
   const times = {
     timeExam: [10, 15, 20, 25, 30, 40, 50, 60],
   };
@@ -45,12 +48,12 @@ function Examdetail() {
 
   const [examNumber, setExamNumber] = useState();
   const [time, setTime] = useState(45);
-  const id = 1;
+  const [idExamNumber, setIdExamNumber] = useState(0);
 
   async function dataExamNumber(id) {
     const data = await examNumberService.getExamNumberUser(id);
     setExamNumber(data.data);
-    console.log(data.data);
+    setIdExamNumber(data.data?.examNumbers[0]?.id);
   }
   useEffect(() => {
     dataExamNumber(id);
@@ -59,21 +62,31 @@ function Examdetail() {
   const handleSubmit = async () => {
     try {
       // Directly call the service and handle the result
-      const workTime = await workTimeService.addWorkTimeUser(auth?.userId, id, time);
       const data = await examNumberService.getExamNumberUser(id);
-
+      // const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber)
+      const workTime =  await workTimeService.addWorkTimeUser(
+          auth?.userId,
+          idExamNumber,
+          time
+        );
+      console.log("idExamNumber: ", idExamNumber);
+      console.log(workTime);
+      // kiểm tra đề đã thi chưa thi lại
       if (workTime?.data) {
         console.log("tao thanh cong");
-        setData(data)
+        setData(data);
         navigate("/examining");
       } else {
-        console.log("Failed to add work time");
+
         const isConfirmed = await checkExaminingSwal();
         if (isConfirmed) {
           // gọi api xóa dữ liệu
-          await workTimeService.removeWorkTimeAndUserAnswerUser(id, auth?.userId);
-          await workTimeService.addWorkTimeUser(auth?.userId, id, time);
-          setData(data)
+          await workTimeService.removeWorkTimeAndUserAnswerUser(
+            idExamNumber,
+            auth?.userId
+          );
+          await workTimeService.addWorkTimeUser(auth?.userId, idExamNumber, time);
+          setData(data);
           console.log("xóa");
 
           navigate("/examining");
@@ -85,12 +98,19 @@ function Examdetail() {
   };
 
   function setData(data) {
+    
     // setData cho redux, localStorage
     examiningLocalStorage.save(data.data);
-    // fix chỗ này sau
-    dispatch(addListQuestion(data.data?.examNumbers[0]?.listQuestions));
+    idExamNumberLocalStorage.save(idExamNumber)
+    // dispatch listQuestion chuẩn bị dữ liệu thi
+    const selectedExam = data.data?.examNumbers.find((exam) => exam.id === idExamNumber);
+    const listQuestions = selectedExam?.listQuestions;
+    dispatch(addListQuestion(listQuestions));
   }
 
+  const handleRadioChange = (id) => {
+    setIdExamNumber(id);
+  };
   return (
     <div id="id-examdetail">
       <Header />
@@ -156,20 +176,19 @@ function Examdetail() {
                     <Tab eventKey="luyentap" title="Luyện tập">
                       <Stack>
                         <Form>
-                          <Form.Check
-                            type="radio"
-                            id="exam1"
-                            name="examNumber"
-                            label="Đề thi 1 (40 câu)"
-                            defaultChecked
-                          />
-                          <Form.Check
-                            type="radio"
-                            id="exam2"
-                            name="examNumber"
-                            label="Đề thi 2 (40 câu)"
-                          />
+                          {examNumber?.examNumbers.map((e, index) => (
+                            <Form.Check
+                              type="radio"
+                              id={`exam${e.id}`}
+                              name="examNumber"
+                              label={`Đề thi ${index + 1} (${examNumber?.quantityQuestion} câu)`}
+                              defaultChecked={index === 0}
+                              key={index}
+                              onChange={() => handleRadioChange(e.id)}
+                            />
+                          ))}
                         </Form>
+
                         <span className="note">
                           Giới hạn thời gian để trống mặc định là 45 phút
                         </span>

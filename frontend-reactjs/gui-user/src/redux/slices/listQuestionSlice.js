@@ -6,8 +6,8 @@ const listQuestionSlice = createSlice({
     initialState: [],
     reducers: {
         addListQuestion(state, action) {
-            action.payload.map((question, index) => (
-                state.push({
+            action.payload.map((question, index) => {
+                return state.push({
                     id: index+1,
                     idReal: question.id,
                     contentQuestion: question.nameQuestion,
@@ -18,7 +18,7 @@ const listQuestionSlice = createSlice({
                         value: option.nameOption,
                       }))
                   })
-            ))
+        })
             listQuestionLocalStorage.save(state)
         },
         addedListQuestion(state, action) {
@@ -33,9 +33,9 @@ const listQuestionSlice = createSlice({
             }
             listQuestionLocalStorage.update(idQuestion, idAnswer, state)
         },
-        removeQuestion(state) {
-            state = []
+        removeQuestion() {
             listQuestionLocalStorage.remove()
+            return []
         }
         
     }

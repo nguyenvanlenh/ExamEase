@@ -35,6 +35,7 @@ public class SecurityConfig{
 			"/api/exams/**",
 			"/api/exam-numbers/**",
 			"/api/user_answers/**",
+			"/api/upload/**",
 			"/api/categories/**",
 			"/api/time-exams/**",
 	};
@@ -56,7 +57,7 @@ public class SecurityConfig{
 	public ExceptionHandlerFilter exceptionHandlerFilter() {
 		return new ExceptionHandlerFilter();
 	}
-	
+
 	@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 		return authConfig.getAuthenticationManager();

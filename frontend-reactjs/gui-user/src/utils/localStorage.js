@@ -54,3 +54,15 @@ export const authLocalStorage = {
         localStorage.removeItem('auth');
     }
 }
+
+export const idExamNumberLocalStorage = {
+    save: (object) => {
+        localStorage.setItem('idExamNumber', JSON.stringify(object));
+    },
+    get: () => {
+        return JSON.parse(localStorage.getItem('idExamNumber'));
+    },
+    remove: () => {
+        localStorage.removeItem('idExamNumber');
+    }
+}
