@@ -26,6 +26,8 @@ import com.nlu.model.dto.response.PageResponse;
 import com.nlu.model.dto.response.ResponseData;
 import com.nlu.service.ExamService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/exams")
 public class ExamController {
@@ -33,7 +35,7 @@ public class ExamController {
 	@Autowired private ExamService examService;
 
 	@PostMapping
-	public ResponseData createExam(@RequestBody ExamRequest request) {
+	public ResponseData createExam(@Valid @RequestBody ExamRequest request) {
 		ExamResponse data = examService.createExam(request);
 		return ResponseData.builder()
 				.status(HttpStatus.CREATED.value())
