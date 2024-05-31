@@ -1,0 +1,68 @@
+@import "../../styles/root.scss";
+
+#id-footer {
+    width: 100%;
+    background-color: #fff;
+    border-top: 1px solid #e7eaf3;
+    background-image: url(/data/imgs/footer.webp);
+    background-position: bottom;
+    background-size: auto;
+    background-repeat: no-repeat;
+
+    .container {
+        width: 100%;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+
+        .ml-row {
+            margin-left: 0;
+        }
+
+        .title-footer {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .year {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .icons a {
+            color: $color-text;
+            padding-right: 4px;
+        }
+
+        .sub-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .text-link a,
+        .text {
+            color: $color-text;
+            text-decoration: none;
+        }
+
+        .text-link a:hover {
+            color: $color-blue_global;
+        }
+
+        .copyright {
+            margin-top: 12px;
+            color: $color-text;
+            margin-left: 0;
+        }
+    }
+
+    @media screen and (max-width: 780px) {
+        .container {
+            .copyright {
+                margin-left: 12px;
+            }
+            .ml-row {
+                margin-left: 12px;
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+@import "../../styles/root.scss";
+
+.question-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 24px;
+    .wrap-number {
+        height: 40px;
+        width: 40px;
+        margin-right: 12px;
+        .number {
+            padding: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $color-blue_global;
+            background-color: $color-blue_second;
+        }
+    }
+    .content {
+        .content-question {
+            margin-bottom: 24px;
+            margin-top: 6px;
+        }
+        .form-check-input, .form-check-label {
+            cursor: pointer;
+        }
+    }
+    @media screen and (max-width: 780px) {
+        .wrap-number {
+            margin-right: 6px;
+            .number {
+                padding: 8px;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $color-blue_global;
+                background-color: $color-blue_second;
+            }
+        }
+        .content {
+            .content-question {
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+            .list-answers {
+                font-size: 12px;
+            }
+        }
+    }
+}

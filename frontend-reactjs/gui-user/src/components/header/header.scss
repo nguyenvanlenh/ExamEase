@@ -1,0 +1,77 @@
+@import '/src/styles/root.scss';
+
+#id-header {
+    height: 64px;
+    z-index: 99; 
+    position: fixed;
+    background-color: white;
+    width: 100%;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .btn-login {
+            background-color: $color-blue_global;
+            border-radius: 20px;
+            padding-top: 4px;
+            a {
+                color: white;
+                text-decoration: none;
+                font-weight: 600;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+    .btn-login-menu {
+        background-color: $color-blue_global;
+        border-radius: 20px;
+        a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    .text-item {
+        color: $color-gray;
+        font-weight: $fw-md;
+    }
+    .text-item:hover {
+        cursor: pointer;
+        color: $color-blue_global;
+    }
+    .img-account {
+        width: 40px;
+        height: 40px;
+    }
+    .content-menu-mobile {
+        display: none;
+    }
+    .container-menu {
+        display: none;
+        padding: 12px 24px;
+
+    }
+    .btn-login-menu {
+        padding: 6px 12px;
+    }
+    .container-menu:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+
+    @media screen  and (max-width: 800px){
+        .content{
+            display: none;
+        }
+        .container-menu {
+            display: block;
+        }
+    }
+
+}

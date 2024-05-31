@@ -1,0 +1,20 @@
+@import "../../styles/root.scss";
+.result-statistics {
+    a {
+        color: $color-blue_global;
+    }
+    .content-header {
+        background: linear-gradient(1turn, #e7f1ff, hsla(0, 0%, 100%, 0.13) 100%, #fff 0, #fdfeff 0);
+    }
+    .content-wrapper {
+        .btn-search {
+            background-color: $color-blue_global;
+        }
+        .card-statistics {
+            height: 13rem;
+            box-shadow:
+                rgba(0, 0, 0, 0.16) 0px 3px 6px,
+                rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        }
+    }
+}

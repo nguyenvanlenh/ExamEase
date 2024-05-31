@@ -1,0 +1,180 @@
+@import "../../styles/root.scss";
+
+#id-examdetail {
+    background-color: $color-blue_four;
+
+    .wrap {
+        padding: 32px 12px 48px;
+        .mg {
+            margin: 0 17.8px;
+        }
+    }
+
+    .content-block {
+        padding: 16px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+
+        .title {
+            font-size: 34px;
+            font-weight: 600;
+            margin-top: 12px;
+            margin-bottom: 24px;
+        }
+
+        .tab-container {
+            .tab-pill {
+                border: none;
+                font-weight: 600;
+                border-radius: 50px;
+                background-color: $color-blue_four;
+                color: #000;
+
+                &.active {
+                    color: $color-bg_bt;
+                    background-color: $color-blue_second;
+                }
+            }
+
+            .tab-content {
+                margin-top: 24px;
+                .list-sub {
+                    display: flex;
+                    list-style-type: none;
+                    padding: 0;
+                    margin: 0;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    li {
+                        margin-right: 12px;
+                    }
+                }
+                .notify {
+                    margin: 12px 0 28px;
+                    color: $color-text-red;
+                    font-style: italic;
+                }
+            }
+
+            .custom-tabs {
+                border-bottom: 1px solid #ccc;
+
+                .nav-link {
+                    color: gray;
+                    font-size: 16px;
+                    font-weight: 600;
+                    padding: 10px 18px;
+                }
+
+                .nav-link.active {
+                    color: $color-blue_global;
+                }
+
+            }
+            .note {
+                margin-top: 12px;
+                margin-bottom: 8px;
+            }
+            .btn-custom {
+                font-weight: 600;
+                font-size: 18px;
+                background-color: $color-blue_global;
+                margin-top: 18px;
+                color: #fff;
+                padding: 6px 12px;
+                width: 120px;
+                text-align: center;
+                border-radius: 8px;
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+        }
+    }
+    .user-target-info-box {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        padding: 1.5rem 1rem;
+        border: 1px solid #efefef;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .05);
+        border-radius: .65rem;
+        align-items: center;
+        justify-content: center;
+        margin-left: 17.8px;
+        .text-center {
+            margin-bottom: 12px;
+        }
+        .user-target-info {
+            border-top: 1px solid #ccc;
+            padding-top: 12px;
+            .user-sub {
+                color: $color-gray;
+                .icon {
+                    font-size: 18px;
+                    padding-bottom: 2px;
+                }
+            }
+            .link {
+                color: $color-blue_global;
+            }
+            .btn-custom {
+                border-radius: 60px;
+                padding: 4px 12px;
+                border-color: $color-blue_global;
+                background-color: $color-blue_second;
+                color: #000;
+                &:hover {
+                    background-color: $color-blue_global;
+                    color: #fff;
+                }
+            }
+        }
+
+    }
+    @media screen and (max-width: 780px) {
+        .wrap .mg {
+            margin: 0;
+            .row>* {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        .content-block {
+            .title {
+                font-size: 22px;
+            }
+            .tab-container {
+                .tab-pill {
+                    font-size: 12px;
+                }
+                .custom-tabs {
+                    .nav-link {
+                        font-size: 12px;
+                        padding: 4px 6px;
+                    }
+                }
+            }
+            .tab-content {
+                .list-sub li {
+                    font-size: 12px;
+                    svg {
+                        width: 16px;
+                    }
+                }
+                .notify {
+                    margin: 12px 0 28px;
+                    color: $color-text-red;
+                    font-style: italic;
+                    font-size: 12px;
+                }
+            }
+        }
+        .user-target-info-box {
+            margin-left: 0;
+        }
+    }
+}

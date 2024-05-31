@@ -1,0 +1,64 @@
+export const RequestData = () => {
+
+    const ExamRequest = (teacherId, title, shortDescription, description, quantityQuestion, timeId, categoryId, startTime, endTime, isPublic, listExamNumberRequests, listQuestionRequests) => {
+        return {
+            teacherId: teacherId,
+            title: title,
+            shortDescription: shortDescription,
+            description: description,
+            quantityQuestion: quantityQuestion,
+            timeId: timeId,
+            categoryId: categoryId,
+            startTime: startTime,
+            endTime: endTime,
+            isPublic: isPublic,
+            listExamNumberRequests: listExamNumberRequests,
+            listQuestionRequests: listQuestionRequests
+        };
+    }
+
+    const ExamNumberRequest = (name) => {
+        return {
+            name: name
+        };
+    }
+    const QuestionRequest = (question, listOptionRequests) => {
+        return {
+            question: question,
+            listOptionRequests: listOptionRequests
+        };
+    }
+    const OptionRequest = (content, isCorrect) => {
+        return {
+            content: content,
+            isCorrect: isCorrect
+        };
+    }
+
+
+
+    const LoginRequest = (username, password) => {
+        return {
+            username: username,
+            password: password
+        };
+    }
+
+    const RegisterRequest = (username, password, email, listRoles) => {
+        return {
+            username: username,
+            password: password,
+            email: email,
+            listRoles: listRoles
+        };
+    }
+
+    return {
+        LoginRequest,
+        RegisterRequest,
+        ExamRequest,
+        ExamNumberRequest,
+        QuestionRequest,
+        OptionRequest
+    };
+}

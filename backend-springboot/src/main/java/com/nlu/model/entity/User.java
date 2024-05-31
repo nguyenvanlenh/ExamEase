@@ -2,6 +2,8 @@ package com.nlu.model.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +19,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Entity
@@ -33,18 +36,19 @@ public class User {
 	private String code;
 	@Column(nullable = false,length = 20)
 	private String username;
+	@JsonIgnore
 	@Column(nullable = false)
 	private String password;
 	private String fullname;
 	private String email;
 	private Boolean active;
-	
-	@OneToMany(mappedBy = "teacher")
+	@JsonIgnore
+	@OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
 	private Set<Student> listStudents;
 	
 	@OneToMany(mappedBy = "teacher")
 	private Set<Exam> listExams;
-	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name ="user_roles",
 	joinColumns = @JoinColumn(name = "user_id"),

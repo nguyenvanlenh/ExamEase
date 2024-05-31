@@ -1,0 +1,46 @@
+$color-blue_global: #35509A;
+$color-blue_second: #E8F2FF;
+$color-blue_third: hsl(207, 100%, 96%);
+$color-blue_four: #f8f9fa;
+$color-while: #fff;
+$color-black: #000;
+$color-red: #F79321;
+$color-yellow: #ffc709;
+$color-orange: #F79321;
+$color-text: #3F3B3B;
+$color-title: #003C71;
+$color-gray: #50535D;
+$color-bg_bt: #003c71;
+$color-green: #9fc43a;
+$color-bg-gray: rgb(224 231 238);
+$color-text-red: #e43a45;
+$color-text-green: #3cb46e;
+
+$fs-64: 64px;
+$fs-42: 42px;
+$fs-36: 36px;
+$fs-32: 32px;
+$fs-28: 28px;
+$fs-24: 24px;
+$fs-22: 22px;
+$fs-20: 20px;
+$fs-18: 18px;
+$fs-16: 16px;
+$fs-14: 14px;
+
+$fw-sm: 300;
+$fw-md: 500;
+$fw-lg: 600;
+$fw-xl: 800;
+$fw-xxl: 900;
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    
+    a {
+        text-decoration: none !important;
+    }
+}

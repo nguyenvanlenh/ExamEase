@@ -1,0 +1,246 @@
+@import "../../styles/root.scss";
+
+#id-result {
+    background-color: $color-blue_four;
+
+    .wrap {
+        padding: 32px 12px 48px;
+
+        .mg {
+            margin: 0 17.8px;
+        }
+    }
+
+    .content-block {
+        padding: 16px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+
+        .title {
+            font-size: 34px;
+            font-weight: 600;
+            margin-top: 12px;
+            margin-bottom: 24px;
+        }
+
+        .tab-container {
+            .tab-pill {
+                border: 1px solid $color-blue_global;
+                font-weight: 600;
+                border-radius: 50px;
+                background-color: $color-blue_four;
+                color: #000;
+            }
+
+            .active {
+                color: $color-bg_bt;
+                background-color: $color-blue_global;
+                color: #fff;
+
+                &:hover {
+                    opacity: 0.8;
+                    cursor: pointer;
+                }
+            }
+
+            .active2 {
+                background-color: $color-blue_second;
+
+                &:hover {
+                    background-color: $color-blue_global;
+                    color: #fff;
+                }
+            }
+
+            .tab-content {
+                margin-top: 24px;
+
+                .c1 {
+                    background-color: $color-blue_four;
+                    padding: 24px 12px;
+                    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                }
+
+                .c2 {
+                    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+                    border-radius: 10px;
+                    padding: 12px 0;
+
+                    .color-done {
+                        color: $color-text-green;
+                    }
+
+                    .color-error {
+                        color: $color-text-red;
+                    }
+
+                    .color-pass {
+                        color: $color-gray;
+                    }
+                }
+
+                .title-center {
+                    font-size: 18px;
+                    font-weight: 600;
+                    margin: 24px 12px;
+                }
+
+                .table-wrapper {
+                    max-width: 100%;
+                    overflow-x: auto;
+
+                    .table-striped {
+                        .wrap-question {
+                            width: 30px;
+                            height: 30px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin-right: 6px;
+                            margin-bottom: 6px;
+                        }
+
+                        .color-error {
+                            color: $color-text-red;
+                            border-radius: 50%;
+                            border: 1px solid $color-text-red;
+
+                            &:hover {
+                                cursor: pointer;
+                                background-color: $color-text-red;
+                                color: #fff;
+                            }
+                        }
+
+                        .color-correct {
+                            color: $color-text-green;
+                            border-radius: 50%;
+                            border: 1px solid $color-text-green;
+
+                            &:hover {
+                                cursor: pointer;
+                                background-color: $color-text-green;
+                                color: #fff;
+                            }
+                        }
+
+                        .color-pass {
+                            color: $color-gray;
+                            border-radius: 50%;
+                            border: 1px solid $color-gray;
+
+                            &:hover {
+                                cursor: pointer;
+                                background-color: $color-gray;
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    .user-target-info-box {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        padding: 1.5rem 1rem;
+        border: 1px solid #efefef;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .05);
+        border-radius: .65rem;
+        align-items: center;
+        justify-content: center;
+        margin-left: 17.8px;
+
+        .text-center {
+            margin-bottom: 12px;
+        }
+
+        .user-target-info {
+            border-top: 1px solid #ccc;
+            padding-top: 12px;
+
+            .user-sub {
+                color: $color-gray;
+
+                .icon {
+                    font-size: 18px;
+                    padding-bottom: 2px;
+                }
+            }
+
+            .link {
+                color: $color-blue_global;
+            }
+
+            .btn-custom {
+                border-radius: 60px;
+                padding: 4px 12px;
+                border-color: $color-blue_global;
+                background-color: $color-blue_second;
+                color: #000;
+
+                &:hover {
+                    background-color: $color-blue_global;
+                    color: #fff;
+                }
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 780px) {
+        .wrap .mg {
+            margin: 0;
+
+            .row>* {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+        .content-block {
+            .title {
+                font-size: 22px;
+            }
+
+            .tab-container {
+                .tab-pill {
+                    font-size: 12px;
+                }
+
+                .custom-tabs {
+                    .nav-link {
+                        font-size: 12px;
+                        padding: 4px 6px;
+                    }
+                }
+            }
+
+            .tab-content {
+                .list-sub li {
+                    font-size: 12px;
+
+                    svg {
+                        width: 16px;
+                    }
+                }
+
+                .notify {
+                    margin: 12px 0 28px;
+                    color: $color-text-red;
+                    font-style: italic;
+                    font-size: 12px;
+                }
+            }
+        }
+
+        .user-target-info-box {
+            margin-left: 0;
+        }
+    }
+}

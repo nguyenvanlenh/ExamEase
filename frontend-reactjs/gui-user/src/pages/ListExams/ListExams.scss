@@ -1,0 +1,85 @@
+@import "../../styles/root.scss";
+a {
+    color: $color-black;
+    text-decoration: none;
+}
+.site-content-wrapper,
+#list-exams-wrapper {
+    position: relative;
+
+    .content-header {
+        background-color: $color-blue_four;
+
+        .user-target-info-box {
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            padding: 1.5rem 1rem;
+            border: 1px solid #efefef;
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
+            border-radius: 0.65rem;
+            align-items: center;
+            justify-content: center;
+            // margin-left: 1px;
+            .text-center {
+                margin-bottom: 12px;
+            }
+            .user-target-info {
+                border-top: 1px solid #ccc;
+                padding-top: 12px;
+                .user-sub {
+                    color: $color-gray;
+                    .icon {
+                        font-size: 18px;
+                        padding-bottom: 2px;
+                    }
+                }
+                .link {
+                    color: $color-blue_global;
+                }
+                .btn-custom {
+                    border-radius: 60px;
+                    padding: 4px 12px;
+                    border-color: $color-blue_global;
+                    background-color: $color-blue_second;
+                    color: #000;
+                    &:hover {
+                        background-color: $color-blue_global;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        .test-book {
+            padding: 5px;
+            border-radius: 2px;
+            border: 1px solid #dbdbdb;
+            text-align: center;
+            font-size: 14px;
+            color: $color-black;
+            margin-right: 0.65rem;
+            cursor: pointer;
+            background-color: #fff;
+            white-space: nowrap;
+        }
+        .nav-link {
+            color: $color-black;
+        }
+        .btn-search {
+            background-color: $color-blue_global;
+        }
+        .selected {
+            background-color: #f0f0f0;
+        }
+    }
+    .content-wrapper {
+        .active > .page-link,
+        .page-link.active {
+            background-color: $color-blue_global !important;
+            color: #fff;
+        }
+        .page-link {
+            color: $color-blue_global;
+        }
+    }
+}
