@@ -62,6 +62,12 @@ public class WorkTimeController {
 			@PathVariable(name = "examNumberId") Integer examNumberId) {
 
 		WorkTime data = workTimeService.getWorkTimeByUser(userId, examNumberId);
+		if(data == null) return ResponseData.builder()
+					.status(HttpStatus.NOT_FOUND.value())
+					.message("Data not found")
+					.data(data)
+					.build();
+
 		return ResponseData.builder()
 				.status(HttpStatus.OK.value())
 				.message("Data work time by id user and id exam number")
