@@ -2,8 +2,11 @@ package com.nlu.service.imp;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import com.nlu.model.dto.response.WorkTimeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,4 +123,28 @@ public class WorkTimeService {
 		 return true;
 	}
 
+	@Transactional
+    public List<WorkTimeResponse> getAllWorkTimeByUser(Long id) {
+		List<WorkTime> workTimes = workTimeRepository.findAllByUser_IdOrderByBeginExamDesc(id);
+		List<WorkTimeResponse> workTimeResponses = new ArrayList<>();
+		for (WorkTime workTime : workTimes) {
+			Long idExamNumber = Long.valueOf(workTime.getExamNumber().getId());
+			Integer totalCorrect = examNumberRepository.getExamNumberQuestionCorrectByIdExamAndIdUser(idExamNumber, id);
+			Integer totalQuestion = examNumberRepository.getExamNumberCountById(idExamNumber);
+			String title = examNumberRepository.getExamNumberExamTitleById(idExamNumber);
+			String result = totalCorrect +"/"+ totalQuestion;
+			long milliseconds = workTime.getEndExam().getTime() - workTime.getBeginExam().getTime();
+			Integer completionTime = (int) TimeUnit.MILLISECONDS.toSeconds(milliseconds);
+			WorkTimeResponse workTimeResponse = WorkTimeResponse.builder()
+					.id(workTime.getId())
+					.time(workTime.getExamNumber().getExam().getTimeExam().getId()+"")
+					.completionTime(completionTime)
+					.workDay(workTime.getBeginExam())
+					.result(result)
+					.title(title)
+					.build();
+			workTimeResponses.add(workTimeResponse);
+		}
+		return workTimeResponses;
+    }
 }

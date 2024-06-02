@@ -1,6 +1,6 @@
 package com.nlu.utils;
 
-import com.nlu.model.model.QuestionUploadFile;
+import com.nlu.model.model.QuestionUploadFileModel;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PdfReaderUtils {
 
-    public static List<QuestionUploadFile> readPdfFile(InputStream inputStream) {
+    public static List<QuestionUploadFileModel> readPdfFile(InputStream inputStream) {
         try (PDDocument document = PDDocument.load(inputStream)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(document);
@@ -23,8 +23,8 @@ public class PdfReaderUtils {
         return null;
     }
 
-    public static List<QuestionUploadFile> extractQuestions(String text) {
-        List<QuestionUploadFile> questions = new ArrayList<>();
+    public static List<QuestionUploadFileModel> extractQuestions(String text) {
+        List<QuestionUploadFileModel> questions = new ArrayList<>();
         String[] lines = text.split("\\r?\\n");
         StringBuilder currentQuestion = new StringBuilder();
         String choiceA = "", choiceB = "", choiceC = "", choiceD = "";
@@ -33,7 +33,7 @@ public class PdfReaderUtils {
         for (String line : lines) {
             if (line.startsWith("Câu ")) {
                 if (isQuestion) {
-                    questions.add(new QuestionUploadFile(currentQuestion.toString().trim(), choiceA, choiceB, choiceC, choiceD, ""));
+                    questions.add(new QuestionUploadFileModel(currentQuestion.toString().trim(), choiceA, choiceB, choiceC, choiceD, ""));
                     currentQuestion.setLength(0);
                     choiceA = choiceB = choiceC = choiceD = "";
                 }
@@ -59,7 +59,7 @@ public class PdfReaderUtils {
 
         // Add the last question if there is one
         if (isQuestion) {
-            questions.add(new QuestionUploadFile(currentQuestion.toString().trim(), choiceA, choiceB, choiceC, choiceD, ""));
+            questions.add(new QuestionUploadFileModel(currentQuestion.toString().trim(), choiceA, choiceB, choiceC, choiceD, ""));
         }
 
         return questions;

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionUploadFile {
+public class QuestionUploadFileModel {
     private String content;
     private String choiceA;
     private String choiceB;

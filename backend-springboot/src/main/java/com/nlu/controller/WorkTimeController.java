@@ -1,7 +1,10 @@
 package com.nlu.controller;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 
+import com.nlu.model.dto.response.WorkTimeResponse;
 import com.nlu.service.UserAnswerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +117,21 @@ public class WorkTimeController {
 				.status(HttpStatus.OK.value())
 				.message("Delete successfully!")
 				.data(removeWorkTime && removeUserAnswer)
+				.build();
+	}
+	@GetMapping("/users/{id}")
+	public ResponseData getAllWorkTimeByUser(@PathVariable Long id) {
+		List<WorkTimeResponse> workTimes = workTimeService.getAllWorkTimeByUser(id);
+		if(workTimes.isEmpty())
+				return ResponseData.builder()
+						.status(HttpStatus.OK.value())
+						.message("Empty data!")
+						.data(workTimes)
+						.build();
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("All work times by user")
+				.data(workTimes)
 				.build();
 	}
 }
