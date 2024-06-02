@@ -66,3 +66,15 @@ export const idExamNumberLocalStorage = {
         localStorage.removeItem('idExamNumber');
     }
 }
+
+export const examWorkedsLocalStorage = {
+    save: (object) => {
+        localStorage.setItem('examWorkeds', JSON.stringify(object));
+    },
+    get: () => {
+        return JSON.parse(localStorage.getItem('examWorkeds'));
+    },
+    remove: () => {
+        localStorage.removeItem('examWorkeds');
+    }
+}

@@ -4,10 +4,13 @@ import { Button, Nav, NavDropdown } from 'react-bootstrap'
 import imgAccount from '../../data/imgs/user_icon.webp'
 import { Link } from "react-router-dom";
 import { authLocalStorage } from "../../utils/localStorage";
+import { useDispatch } from "react-redux";
+import { removeAuth } from "../../redux/slices/authSlice";
+import { removexamWorked } from "../../redux/slices/examWorkedSlice";
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const dispatch = useDispatch()
     const handleMenuToggle = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -20,7 +23,8 @@ function Header() {
     }, []);
 
     const handleLogOut = () => {
-        localStorage.removeItem('auth');
+        dispatch(removeAuth())
+        dispatch(removexamWorked())
         localStorage.removeItem('username');
         setAuth(false); 
         setIsMenuOpen(false)

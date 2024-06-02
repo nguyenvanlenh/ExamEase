@@ -62,6 +62,21 @@ export const workTimeService = {
                 console.log(error.response?.data.message)
                 return error.response
             })
+    },
+    getAllWorkTimeUser: (authObject) => {
+        const url = `${URL_PATH}/api/worktimes/users/${authObject?.userId}`
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${authObject?.token}`
+            }
+        })
+           .then(response => {
+                return response.data;
+            })
+           .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
     }
 
 }

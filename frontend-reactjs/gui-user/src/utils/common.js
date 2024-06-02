@@ -45,3 +45,13 @@ export const setDataByKeyLS = (key, data) => {
     }
 };
 
+export const formatdMYFromString =(string) => {
+    const date = new Date(string);
+
+    // Trích xuất ngày, tháng và năm
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
+    const day = date.getUTCDate();
+    return `${day}/${month}/${year}`;
+}
+
