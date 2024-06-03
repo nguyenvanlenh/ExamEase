@@ -4,6 +4,8 @@ import examSlice from './slices/examSlice'
 import listQuestionSlice from './slices/listQuestionSlice'
 import authSlice from './slices/authSlice'
 import examWorkedSlice from './slices/examWorkedSlice'
+import pageSlice from './slices/pageSlice'
+
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +13,7 @@ export const store = configureStore({
         listQuestion: listQuestionSlice.reducer,
         exams: examSlice.reducer,
         auth: authSlice.reducer,
-        examWorkeds: examWorkedSlice.reducer
+        examWorkeds: examWorkedSlice.reducer,
+        page: pageSlice.reducer
     },
 })

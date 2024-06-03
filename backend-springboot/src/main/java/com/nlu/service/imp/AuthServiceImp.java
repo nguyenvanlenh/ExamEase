@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nlu.exception.NotFoundException;
 import com.nlu.exception.ResourceExistedException;
 import com.nlu.model.dto.request.LoginRequest;
 import com.nlu.model.dto.request.RegisterRequest;
@@ -77,9 +78,9 @@ public class AuthServiceImp implements AuthService{
 	public void register(RegisterRequest request) {
 		// TODO Auto-generated method stub
 		if(userRepository.existsByUsername(request.getUsername()))
-			throw new ResourceExistedException("username already exists!");
+			throw new ResourceExistedException("register_username_exists");
 		if(userRepository.existsByEmail(request.getEmail()))
-			throw new ResourceExistedException("email already exists!");
+			throw new ResourceExistedException("register_email_exists");
 		
 		User user = new User();
 		user.setUsername(request.getUsername());
@@ -92,12 +93,12 @@ public class AuthServiceImp implements AuthService{
 		
 		if(listRoles.isEmpty()) {
 			Role role = roleRepository.findByName(ERole.STUDENT.toString())
-					.orElseThrow(() -> new RuntimeException("Role not found!"));
+					.orElseThrow(() -> new NotFoundException("role_not_found",ERole.STUDENT.toString()));
 			setRoles.add(role);
 		}else {
 			listRoles.forEach(role ->{
 			Role roleTeacher = roleRepository.findByName(ERole.TEACHER.toString())
-			.orElseThrow(() -> new RuntimeException("Role not found!"));
+					.orElseThrow(() -> new NotFoundException("role_not_found",ERole.TEACHER.toString()));
 			setRoles.add(roleTeacher);
 			});
 		}

@@ -3,7 +3,7 @@ import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
 import Footer from "../../components/footer/Footer"
 import Header from "../../components/header/Header"
-import { Button, Form, Image, InputGroup, ListGroup, Nav, NavDropdown, Pagination, Row, Spinner, Stack } from "react-bootstrap"
+import { Button, Form, Image, InputGroup, ListGroup, Nav, Pagination, Row, Spinner, Stack } from "react-bootstrap"
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam"
@@ -12,17 +12,22 @@ import { Link } from "react-router-dom"
 import { examService } from '../../services/examService';
 import { getDataByKeyLS, setDataByKeyLS } from '../../utils/common';
 import { categoryService } from '../../services/categoryService';
+import { useDispatch, useSelector } from 'react-redux';
+import { removePage, setPage } from '../../redux/slices/pageSlice';
 
 
 export const ListExams = () => {
+    const dispatch = useDispatch();
+    const page = useSelector(state => state.page);
     const [listExams, setListExams] = useState([]);
     const [listCate, setListCate] = useState(getDataByKeyLS("category"));
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(!page ? 0 : page);
     const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState();
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [category, setCategory] = useState("");
+    const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
 
 
 
@@ -45,6 +50,8 @@ export const ListExams = () => {
     // xử lý khi click chọn category
     const [selectedCategory, setSelectedCategory] = useState(null);
     const handleCategoryClick = (cate) => {
+        dispatch(removePage())
+        setCurrentPage(0)
         if (category == cate) {
             setCategory("")
             setSelectedCategory(null);
@@ -55,15 +62,6 @@ export const ListExams = () => {
         }
     };
     // xử lý tìm kiếm
-    const handleSearch = async () => {
-        setShowSuggestions(false)
-        setSearchQuery(searchQuery)
-        const response = await examService.searching(searchQuery, category, currentPage);
-        setListExams(response?.data.content);
-        setTotalPages(response?.data.totalPage);
-    };
-
-    // xử lý auto complete search
     const handleInputChange = (event) => {
         const query = event.target.value;
         setSearchQuery(query);
@@ -71,15 +69,51 @@ export const ListExams = () => {
             setShowSuggestions(true);
             const fetching = async () => {
                 const response = await examService.searching(query, category);
-                setSuggestions(response?.data.content)
-            }
+                setSuggestions(response?.data.content);
+                setSelectedSuggestion(-1); // Reset selected suggestion when input changes
+            };
             fetching();
         } else {
             setShowSuggestions(false);
+            setSelectedSuggestion(-1); // Reset selected suggestion when input is empty
         }
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'ArrowUp') {
+            setSelectedSuggestion((prev) => (prev > 0 ? prev - 1 : prev));
+        } else if (event.key === 'ArrowDown') {
+            setSelectedSuggestion((prev) =>
+                prev < suggestions.length - 1 ? prev + 1 : prev
+            );
+        }
+        else if (event.key === 'Enter') {
+            if (selectedSuggestion !== -1) {
+                handleSearchBySuggestion(suggestions[selectedSuggestion]);
+            } else {
+                handleSearch();
+            }
+        }
+    };
+
+
+    const handleSearch = async (title) => {
+        setShowSuggestions(false);
+        const response = await examService.searching(
+            title || searchQuery,
+            category,
+            currentPage
+        );
+        setListExams(response?.data.content);
+        setTotalPages(response?.data.totalPage);
+    };
+    const handleSearchBySuggestion = (suggestion) => {
+        setSearchQuery(suggestion.title);
+        handleSearch(suggestion.title);
     };
     // xử lý phân trang
     const handlePageChange = (pageNumber) => {
+        dispatch(setPage(pageNumber))
         setCurrentPage(pageNumber);
     };
 
@@ -137,7 +171,7 @@ export const ListExams = () => {
                                 <h1>
                                     Thư viện đề thi
                                 </h1>
-                                <Nav className="nav-pills flex-wrap mt-2 mb-3" style={{ gap: '10px' }}>
+                                <Nav className="nav-pills flex-wrap mt-4 mb-4" style={{ gap: '10px' }}>
                                     {listCate?.map((item, index) => (
                                         <Nav.Item key={index}>
                                             <Nav.Link
@@ -152,33 +186,38 @@ export const ListExams = () => {
                                     ))}
                                 </Nav>
 
-                                {/* <div className="
-                                test-books nav-horizontal nav-horizontal-twolevels
-                                pt-3 pb-3">
-                                    <Link to="/" className="test-book " href="/">2024</Link>
-                                    <Link to="/" className="test-book " href="/">2023</Link>
-                                    <Link to="/" className="test-book " href="/">2022</Link>
-                                    <Link to="/" className="test-book " href="/">2021</Link>
-                                </div> */}
                                 <div className="position-relative">
                                     <InputGroup className="mb-3">
                                         <Form.Control
                                             placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên đề thi ..."
                                             value={searchQuery}
                                             onChange={handleInputChange}
+                                            onKeyDown={handleKeyDown}
                                         />
-                                        <Button className="btn-search" onClick={handleSearch}>
+                                        <Button className="btn-search" onClick={(e) => handleSearch(e.target.value)}>
                                             Tìm kiếm
                                         </Button>
                                     </InputGroup>
                                     {showSuggestions && (
                                         <ListGroup className="position-absolute w-100" style={{ zIndex: 9999 }}>
-                                            {suggestions?.map((result) => {
-                                                return <ListGroup.Item> <Link to={"/"}  >{result.title}</Link></ListGroup.Item>
-                                            })}
+                                            {suggestions?.map((result, index) => (
+                                                <ListGroup.Item
+                                                    key={index}
+                                                    onClick={() => {
+                                                        setSearchQuery(result.title)
+                                                        handleSearchBySuggestion(result)
+                                                        // handleSearch(result.title)
+                                                    }
+                                                    }
+                                                    className={index === selectedSuggestion ? 'selected' : ''}
+                                                >
+                                                    {result.title}
+                                                </ListGroup.Item>
+                                            ))}
                                         </ListGroup>
                                     )}
                                 </div>
+
 
                             </div>
                         </Row>

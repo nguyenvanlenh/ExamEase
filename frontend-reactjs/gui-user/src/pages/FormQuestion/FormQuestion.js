@@ -8,7 +8,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { RequestData } from '../../utils/request';
 import { useSelector, useDispatch } from 'react-redux';
 import { scrollToElement, setDataByKeyLS } from '../../utils/common';
-import { updateCreateExamRequest } from '../../redux/slices/examSlice';
+import { removeExamRequest, updateCreateExamRequest } from '../../redux/slices/examSlice';
 import { examService } from '../../services/examService';
 export const FormQuestion = () => {
     const now = 60;
@@ -64,6 +64,7 @@ export const FormQuestion = () => {
         const data = await examService.createExam(examTemp);
         if (data?.status < 400) {
             setDataByKeyLS("examSaved", data.data);
+            dispatch(removeExamRequest())
             setShowModal(true);
         } else {
             setError(data.data.message);
@@ -141,7 +142,6 @@ export const FormQuestion = () => {
                                 })}
                             </Row>
                         </Col>
-
                     </Row>
                     <Row className='pt-4'>
                         <Col md={6}>
