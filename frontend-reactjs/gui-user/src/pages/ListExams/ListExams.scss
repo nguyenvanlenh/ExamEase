@@ -68,6 +68,9 @@ a {
         .btn-search {
             background-color: $color-blue_global;
         }
+        .selected {
+            background-color: #f0f0f0;
+        }
     }
     .content-wrapper {
         .active > .page-link,

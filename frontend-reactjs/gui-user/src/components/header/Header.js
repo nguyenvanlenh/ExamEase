@@ -16,20 +16,23 @@ function Header() {
     };
     const [auth, setAuth] = useState(false);
     useEffect(() => {
-      const authLocal = authLocalStorage.get();
-      if (authLocal?.authenticated) {
-        setAuth(authLocal?.authenticated);
-      }
+        const authLocal = authLocalStorage.get();
+        if (authLocal?.authenticated) {
+            setAuth(authLocal?.authenticated);
+        }
     }, []);
 
     const handleLogOut = () => {
         dispatch(removeAuth())
         dispatch(removexamWorked())
         localStorage.removeItem('username');
-        setAuth(false); 
+        localStorage.removeItem('category');
+        localStorage.removeItem('timeExam');
+        localStorage.removeItem('examSaved');
+        setAuth(false);
         setIsMenuOpen(false)
     }
-    
+
     return (
         <>
             <div id="id-header" style={{ height: isMenuOpen ? 'auto' : '64px' }}>
@@ -53,31 +56,31 @@ function Header() {
                         <div className="p-3">
                             {
                                 auth ? (
-<NavDropdown className="text-item"
-                                title={<span><img className="img-account"
-                                    src={imgAccount} alt="Avatar" /></span>}
-                                id="basic-nav-dropdown">
-                                <NavDropdown.ItemText style={{ color: '#8c98a4', fontWeight: 600 }}>Thông báo</NavDropdown.ItemText>
-                                <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>Bạn chưa có thông báo mới.</NavDropdown.ItemText>
-                                <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
-                                    <Link to="/create-exam" className="text-item">Tạo bài thi</Link>
-                                </NavDropdown.ItemText>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="account">Trang cá nhân</NavDropdown.Item>
-                                <NavDropdown.ItemText onClick={handleLogOut}>Đăng xuất</NavDropdown.ItemText>
-                            </NavDropdown>
-                                ) : 
-                                (<Button className="btn-login"><Link to={"/login"}>Đăng nhập</Link></Button>)
+                                    <NavDropdown className="text-item"
+                                        title={<span><img className="img-account"
+                                            src={imgAccount} alt="Avatar" /></span>}
+                                        id="basic-nav-dropdown">
+                                        <NavDropdown.ItemText style={{ color: '#8c98a4', fontWeight: 600 }}>Thông báo</NavDropdown.ItemText>
+                                        <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>Bạn chưa có thông báo mới.</NavDropdown.ItemText>
+                                        <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
+                                            <Link to="/create-exam" className="text-item">Tạo bài thi</Link>
+                                        </NavDropdown.ItemText>
+                                        <NavDropdown.Divider />
+                                        <NavDropdown.Item href="account">Trang cá nhân</NavDropdown.Item>
+                                        <NavDropdown.ItemText onClick={handleLogOut}>Đăng xuất</NavDropdown.ItemText>
+                                    </NavDropdown>
+                                ) :
+                                    (<Button className="btn-login"><Link to={"/login"}>Đăng nhập</Link></Button>)
                             }
-                            
+
                         </div>
                     </div>
                     {
                         auth ? (<div className="container-menu" onClick={handleMenuToggle}>
-                        <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
-                    </div>) : (<Button className="container-menu btn-login-menu"><Link to={"/login"}>Đăng nhập</Link></Button>)
+                            <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
+                        </div>) : (<Button className="container-menu btn-login-menu"><Link to={"/login"}>Đăng nhập</Link></Button>)
                     }
-                    
+
                 </div>
                 <div className={`content-menu-mobile`} style={{ display: isMenuOpen ? 'block' : 'none' }}>
                     <div className="p-2 ms-auto">
@@ -94,6 +97,9 @@ function Header() {
                     </div>
                     <div className="p-2">
                         <Nav.Link href="#home" className="text-item">Trang cá nhân</Nav.Link>
+                    </div>
+                    <div className="p-2">
+                        <Link to="/create-exam" className="text-item">Tạo đề thi</Link>
                     </div>
                     <div className="p-2">
                         <Nav.Link onClick={handleLogOut} className="text-item">Đăng xuất</Nav.Link>

@@ -15,10 +15,12 @@ export const parseDateString = (dateString) => {
 
 export const scrollToElement = (id) => {
     const element = document.getElementById(id);
-    if (element) {
+    const header = document.querySelector('#id-header');
+    if (element && header) {
         const { top, height } = element.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-        const offset = top - (windowHeight - height) / 2;
+        const headerHeight = header.getBoundingClientRect().height;
+        const offset = window.pageYOffset + top - headerHeight - (windowHeight / 2) + (height / 2);
 
         window.scrollTo({
             top: offset,
@@ -26,6 +28,9 @@ export const scrollToElement = (id) => {
         });
     }
 };
+
+
+
 export const getDataByKeyLS = (key) => {
     try {
         const item = localStorage.getItem(key);
