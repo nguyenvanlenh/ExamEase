@@ -9,11 +9,17 @@ import EqualizerIcon from "@mui/icons-material/Equalizer";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam";
 import { examService } from "../../services/examService";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const [username, setUsername] = useState(null);
   const [listExams, setListExams] = useState([]);
   const [sizePage, setSizePage] = useState(8);
+  // const [listExamWorded, setListExamWorded] = useState([]);
+  const auth = useSelector((state) => state.auth)
+  const listResultExam = useSelector((state) => state.examWorkeds)
+  console.log(listResultExam)
+  console.log(auth)
   useEffect(() => {
     const usernameLocal = JSON.parse(localStorage.getItem('username'))
     if (usernameLocal) {
@@ -27,7 +33,6 @@ export default function Home() {
       const response = await examService.searching("", "", 0, 8);
       setListExams(response?.data.content);
       // setTotalPages(response?.data.totalPage);
-
     };
     fetching();
   }, []);
@@ -64,24 +69,6 @@ export default function Home() {
     nameButton: "Làm bài",
     listExam: listExam,
   };
-  const listResultExam = [
-    {
-      id: 1,
-      title: "Practice Set 2023 TOEIC Test 10",
-      time: "40",
-      dateDone: "Ngày làm bài: 03/01/2024",
-      timeDone: "Thời gian hoàn thành: 0:10:04",
-      result: "Kết quả: 2/6",
-    },
-    {
-      id: 2,
-      title: "Practice Set 2023 TOEIC Test 10",
-      time: "40",
-      dateDone: "Ngày làm bài: 03/01/2024",
-      timeDone: "Thời gian hoàn thành: 0:10:04",
-      result: "Kết quả: 2/6",
-    },
-  ];
   const objectTookExams = {
     type: "TOOK_EXAM",
     nameButton: "Xem chi tiết",
@@ -107,7 +94,7 @@ export default function Home() {
               <div className="text-chart">Thống kê kết quả luyện thi</div>
             </Link>
           </Stack>
-
+          
           <ListCardItem objectExams={objectTookExams} />
           <div className="view-all">
             <Link>
@@ -115,6 +102,7 @@ export default function Home() {
               <KeyboardDoubleArrowRightIcon fontSize="16" />
             </Link>
           </div>
+          
         </div>
       </Container>
       <div className="exam-bottom">

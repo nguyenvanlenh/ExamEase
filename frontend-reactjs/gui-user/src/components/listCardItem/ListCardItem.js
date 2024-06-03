@@ -23,7 +23,7 @@ function ListCardItem(prop) {
   return (
     <Row className="wrap-cards">
       {objectExams && objectExams.listExam && objectExams.listExam.length > 0 ?
-        objectExams.listExam.map((card) => (
+        objectExams.listExam.slice(0, 4).map((card) => (
           <CardItem
             key={card.id}
             title={card.title}
@@ -37,7 +37,6 @@ function ListCardItem(prop) {
           />
         )) :
         notification
-      
       }
     </Row>
   );
