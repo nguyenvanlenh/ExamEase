@@ -2,6 +2,9 @@ package com.nlu.controller;
 
 import java.util.List;
 
+import com.nlu.model.dto.response.QuestionResultResponse;
+import com.nlu.repository.QuestionRepository;
+import com.nlu.utils.AuthenticationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +27,6 @@ public class QuestionController {
 
 	
 	@Autowired private QuestionService questionService;
-
 	
 	@GetMapping("/exam-number")
 	public ResponseData getQuestionByExamNumberId(@RequestParam("examNumId") Integer examNumId) {
@@ -51,5 +53,14 @@ public class QuestionController {
 				 .status(HttpStatus.OK.value())
 				 .message("Question updated successfully")
 				 .build();
+	}
+
+	@GetMapping("exam-number/{examNumberId}")
+	public ResponseData getQuestions(@PathVariable Integer examNumberId) {
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("Question updated successfully")
+				.data(questionService.getQuestionResult(examNumberId))
+				.build();
 	}
 }

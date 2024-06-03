@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Image, Row, Stack } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Image,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
 import "./Result.scss";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import { Link, useLocation, useNavigate, useNavigation } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
@@ -15,31 +28,48 @@ import ErrorIcon from "@mui/icons-material/Error";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { examNumberService } from "../../services/examNumberService";
 import { authLocalStorage } from "../../utils/localStorage";
-import { calculateDurationInSeconds, formatTimeHMS } from "../../utils/utilsFunction";
+import {
+  calculateDurationInSeconds,
+  formatTimeHMS,
+} from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
+import { questionService } from "../../services/questionService";
 
 function Result({ navigation }) {
   const location = useLocation();
-  const auth = authLocalStorage.get()
+  const auth = authLocalStorage.get();
   const { idExamNumber } = location.state || {};
   const [result, setResult] = useState(null);
   const [totalTime, setTotalTime] = useState(0);
+  const [questionRes, setQuestionRes] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await examNumberService.getResultExamNumberUser(idExamNumber, auth?.userId);
+        const data = await examNumberService.getResultExamNumberUser(
+          idExamNumber,
+          auth?.userId
+        );
         setResult(data.data);
-        const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber);
-        setTotalTime(calculateDurationInSeconds(workTime?.data.beginExam, workTime?.data.endExam))
+        const workTime = await workTimeService.getWorkTimeUser(
+          auth?.userId,
+          idExamNumber
+        );
+        setTotalTime(
+          calculateDurationInSeconds(
+            workTime?.data.beginExam,
+            workTime?.data.endExam
+          )
+        );
+        const questionResults = await questionService.getQuestionResult(
+          idExamNumber
+        );
+        setQuestionRes(questionResults.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-    
   }, []);
-
-  
 
   const handleTabNumber = (number) => {};
   return (
@@ -49,9 +79,7 @@ function Result({ navigation }) {
         <Row className="mg">
           <Col md={9} xs={12}>
             <div className="content-block">
-              <h1 className="title">
-                Kết quả luyện tập: {result?.examName}
-              </h1>
+              <h1 className="title">Kết quả luyện tập: {result?.examName}</h1>
               <div className="tab-container">
                 <Stack direction="horizontal" gap={2}>
                   <Button
@@ -61,9 +89,9 @@ function Result({ navigation }) {
                     Xem đáp án
                   </Button>
                   <Link
-                    style={{ padding: '6px'}}
+                    style={{ padding: "6px" }}
                     to={{
-                      pathname: "/list-exams"
+                      pathname: "/list-exams",
                     }}
                     className={`tab-pill active2`}
                   >
@@ -81,7 +109,8 @@ function Result({ navigation }) {
                               Kết quả bài thi
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {result ? result?.totalCorrect : 0}/{result ? result?.totalQuestion : 0}
+                              {result ? result?.totalCorrect : 0}/
+                              {result ? result?.totalQuestion : 0}
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -90,7 +119,14 @@ function Result({ navigation }) {
                               Độ chính xác (#đúng/#tổng)
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {result ? (result?.totalCorrect/ result?.totalQuestion)*100.0 : 0}%
+                              {result
+                                ? (
+                                    (result?.totalCorrect /
+                                      result?.totalQuestion) *
+                                    100.0
+                                  ).toFixed(1)
+                                : 0}
+                              %
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -153,44 +189,36 @@ function Result({ navigation }) {
                           <td>{result?.totalCorrect}</td>
                           <td>{result?.totalWrong}</td>
                           <td>{result?.totalSkipped}</td>
-                          <td>{(result?.totalCorrect/ result?.totalQuestion)*100.0}%</td>
+                          <td>
+                            {result
+                              ? (
+                                  (result?.totalCorrect /
+                                    result?.totalQuestion) *
+                                  100.0
+                                ).toFixed(1)
+                              : 0}
+                            %
+                          </td>
                           <td className="d-flex flex-wrap">
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
+                            {questionRes.length > 0 &&
+                              questionRes.map((q, index) => {
+                                let colorClass;
+                                if (q.correct === true) {
+                                  colorClass = "color-correct";
+                                } else if (q.correct === false) {
+                                  colorClass = "color-error";
+                                } else {
+                                  colorClass = "color-pass";
+                                }
+                                return (
+                                  <div
+                                    key={index}
+                                    className={`wrap-question ${colorClass}`}
+                                  >
+                                    <div className="question">{index + 1}</div>
+                                  </div>
+                                );
+                              })}
                           </td>
                         </tr>
                       </tbody>

@@ -69,8 +69,6 @@ function Examdetail() {
           idExamNumber,
           time
         );
-      console.log("idExamNumber: ", idExamNumber);
-      console.log(workTime);
       // kiểm tra đề đã thi chưa thi lại
       if (workTime?.data) {
         console.log("tao thanh cong");
@@ -221,18 +219,11 @@ function Examdetail() {
                 <div className={`tab-content ${tabNumber === 1 || "d-none"}`}>
                   <span>Các phần thi:</span>
                   <ul>
-                    <li>
-                      <Link className="p-2">Đề 1</Link>
-                    </li>
-                    <li>
-                      <Link className="p-2">Đề 2</Link>
-                    </li>
-                    <li>
-                      <Link className="p-2">Đề 3</Link>
-                    </li>
-                    <li>
-                      <Link className="p-2">Đề 4</Link>
-                    </li>
+                    {examNumber?.examNumbers.map((e, index) => (
+                      <li key={index}>
+                        <Link to={`/test/${e.id}`} className="p-2">Đề {index+1}</Link>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>

@@ -4,16 +4,8 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.nlu.model.dto.response.QuestionResultResponse;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +13,33 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@SqlResultSetMapping(
+		name = "QuestionResultMapping",
+		classes = @ConstructorResult(
+				targetClass = QuestionResultResponse.class,
+				columns = {
+						@ColumnResult(name = "id", type = Long.class),
+						@ColumnResult(name = "name_question", type = String.class),
+						@ColumnResult(name = "correct", type = Boolean.class)
+				}
+		)
+)
+@NamedNativeQuery(
+		name = "Question.questionResult",
+		query = "SELECT q.id, q.name_question, sub.correct " +
+				"FROM questions q " +
+				"JOIN examnumber_ques eq ON q.id = eq.question_id " +
+				"LEFT JOIN (" +
+				"    SELECT q.id, o.correct " +
+				"    FROM questions q " +
+				"    JOIN examnumber_ques eq ON q.id = eq.question_id " +
+				"    JOIN options o ON q.id = o.question_id " +
+				"    LEFT JOIN user_answers ua ON o.id = ua.option_id " +
+				"    WHERE ua.user_id = :userId AND eq.examnumber_id = :examNumberId " +
+				") sub ON sub.id = q.id " +
+				"WHERE eq.examnumber_id = :examNumberId",
+		resultSetMapping = "QuestionResultMapping"
+)
 @Table(name = "questions")
 @Getter
 @Setter
@@ -46,7 +65,5 @@ public class Question {
 	    this.nameQuestion = nameQuestion;
 	    this.options = options;
 	}
-	
-	
-	
+
 }

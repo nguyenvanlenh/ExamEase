@@ -96,12 +96,15 @@ export default function Home() {
           </Stack>
           
           <ListCardItem objectExams={objectTookExams} />
-          <div className="view-all">
+          {
+            listResultExam && listResultExam.length > 0 &&
+            (<div className="view-all">
             <Link>
               <b>Xem tất cả</b>
               <KeyboardDoubleArrowRightIcon fontSize="16" />
             </Link>
-          </div>
+          </div>)
+          }
           
         </div>
       </Container>
