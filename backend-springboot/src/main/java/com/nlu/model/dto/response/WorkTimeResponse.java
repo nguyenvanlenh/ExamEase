@@ -12,6 +12,7 @@ import java.util.Date;
 @Builder
 public class WorkTimeResponse {
     private Long id;
+    private Integer idExamNumber;
     private String title;
     private String time;
     private Integer completionTime;
