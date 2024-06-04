@@ -12,6 +12,7 @@ const examWorkedSlice = createSlice({
             action.payload.map((work) => {
                 return state.push({
                     id: work.id,
+                    idExamNumber: work.idExamNumber,
                     title: work.title,
                     time: work.time,
                     timeDone: "Ngày làm bài: " + formatdMYFromString(work.workDay),

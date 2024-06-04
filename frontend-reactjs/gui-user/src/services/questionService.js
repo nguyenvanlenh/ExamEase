@@ -17,5 +17,20 @@ export const questionService = {
             console.log(error.response?.data.message);
             return error.response;
         });
+    },
+    getQuestion: (idQuestion) => {
+        const url = `${URL_PATH}/api/questions/${idQuestion}`
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${auth?.token}`
+            }
+        })
+        .then(response => {
+            return response.data;
+        })
+        .catch(error => {
+            console.log(error.response?.data.message);
+            return error.response;
+        });
     }
 }

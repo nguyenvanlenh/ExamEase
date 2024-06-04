@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
+  Accordion,
   Alert,
   Button,
   Col,
   Container,
+  Dropdown,
   Image,
+  Modal,
   Row,
   Stack,
 } from "react-bootstrap";
@@ -13,12 +16,7 @@ import UserImage from "../../data/imgs/user_icon.webp";
 import "./Result.scss";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
@@ -42,7 +40,12 @@ function Result({ navigation }) {
   const [result, setResult] = useState(null);
   const [totalTime, setTotalTime] = useState(0);
   const [questionRes, setQuestionRes] = useState([]);
+  const [userName, setUsername] = useState("user");
+  const [modalShowQuestion, setModalShowQuestion] = useState(false);
+  const [contentQuestion, setContentQuestion] = useState({});
   useEffect(() => {
+    const usernameLocal = JSON.parse(localStorage.getItem("username"));
+    setUsername(usernameLocal);
     const fetchData = async () => {
       try {
         const data = await examNumberService.getResultExamNumberUser(
@@ -72,6 +75,12 @@ function Result({ navigation }) {
   }, []);
 
   const handleTabNumber = (number) => {};
+  const handleOpenDetailQuestion = async (idQuestion) => {
+    const question = await questionService.getQuestion(idQuestion);
+    setContentQuestion(question.data);
+    setModalShowQuestion(true);
+    console.log(question);
+  };
   return (
     <div id="id-result">
       <Header />
@@ -212,6 +221,9 @@ function Result({ navigation }) {
                                 }
                                 return (
                                   <div
+                                    onClick={() =>
+                                      handleOpenDetailQuestion(q.id)
+                                    }
                                     key={index}
                                     className={`wrap-question ${colorClass}`}
                                   >
@@ -232,7 +244,7 @@ function Result({ navigation }) {
             <div className="user-target-info-box">
               <Image src={UserImage} roundedCircle height={70} />
               <div className="text-center">
-                <strong>20130302</strong>
+                <strong>{userName}</strong>
               </div>
               <div className="user-target-info">
                 <p>
@@ -260,6 +272,80 @@ function Result({ navigation }) {
           </Col>
         </Row>
       </Container>
+      <Modal
+        size="lg"
+        show={modalShowQuestion}
+        onHide={() => setModalShowQuestion(false)}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-lg">Đáp án</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col>
+                <h4>Câu hỏi: {contentQuestion?.nameQuestion}</h4>
+              </Col>
+            </Row>
+            {contentQuestion?.options &&
+              contentQuestion?.options.length > 0 &&
+              contentQuestion?.options.map((o, index) => {
+                let nameOption;
+                if (index === 0) {
+                  nameOption = "A";
+                } else if (index === 1) {
+                  nameOption = "B";
+                } else if (index === 2) {
+                  nameOption = "C";
+                } else {
+                  nameOption = "D";
+                }
+                return (
+                  <Row className="ps-3" key={index}>
+                    <Col className="mb-1">
+                      {nameOption}. {o.nameOption}
+                    </Col>
+                  </Row>
+                );
+              })}
+            <Row>
+              <Col className="ps-4 pt-4">
+                <Accordion defaultActiveKey="1">
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>Đáp án</Accordion.Header>
+                    <Accordion.Body>
+                      {contentQuestion?.options &&
+                        contentQuestion?.options.length > 0 &&
+                        contentQuestion?.options.map((o, index) => {
+                          let nameOption;
+                          if (index === 0) {
+                            nameOption = "A";
+                          } else if (index === 1) {
+                            nameOption = "B";
+                          } else if (index === 2) {
+                            nameOption = "C";
+                          } else {
+                            nameOption = "D";
+                          }
+                          return (
+                            <Row className="ps-1" key={index}>
+                              <Col
+                                style={o.correct ? { color: "#198754" } : {}}
+                              >
+                                {nameOption}. {o.nameOption}
+                              </Col>
+                            </Row>
+                          );
+                        })}
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
       <Footer />
     </div>
   );
