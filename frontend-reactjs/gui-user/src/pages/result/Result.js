@@ -32,10 +32,11 @@ import {
 } from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
 import { questionService } from "../../services/questionService";
+import { useSelector } from "react-redux";
 
 function Result({ navigation }) {
   const location = useLocation();
-  const auth = authLocalStorage.get();
+  const auth = useSelector(state => state.auth)
   const { idExamNumber } = location.state || {};
   const [result, setResult] = useState(null);
   const [totalTime, setTotalTime] = useState(0);
@@ -79,8 +80,25 @@ function Result({ navigation }) {
     const question = await questionService.getQuestion(idQuestion);
     setContentQuestion(question.data);
     setModalShowQuestion(true);
-    console.log(question);
   };
+  function setNameOption(index) {
+    if (index === 0) {
+      return "A";
+    } else if (index === 1) {
+      return "B";
+    } else if (index === 2) {
+      return "C";
+    }
+    return  "D"
+  }
+  function setColor(correct) {
+    if (correct === true) {
+      return "color-correct";
+    } else if (correct === false) {
+      return "color-error";
+    }
+    return "color-pass";
+  }
   return (
     <div id="id-result">
       <Header />
@@ -211,21 +229,13 @@ function Result({ navigation }) {
                           <td className="d-flex flex-wrap">
                             {questionRes.length > 0 &&
                               questionRes.map((q, index) => {
-                                let colorClass;
-                                if (q.correct === true) {
-                                  colorClass = "color-correct";
-                                } else if (q.correct === false) {
-                                  colorClass = "color-error";
-                                } else {
-                                  colorClass = "color-pass";
-                                }
                                 return (
                                   <div
                                     onClick={() =>
                                       handleOpenDetailQuestion(q.id)
                                     }
                                     key={index}
-                                    className={`wrap-question ${colorClass}`}
+                                    className={`wrap-question ${setColor(q.correct)}`}
                                   >
                                     <div className="question">{index + 1}</div>
                                   </div>
@@ -291,20 +301,10 @@ function Result({ navigation }) {
             {contentQuestion?.options &&
               contentQuestion?.options.length > 0 &&
               contentQuestion?.options.map((o, index) => {
-                let nameOption;
-                if (index === 0) {
-                  nameOption = "A";
-                } else if (index === 1) {
-                  nameOption = "B";
-                } else if (index === 2) {
-                  nameOption = "C";
-                } else {
-                  nameOption = "D";
-                }
                 return (
                   <Row className="ps-3" key={index}>
-                    <Col className="mb-1">
-                      {nameOption}. {o.nameOption}
+                    <Col className={`mb-1 `} >
+                      {setNameOption(index)}. {o.nameOption}
                     </Col>
                   </Row>
                 );
@@ -318,22 +318,12 @@ function Result({ navigation }) {
                       {contentQuestion?.options &&
                         contentQuestion?.options.length > 0 &&
                         contentQuestion?.options.map((o, index) => {
-                          let nameOption;
-                          if (index === 0) {
-                            nameOption = "A";
-                          } else if (index === 1) {
-                            nameOption = "B";
-                          } else if (index === 2) {
-                            nameOption = "C";
-                          } else {
-                            nameOption = "D";
-                          }
                           return (
                             <Row className="ps-1" key={index}>
                               <Col
                                 style={o.correct ? { color: "#198754" } : {}}
                               >
-                                {nameOption}. {o.nameOption}
+                                {setNameOption(index)}. {o.nameOption}
                               </Col>
                             </Row>
                           );

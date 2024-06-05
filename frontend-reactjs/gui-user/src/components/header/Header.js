@@ -2,26 +2,24 @@ import "./header.scss";
 import React, { useEffect, useState } from 'react'
 import { Button, Nav, NavDropdown } from 'react-bootstrap'
 import imgAccount from '../../data/imgs/user_icon.webp'
-import { Link } from "react-router-dom";
-import { authLocalStorage } from "../../utils/localStorage";
-import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { removeAuth } from "../../redux/slices/authSlice";
 import { removexamWorked } from "../../redux/slices/examWorkedSlice";
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuNoneLoginOpen, setIsMenuNoneLoginOpen] = useState(false);
+    const navigation = useNavigate()
     const dispatch = useDispatch()
     const handleMenuToggle = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-    const [auth, setAuth] = useState(false);
-    useEffect(() => {
-        const authLocal = authLocalStorage.get();
-        if (authLocal?.authenticated) {
-            setAuth(authLocal?.authenticated);
-        }
-    }, []);
-
+    const handleMenuNoneLogin = () => {
+        setIsMenuNoneLoginOpen(!isMenuNoneLoginOpen)
+    }
+    const auth = useSelector(state => state.auth)
+    const isAuthEmpty = Object.keys(auth).length !== 0;
     const handleLogOut = () => {
         dispatch(removeAuth())
         dispatch(removexamWorked())
@@ -29,8 +27,8 @@ function Header() {
         localStorage.removeItem('category');
         localStorage.removeItem('timeExam');
         localStorage.removeItem('examSaved');
-        setAuth(false);
         setIsMenuOpen(false)
+        navigation("/")
     }
 
     return (
@@ -48,14 +46,14 @@ function Header() {
                             <Link to="/list-exams" className="text-item">Đề thi online</Link>
                         </div>
                         <div className="p-3">
-                            <Nav.Link href="#home" className="text-item">Đề thi của tôi</Nav.Link>
+                            <Nav.Link href="#home" className="text-item">Thi trực tuyến</Nav.Link>
                         </div>
                         <div className="p-3">
                             <Nav.Link href="#home" className="text-item">Liên hệ</Nav.Link>
                         </div>
                         <div className="p-3">
                             {
-                                auth ? (
+                                isAuthEmpty ? (
                                     <NavDropdown className="text-item"
                                         title={<span><img className="img-account"
                                             src={imgAccount} alt="Avatar" /></span>}
@@ -76,11 +74,24 @@ function Header() {
                         </div>
                     </div>
                     {
-                        auth ? (<div className="container-menu" onClick={handleMenuToggle}>
+                        isAuthEmpty ? (<div className="container-menu" onClick={handleMenuToggle}>
                             <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
                         </div>) : (<Button className="container-menu btn-login-menu"><Link to={"/login"}>Đăng nhập</Link></Button>)
                     }
+                    {
+                        isAuthEmpty || (<div className="container-menu" onClick={handleMenuNoneLogin}>
+                        <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
+                    </div>)
+                    }
 
+                </div>
+                <div className={`content-menu-mobile`} style={{ backgroundColor: "#ffffff", display: isMenuNoneLoginOpen ? 'block' : 'none' }}>
+                    <div className="p-2 ms-auto">
+                        <Nav.Link href="/login" className="text-item">Đăng nhập</Nav.Link>
+                    </div>
+                    <div className="p-2">
+                        <Link to="/list-exams" className="text-item">Thi trực tuyến</Link>
+                    </div>
                 </div>
                 <div className={`content-menu-mobile`} style={{ display: isMenuOpen ? 'block' : 'none' }}>
                     <div className="p-2 ms-auto">
@@ -88,9 +99,6 @@ function Header() {
                     </div>
                     <div className="p-2">
                         <Link to="/list-exams" className="text-item">Đề thi online</Link>
-                    </div>
-                    <div className="p-2">
-                        <Nav.Link href="#home" className="text-item">Đề thi của tôi</Nav.Link>
                     </div>
                     <div className="p-2">
                         <Nav.Link href="#home" className="text-item">Liên hệ</Nav.Link>
