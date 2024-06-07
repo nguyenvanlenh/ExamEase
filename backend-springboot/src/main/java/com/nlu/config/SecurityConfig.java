@@ -90,7 +90,7 @@ public class SecurityConfig{
                 .exceptionHandling(handling -> {
                 handling.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
                 })
-                ;
+              ;
         
       return http.build();
 	}
