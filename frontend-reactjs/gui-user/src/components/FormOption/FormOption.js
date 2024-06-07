@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Accordion, Button, Col, FloatingLabel, Form, Modal } from 'react-bootstrap';
-import { flushSync } from 'react-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { updateCreateExamRequest } from '../../redux/slices/examSlice';
+import { RequestData } from '../../utils/request';
 
-const FormOption = ({
-    questionNumber,
-    handleQuestionSubmit,
-    isSaving,
-    handleQuestionSaved,
-    setCompleted,
-    values }) => {
-    const [question, setQuestion] = useState("");
-    const [correctAnswer, setCorrectAnswer] = useState("");
-    const [incorrectAnswers, setIncorrectAnswers] = useState(["", "", ""]);
+
+const FormOption = ({ questionParent, questionNumber, setCompleted }) => {
+    const dispatch = useDispatch();
+
+    const [question, setQuestion] = useState(questionParent?.question || "");
+    const [correctAnswer, setCorrectAnswer] = useState(questionParent?.listOptionRequests.find(option => option.isCorrect)?.content || "");
+    const [incorrectAnswers, setIncorrectAnswers] = useState(
+        questionParent?.listOptionRequests
+            .filter(option => !option.isCorrect)
+            .map(option => option.content) || ["", "", ""]
+    );
     const [modalShow, setModalShow] = useState(false);
-    const examRequest = useSelector(state => state.exams);
+    const [isFormValid, setIsFormValid] = useState(false);
+
     useEffect(() => {
-        if (isSaving) {
-            saveQuestion();
-        }
-    }, [isSaving]);
+        setQuestion(questionParent?.question || "");
+        setCorrectAnswer(questionParent?.listOptionRequests.find(option => option.isCorrect)?.content || "");
+        setIncorrectAnswers(
+            questionParent?.listOptionRequests
+                .filter(option => !option.isCorrect)
+                .map(option => option.content) || ["", "", ""]
+        );
+    }, [questionParent]);
+
 
     useEffect(() => {
         autoCheckCompletion();
@@ -29,28 +37,25 @@ const FormOption = ({
         const isQuestionFilled = question.trim() !== '';
         const isCorrectAnswerFilled = correctAnswer.trim() !== '';
         const areIncorrectAnswersFilled = incorrectAnswers.every(answer => answer.trim() !== '');
-
-        if (isQuestionFilled && isCorrectAnswerFilled && areIncorrectAnswersFilled) {
-            setCompleted(true);
-        } else {
-            setCompleted(false);
-        }
+        const isComplete = isQuestionFilled && isCorrectAnswerFilled && areIncorrectAnswersFilled;
+        setIsFormValid(isComplete); // Update form validity
+        setCompleted(isComplete);
     };
 
     const saveQuestion = () => {
-        const questionData = {
-            question: question,
-            correctAnswer: correctAnswer,
-            incorrectAnswers: incorrectAnswers.filter((answer) => answer.trim() !== '')
-        };
-
-        if (question.trim() !== '' && correctAnswer.trim() !== '' && incorrectAnswers.some((answer) => answer.trim() !== '')) {
-            handleQuestionSubmit(questionData);
-            handleQuestionSaved();
-            setCompleted(true);
-        }
+        const questionSaved = RequestData().QuestionRequest(
+            questionNumber,
+            question,
+            [
+                RequestData().OptionRequest(correctAnswer, true),
+                ...incorrectAnswers.map(answer =>
+                    RequestData().OptionRequest(answer ?? "", false)
+                )
+            ]
+        );
+        dispatch(updateCreateExamRequest(questionSaved));
+        setCompleted(true);
     };
-
 
     return (
         <Col md={6}>
@@ -84,10 +89,7 @@ const FormOption = ({
                                     as="textarea"
                                     style={{ height: '100px', maxHeight: '250px' }}
                                     placeholder={`Câu hỏi ${questionNumber}`}
-                                    value={
-                                        examRequest[0]?.listQuestionRequests[questionNumber - 1]?.question ||
-                                        question
-                                    }
+                                    value={question}
                                     onChange={(e) => setQuestion(e.target.value)}
                                 />
                             </FloatingLabel>
@@ -97,24 +99,20 @@ const FormOption = ({
                                 <Form.Control
                                     type="text"
                                     placeholder="Điền đáp án đúng"
-                                    value={
-                                        examRequest[0]?.listQuestionRequests[questionNumber - 1]?.listOptionRequests[0].content ||
-                                        correctAnswer}
+                                    value={correctAnswer}
                                     onChange={(e) => setCorrectAnswer(e.target.value)}
                                     required
                                 />
                             </Form.Group>
-                            {[1, 2, 3].map((content, index) => (
+                            {incorrectAnswers.map((answer, index) => (
                                 <Form.Group key={index} className="mb-3" controlId={`incorrectAnswer${index}${questionNumber}`}>
                                     <Form.Control
                                         type="text"
                                         placeholder={`Điền đáp án sai`}
-                                        value={
-                                            examRequest[0]?.listQuestionRequests[questionNumber - 1]?.listOptionRequests[content].content ||
-                                            incorrectAnswers[content]}
+                                        value={answer}
                                         onChange={(e) => {
                                             const updatedAnswers = [...incorrectAnswers];
-                                            updatedAnswers[content] = e.target.value;
+                                            updatedAnswers[index] = e.target.value;
                                             setIncorrectAnswers(updatedAnswers);
                                         }}
                                     />
@@ -124,10 +122,18 @@ const FormOption = ({
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button className='w-100' onClick={() => {
-                        setModalShow(false)
-                        saveQuestion()
-                    }}>Xong</Button>
+                    <Button
+                        className='w-100'
+                        onClick={() => {
+                            if (isFormValid) { // Only save the question if the form is valid
+                                setModalShow(false);
+                                saveQuestion();
+                            }
+                        }}
+                        disabled={!isFormValid} // Disable the button if the form is invalid
+                    >
+                        Xong
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </Col>

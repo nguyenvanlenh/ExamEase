@@ -22,8 +22,9 @@ export const RequestData = () => {
             name: name
         };
     }
-    const QuestionRequest = (question, listOptionRequests) => {
+    const QuestionRequest = (id, question, listOptionRequests) => {
         return {
+            id: id,
             question: question,
             listOptionRequests: listOptionRequests
         };
