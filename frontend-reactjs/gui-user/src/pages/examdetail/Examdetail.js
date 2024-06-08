@@ -6,7 +6,6 @@ import {
   Container,
   Form,
   Image,
-  InputGroup,
   Row,
   Stack,
   Tab,
@@ -24,17 +23,16 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { examNumberService } from "../../services/examNumberService";
 import { workTimeService } from "../../services/workTimeService";
 import {
-  authLocalStorage,
   examiningLocalStorage,
   idExamNumberLocalStorage,
 } from "../../utils/localStorage";
 import { checkExaminingSwal } from "../../utils/mySwal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addListQuestion } from "../../redux/slices/listQuestionSlice";
 function Examdetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const auth = authLocalStorage.get("auth");
+  const auth = useSelector(state => state.auth)
   const location = useLocation();
   const id = location.state;
   const times = {
@@ -65,7 +63,7 @@ function Examdetail() {
       const data = await examNumberService.getExamNumberUser(id);
       // const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber)
       const workTime =  await workTimeService.addWorkTimeUser(
-          auth?.userId,
+          auth,
           idExamNumber,
           time
         );
@@ -81,7 +79,7 @@ function Examdetail() {
           // gọi api xóa dữ liệu
           await workTimeService.removeWorkTimeAndUserAnswerUser(
             idExamNumber,
-            auth?.userId
+            auth
           );
           await workTimeService.addWorkTimeUser(auth?.userId, idExamNumber, time);
           setData(data);
@@ -188,7 +186,7 @@ function Examdetail() {
                         </Form>
 
                         <span className="note">
-                          Giới hạn thời gian để trống mặc định là 45 phút
+                          Giới hạn thời gian( để trống mặc định là 45 phút )
                         </span>
 
                         <Form.Select

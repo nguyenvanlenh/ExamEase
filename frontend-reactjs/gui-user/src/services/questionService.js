@@ -3,11 +3,11 @@ import { URL_PATH } from "../utils/constants"
 const auth = JSON.parse(localStorage.getItem('auth'))
 export const questionService = {
 
-    getQuestionResult: (idExamNumber) => {
+    getQuestionResult: (idExamNumber, authObject) => {
         const url = `${URL_PATH}/api/questions/exam-number/${idExamNumber}`
         return axios.get(url, {
             headers: {
-                Authorization: `Bearer ${auth?.token}`
+                Authorization: `Bearer ${authObject?.token}`
             }
         })
         .then(response => {

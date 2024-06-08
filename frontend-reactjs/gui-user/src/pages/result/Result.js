@@ -55,7 +55,7 @@ function Result({ navigation }) {
         );
         setResult(data.data);
         const workTime = await workTimeService.getWorkTimeUser(
-          auth?.userId,
+          auth,
           idExamNumber
         );
         setTotalTime(
@@ -65,7 +65,8 @@ function Result({ navigation }) {
           )
         );
         const questionResults = await questionService.getQuestionResult(
-          idExamNumber
+          idExamNumber,
+          auth
         );
         setQuestionRes(questionResults.data);
       } catch (error) {
