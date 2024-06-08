@@ -44,6 +44,8 @@ function Result({ navigation }) {
   const [userName, setUsername] = useState("user");
   const [modalShowQuestion, setModalShowQuestion] = useState(false);
   const [contentQuestion, setContentQuestion] = useState({});
+  // console.log(questionRes)
+  // console.log(contentQuestion)
   useEffect(() => {
     const usernameLocal = JSON.parse(localStorage.getItem("username"));
     setUsername(usernameLocal);
@@ -82,7 +84,8 @@ function Result({ navigation }) {
     setContentQuestion(question.data);
     setModalShowQuestion(true);
   };
-  function setNameOption(index) {
+  function handleSetNameOption(index) {
+    handleSetColorSelected(722)
     if (index === 0) {
       return "A";
     } else if (index === 1) {
@@ -92,7 +95,7 @@ function Result({ navigation }) {
     }
     return  "D"
   }
-  function setColor(correct) {
+  function handleSetColor(correct) {
     if (correct === true) {
       return "color-correct";
     } else if (correct === false) {
@@ -100,6 +103,18 @@ function Result({ navigation }) {
     }
     return "color-pass";
   }
+  function handleSetColorSelected(idOption) {
+    const q = questionRes.find(question => question.selectedOptionId === idOption)
+    if(q) {
+      if(q.correct === true) {
+        return "color-correct";
+      } else if (q.correct === false) {
+        return "color-error";
+      }
+    }
+    return "color-pass";
+  }
+
   return (
     <div id="id-result">
       <Header />
@@ -236,7 +251,7 @@ function Result({ navigation }) {
                                       handleOpenDetailQuestion(q.id)
                                     }
                                     key={index}
-                                    className={`wrap-question ${setColor(q.correct)}`}
+                                    className={`wrap-question ${handleSetColor(q.correct)}`}
                                   >
                                     <div className="question">{index + 1}</div>
                                   </div>
@@ -296,7 +311,7 @@ function Result({ navigation }) {
           <Container>
             <Row>
               <Col>
-                <h4>Câu hỏi: {contentQuestion?.nameQuestion}</h4>
+                <h4>{contentQuestion?.nameQuestion}</h4>
               </Col>
             </Row>
             {contentQuestion?.options &&
@@ -304,8 +319,8 @@ function Result({ navigation }) {
               contentQuestion?.options.map((o, index) => {
                 return (
                   <Row className="ps-3" key={index}>
-                    <Col className={`mb-1 `} >
-                      {setNameOption(index)}. {o.nameOption}
+                    <Col className={`mb-1 ${handleSetColorSelected(o.id)}`} >
+                      {handleSetNameOption(index)}. {o.nameOption}
                     </Col>
                   </Row>
                 );
@@ -324,7 +339,7 @@ function Result({ navigation }) {
                               <Col
                                 style={o.correct ? { color: "#198754" } : {}}
                               >
-                                {setNameOption(index)}. {o.nameOption}
+                                {handleSetNameOption(index)}. {o.nameOption}
                               </Col>
                             </Row>
                           );
