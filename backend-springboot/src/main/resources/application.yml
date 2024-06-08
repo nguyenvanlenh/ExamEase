@@ -24,6 +24,17 @@ spring:
   user:
    name: admin
    password: 1234
+ mail:
+    username: 20130303@st.hcmuaf.edu.vn
+    port: '587'
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    password: optc fztr oofr meql
 nlu:
  jwt:
   expiration: 86400000

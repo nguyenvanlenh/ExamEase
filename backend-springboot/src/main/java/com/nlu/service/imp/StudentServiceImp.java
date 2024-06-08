@@ -9,6 +9,7 @@ import com.nlu.model.dto.response.ExamResultResponse;
 import com.nlu.model.dto.response.StudentResponse;
 import com.nlu.repository.ExamNumberRepository;
 import com.nlu.service.ExamNumberService;
+import com.nlu.service.MailService;
 import com.nlu.utils.ExcelStudentPointUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -39,6 +40,9 @@ public class StudentServiceImp implements StudentService{
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private ExamNumberService examNumberService;
+	@Autowired
+	private MailService mailService;
+	
 	
 	@Override
 	public void save(MultipartFile file,String codeGroup) {
@@ -52,6 +56,7 @@ public class StudentServiceImp implements StudentService{
 			List<Student> listStudents = ExcelUtils.toListStudents(file.getInputStream());
 			
 			createAndSaveListStudentOfTeacher( teacher,  listStudents, codeGroup);
+			listStudents.forEach(mailService::sendMailNotification);
 			
 		} catch (IOException ex) {
 			 throw new RuntimeException("Excel data is failed to store: " + ex.getMessage());
