@@ -44,5 +44,4 @@ public class Option {
 	@JsonBackReference
 	@OneToMany(mappedBy = "option",cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<UserAnswer> listUserAnswers;
-	
 }

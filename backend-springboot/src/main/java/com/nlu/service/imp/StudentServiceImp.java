@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.nlu.model.dto.request.LoginStudentRequest;
 import com.nlu.model.dto.response.ExamResultResponse;
+import com.nlu.model.dto.response.ExamStudentResponse;
 import com.nlu.model.dto.response.StudentResponse;
 import com.nlu.repository.ExamNumberRepository;
+import com.nlu.repository.ExamRepository;
 import com.nlu.service.ExamNumberService;
 import com.nlu.service.MailService;
 import com.nlu.utils.ExcelStudentPointUtils;
@@ -17,15 +21,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nlu.exception.NotFoundException;
+import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.Student;
 import com.nlu.model.entity.User;
+import com.nlu.model.entity.WorkTime;
 import com.nlu.repository.StudentRepository;
 import com.nlu.repository.UserRepository;
+import com.nlu.repository.WorkTimeRepository;
 import com.nlu.service.StudentService;
 import com.nlu.utils.AuthenticationUtils;
 import com.nlu.utils.ExcelUtils;
@@ -42,6 +50,10 @@ public class StudentServiceImp implements StudentService{
 	private ExamNumberService examNumberService;
 	@Autowired
 	private MailService mailService;
+	@Autowired
+	private ExamRepository examRepository;
+	@Autowired
+	private WorkTimeRepository workTimeRepository;
 	
 	
 	@Override
@@ -130,6 +142,34 @@ public class StudentServiceImp implements StudentService{
 			listStudents.add(studentResponse);
 		}
 		return listStudents;
+	}
+	
+	@Override
+	public ExamStudentResponse loginByStudent(LoginStudentRequest request) {
+		Student student = studentRepository.findByEmailAndCodeGroupAndActiveTrue(request.getEmail(), request.getCodeGroup())
+				.orElseThrow(() -> new NotFoundException("student_or_code_not_found", request.getEmail()));
+		boolean authenticated = passwordEncoder.matches(request.getPassword(), student.getPassword());
+
+		if (!authenticated)
+			throw new BadCredentialsException("login_student_authenticated");
+		
+		Exam exam = Optional.ofNullable(examRepository.findByCodeGroup(request.getCodeGroup()))
+				.orElseThrow(() -> new NotFoundException("code_group_not_found", request.getCodeGroup()));
+		WorkTime workTime = Optional.ofNullable(workTimeRepository.findByStudent_Id(student.getId()))
+				.orElseThrow(() -> new NotFoundException("worktime_not_found_by_st", student.getId()));
+		
+		return ExamStudentResponse.builder()
+				.studentId(student.getId())
+				.examNumberId(workTime.getExamNumber().getId())
+				.fullname(student.getFullname())
+				.code(student.getCode())
+				.timeExam(exam.getTimeExam().getName())
+				.dateExam(exam.getStartTime())
+				.build();
+	}
+	@Override
+	public void revokeStudentsByCodeGroup(String codeGroup) {
+		studentRepository.revokeStudentsByCodeGroup(codeGroup);
 	}
 
 	

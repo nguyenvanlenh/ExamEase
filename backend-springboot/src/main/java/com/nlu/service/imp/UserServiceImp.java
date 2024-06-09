@@ -23,7 +23,7 @@ public class UserServiceImp implements UserService {
 	@Override
 	public UserResponse getUser(Long id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
-		return new UserResponse().fromEntity(user);
+		return UserResponse.fromEntity(user);
 
 	}
 	
@@ -31,7 +31,7 @@ public class UserServiceImp implements UserService {
 	@Override
 	public List<UserResponse> getAllUsers() {
 		List<UserResponse> listUserResponses = userRepository.findAll().stream()
-				.map((user) -> new UserResponse().fromEntity(user))
+				.map(UserResponse::fromEntity)
 				.toList();
 		return listUserResponses;
 	}

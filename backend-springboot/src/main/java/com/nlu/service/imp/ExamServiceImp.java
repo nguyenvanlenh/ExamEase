@@ -103,7 +103,7 @@ public class ExamServiceImp implements ExamService {
 			Collections.shuffle(shuffledQuestionRequests);
 			List<Question> listQuestions = saveQuestion(shuffledQuestionRequests);
 
-			examNumber.setListQuestions(new HashSet<>(listQuestions));
+			examNumber.setListQuestions(listQuestions);
 			return examNumber;
 		}).toList();
 		// save exam number
