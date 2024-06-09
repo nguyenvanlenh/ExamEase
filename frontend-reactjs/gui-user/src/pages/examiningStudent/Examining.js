@@ -6,13 +6,13 @@ import ListQuestion from "../../components/listQuestion/ListQuestion";
 import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import { addedListQuestion, removeQuestion } from "../../redux/slices/listQuestionSlice";
-import { authLocalStorage, examiningLocalStorage, idExamNumberLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
+import { examiningLocalStorage, idExamNumberLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
 import { submitExaminingSwal } from "../../utils/mySwal";
 import { useNavigate } from "react-router-dom";
 import { calculateDurationInSeconds, formatTimeMS } from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
 function Examining() {
-  const auth = useSelector(state => state.auth);
+  const auth = useSelector(state => state.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [move, setMove] = useState(false);

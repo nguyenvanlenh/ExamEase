@@ -16,10 +16,7 @@ export default function Home() {
   const [listExams, setListExams] = useState([]);
   const [sizePage, setSizePage] = useState(8);
   // const [listExamWorded, setListExamWorded] = useState([]);
-  const auth = useSelector((state) => state.auth)
   const listResultExam = useSelector((state) => state.examWorkeds)
-  console.log(listResultExam)
-  console.log(auth)
   useEffect(() => {
     const usernameLocal = JSON.parse(localStorage.getItem('username'))
     if (usernameLocal) {
@@ -74,7 +71,6 @@ export default function Home() {
     nameButton: "Xem chi tiết",
     listExam: listResultExam,
   };
-  // const listExams = [1, 2, 3, 4, 5, 6];
   return (
     <div id="id-home">
       <Header />
@@ -96,12 +92,15 @@ export default function Home() {
           </Stack>
           
           <ListCardItem objectExams={objectTookExams} />
-          <div className="view-all">
+          {
+            listResultExam && listResultExam.length > 0 &&
+            (<div className="view-all">
             <Link>
               <b>Xem tất cả</b>
               <KeyboardDoubleArrowRightIcon fontSize="16" />
             </Link>
-          </div>
+          </div>)
+          }
           
         </div>
       </Container>
