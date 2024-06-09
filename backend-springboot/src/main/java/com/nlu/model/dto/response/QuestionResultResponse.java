@@ -12,4 +12,5 @@ public class QuestionResultResponse {
     Long id;
     String nameQuestion;
     Boolean correct;
+    Long selectedOptionId;
 }

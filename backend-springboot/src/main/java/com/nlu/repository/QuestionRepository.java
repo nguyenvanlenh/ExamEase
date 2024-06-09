@@ -16,5 +16,4 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
 	@Query(name = "Question.questionResult", nativeQuery = true)
 	List<QuestionResultResponse> questionResult(@Param("examNumberId") Integer examNumberId, @Param("userId") Long userId);
-//	List<QuestionResultResponse> questionResult(Integer examNumberId, Long userId);
 }
