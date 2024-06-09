@@ -33,6 +33,7 @@ public class SecurityConfig{
 			"/api/auth/login",
 			"/api/auth/register",
 			"/api/exams/**",
+			"/api/students/login",
 			"/api/exam-numbers/**",
 			"/api/user_answers/**",
 			"/api/upload/**",
