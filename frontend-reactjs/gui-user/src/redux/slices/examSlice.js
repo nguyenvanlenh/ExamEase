@@ -23,13 +23,33 @@ const examSlice = createSlice({
             state.push(exam)
         },
         updateCreateExamRequest(state, action) {
-            const update = [{
+            const updatedQuestions = state[0].listQuestionRequests.map(q =>
+                q.id === action.payload.id ? action.payload : q
+            );
+
+            const questionExists = updatedQuestions.some(q => q.id === action.payload.id);
+            if (!questionExists) {
+                updatedQuestions.push(action.payload);
+            }
+
+            const updatedState = [{
+                ...state[0],
+                listQuestionRequests: updatedQuestions
+            }];
+
+            return updatedState;
+        },
+
+        addQuestionsIntoExamRequest(state, action) {
+
+            const updatedState = [{
                 ...state[0],
                 listQuestionRequests: action.payload
+            }];
 
-            }]
-            return update;
+            return updatedState;
         },
+
         removeExamRequest() {
             return [];
         }
@@ -37,6 +57,7 @@ const examSlice = createSlice({
 })
 
 export const { createExamRequest, updateCreateExamRequest,
+    addQuestionsIntoExamRequest,
     removeExamRequest
 } = examSlice.actions
 export default examSlice;

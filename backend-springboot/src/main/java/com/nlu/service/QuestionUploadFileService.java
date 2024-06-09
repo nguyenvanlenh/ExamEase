@@ -1,5 +1,6 @@
 package com.nlu.service;
 
+import com.nlu.model.dto.request.QuestionRequest;
 import com.nlu.model.model.QuestionUploadFileModel;
 import com.nlu.utils.DocxReaderUtils;
 import com.nlu.utils.ExcelReaderAnswersUtils;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 @Service
 public class QuestionUploadFileService {
-    public List<Object> handleFileUpload(MultipartFile file, MultipartFile answerFile) {
+    public List<QuestionRequest> handleFileUpload(MultipartFile file, MultipartFile answerFile) {
         String fileType = file.getContentType();
         String answerFileType = answerFile.getContentType();
         List<QuestionUploadFileModel> questionUploadFiles;
@@ -43,7 +44,7 @@ public class QuestionUploadFileService {
             e.printStackTrace();
             return null;
         }
-        return null;
+        return QuestionRequest.toListRequest(questionUploadFiles);
 
     }
 }
