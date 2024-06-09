@@ -85,7 +85,7 @@ export default function Home() {
         <div className="part">
           <Stack direction="horizontal">
             <h2 className="title2">Kết quả luyện thi mới nhất</h2>
-            <Link className="link-chart">
+            <Link to={"/statistics"} className="link-chart">
               <EqualizerIcon />
               <div className="text-chart">Thống kê kết quả luyện thi</div>
             </Link>

@@ -13,6 +13,7 @@ import Examining from "./pages/examing/Examining";
 import Result from "./pages/result/Result";
 import Register from "./pages/register/Register";
 import ExaminingRules from "./pages/examRules/ExaminingRules";
+import LoginStudent from "./pages/loginStudent/LoginStudent";
 
 
 export const router = createBrowserRouter([
@@ -71,6 +72,10 @@ export const router = createBrowserRouter([
     {
         path: "/examining-rules",
         element: <ExaminingRules />
+     },
+     {
+        path: "/login-student",
+        element: <LoginStudent />
      }
 
 ]);

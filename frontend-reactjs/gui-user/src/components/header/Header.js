@@ -46,9 +46,6 @@ function Header() {
                             <Link to="/list-exams" className="text-item">Đề thi online</Link>
                         </div>
                         <div className="p-3">
-                            <Nav.Link href="#home" className="text-item">Thi trực tuyến</Nav.Link>
-                        </div>
-                        <div className="p-3">
                             <Nav.Link href="#home" className="text-item">Liên hệ</Nav.Link>
                         </div>
                         <div className="p-3">
@@ -90,7 +87,7 @@ function Header() {
                         <Nav.Link href="/login" className="text-item">Đăng nhập</Nav.Link>
                     </div>
                     <div className="p-2">
-                        <Link to="/list-exams" className="text-item">Thi trực tuyến</Link>
+                        <Link to="/register" className="text-item">Đăng kí</Link>
                     </div>
                 </div>
                 <div className={`content-menu-mobile`} style={{ display: isMenuOpen ? 'block' : 'none' }}>
