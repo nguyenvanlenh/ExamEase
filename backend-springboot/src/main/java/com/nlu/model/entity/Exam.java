@@ -22,13 +22,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="Exams")
+@Table(name = "Exams")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Exam implements Serializable{
-	
+public class Exam implements Serializable {
+
 	/**
 	 * 
 	 */
@@ -37,9 +37,9 @@ public class Exam implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String title;
-	@Column(name ="code_group")
+	@Column(name = "code_group")
 	private String codeGroup = UUID.randomUUID().toString();
 	@Column(name = "short_description")
 	private String shortDescription;
@@ -48,26 +48,24 @@ public class Exam implements Serializable{
 	private int quantityQuestion;
 	private Timestamp startTime;
 	private Timestamp endTime;
-	
+
 	@Column(name = "is_public")
 	private boolean isPublic;
-	
-	@OneToMany(mappedBy = "exam",fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<ExamNumber> examNumbers;
-	
-	@ManyToOne(optional = false)
-	@JoinColumn(name="time_id")
-	private TimeExam timeExam;
-	
-	@ManyToOne(optional = false)
-	@JoinColumn(name="teacher_id")
-	private User teacher;
-	
-	@ManyToOne(optional = true,fetch = FetchType.LAZY)
-	@JoinColumn(name="category_id")
-	private Category category;
-	
 
+	@OneToMany(mappedBy = "exam", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ExamNumber> examNumbers;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "time_id")
+	private TimeExam timeExam;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "teacher_id")
+	private User teacher;
+
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
+	private Category category;
 
 	public Exam(Long id, String title, String description, int quantityQuestion, TimeExam timeExam) {
 		this.id = id;

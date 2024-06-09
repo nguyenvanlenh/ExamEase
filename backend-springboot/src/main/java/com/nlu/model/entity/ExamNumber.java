@@ -1,5 +1,6 @@
 package com.nlu.model.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -44,8 +45,24 @@ public class ExamNumber {
 	@JoinTable(name = "examnumber_ques",
 	joinColumns = @JoinColumn(name = "examnumber_id"),
 	inverseJoinColumns = @JoinColumn(name = "question_id"))
-	private Set<Question> listQuestions;
+	private List<Question> listQuestions;
 	
 	@OneToMany(mappedBy = "examNumber",cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<WorkTime> listWorkTimes;
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof ExamNumber)) {
+			return false;
+		}
+		return id != null && id.equals(((ExamNumber) o).id);
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
 }

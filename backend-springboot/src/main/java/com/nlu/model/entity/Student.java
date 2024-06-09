@@ -2,7 +2,9 @@ package com.nlu.model.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,9 +46,9 @@ public class Student {
 	
 //	@OneToMany(mappedBy = "student")
 //	private Set<UserAnswer> listUserAnswers;
-//	
-//	@OneToMany(mappedBy = "student")
-//	private Set<WorkTime> lisWorkTimes;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "student")
+	private Set<WorkTime> lisWorkTimes;
 	public Student(Long id, String code, String fullname, String email) {
 		this.id = id;
 		this.code = code;
