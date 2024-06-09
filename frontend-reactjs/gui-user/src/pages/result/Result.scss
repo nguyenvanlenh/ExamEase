@@ -244,3 +244,14 @@
         }
     }
 }
+.color-error {
+    color: $color-text-red;
+}
+
+.color-correct {
+    color: $color-text-green;
+}
+
+.color-pass {
+    color: $color-gray;
+}

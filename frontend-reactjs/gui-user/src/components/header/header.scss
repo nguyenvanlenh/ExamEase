@@ -64,12 +64,21 @@
         opacity: 0.8;
         cursor: pointer;
     }
+    .mobile {
+        display: none;
+    }
 
     @media screen  and (max-width: 800px){
         .content{
             display: none;
         }
         .container-menu {
+            display: block;
+        }
+        .btn-login-menu {
+            display: none;
+        }
+        .mobile {
             display: block;
         }
     }

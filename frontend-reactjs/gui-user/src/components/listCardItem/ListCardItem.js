@@ -26,6 +26,7 @@ function ListCardItem(prop) {
         objectExams.listExam.slice(0, 4).map((card) => (
           <CardItem
             key={card.id}
+            idExamNumber={card.idExamNumber}
             title={card.title}
             time={card.time}
             beginDay={card.beginDay}
@@ -34,6 +35,7 @@ function ListCardItem(prop) {
             timeDone={card.timeDone}
             result={card.result}
             nameButton={objectExams.nameButton}
+            type={objectExams?.type}
           />
         )) :
         notification

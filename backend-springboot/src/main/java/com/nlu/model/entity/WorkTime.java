@@ -47,14 +47,4 @@ public class WorkTime {
 	@Column(name="end_exam")
 	private Timestamp endExam;
 
-	@Override
-	public String toString() {
-		return "WorkTime{" +
-				"id=" + id +
-				", examNumberId=" + (examNumber != null ? examNumber.getId() : "null") +
-				", beginExam=" + beginExam +
-				", endExam=" + endExam +
-				'}';
-	}
-
 }

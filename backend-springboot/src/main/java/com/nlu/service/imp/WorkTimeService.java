@@ -137,6 +137,7 @@ public class WorkTimeService {
 			Integer completionTime = (int) TimeUnit.MILLISECONDS.toSeconds(milliseconds);
 			WorkTimeResponse workTimeResponse = WorkTimeResponse.builder()
 					.id(workTime.getId())
+					.idExamNumber(workTime.getExamNumber().getId())
 					.time(workTime.getExamNumber().getExam().getTimeExam().getId()+"")
 					.completionTime(completionTime)
 					.workDay(workTime.getBeginExam())

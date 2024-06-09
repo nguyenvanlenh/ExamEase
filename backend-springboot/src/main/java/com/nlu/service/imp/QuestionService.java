@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.nlu.model.dto.response.QuestionResultResponse;
+import com.nlu.utils.AuthenticationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,9 +50,9 @@ public class QuestionService {
 				.collect(Collectors.toSet());
 		question.setOptions(listOptions);
 	}
-	
-	
-	
-	
-	
+
+	public List<QuestionResultResponse> getQuestionResult(Integer examNumberId) {
+		Long idUser = AuthenticationUtils.extractUserId();
+		return questionRepository.questionResult(examNumberId, idUser);
+	}
 }
