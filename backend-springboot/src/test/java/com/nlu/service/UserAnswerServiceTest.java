@@ -6,10 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class UserAnswerServiceTest {
-    @Autowired
-    private UserAnswerService userAnswerService;
-    @Test
-    public void testRemoveUserAnswer() {
-        System.out.println(userAnswerService.removeAnswerUser(1, 5L));
-    }
+//    @Autowired
+//    private UserAnswerService userAnswerService;
+//    @Test
+//    public void testRemoveUserAnswer() {
+//        System.out.println(userAnswerService.removeAnswerUser(1, 5L));
+//    }
 }

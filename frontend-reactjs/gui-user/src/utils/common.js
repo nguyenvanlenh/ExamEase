@@ -4,14 +4,25 @@ export const formatDate = (date) => {
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
+export const formatDateLocal = (date) => {
+    const d = new Date(date);
+    const pad = (num) => (num < 10 ? '0' : '') + num;
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
 
-// ví dụ a = formatDate(date)
-
-// tôi muốn date === parseDateString(a) ( chuyển qua chuyển về)
 export const parseDateString = (dateString) => {
     const [year, month, day] = dateString.split('-').map(Number);
     return new Date(year, month - 1, day);
 };
+export const timeStampToDate = (dateString) => {
+    const [year, month, day] = dateString.split('T')[0].split('-');
+    return new Date(year, month - 1, day);
+}
 
 export const scrollToElement = (id) => {
     const element = document.getElementById(id);
@@ -50,7 +61,7 @@ export const setDataByKeyLS = (key, data) => {
     }
 };
 
-export const formatdMYFromString =(string) => {
+export const formatdMYFromString = (string) => {
     const date = new Date(string);
 
     // Trích xuất ngày, tháng và năm

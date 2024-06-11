@@ -13,6 +13,8 @@ import Examining from "./pages/examing/Examining";
 import Result from "./pages/result/Result";
 import Register from "./pages/register/Register";
 import ExaminingRules from "./pages/examRules/ExaminingRules";
+import { ManagementExams } from "./pages/ManagementExams/ManagementExams";
+import { ManagementQuestion } from "./pages/ManagementQuestion/ManagementQuestion";
 
 
 export const router = createBrowserRouter([
@@ -67,11 +69,19 @@ export const router = createBrowserRouter([
     {
         path: "/result",
         element: <Result />
-    }, 
+    },
     {
         path: "/examining-rules",
         element: <ExaminingRules />
-     }
+    },
+    {
+        path: "/manage-exam",
+        element: <ManagementExams />
+    },
+    {
+        path: "/manage-question",
+        element: <ManagementQuestion />
+    }
 
 ]);
 

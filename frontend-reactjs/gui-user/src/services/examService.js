@@ -81,6 +81,28 @@ export const examService = {
                 console.log(error?.response?.data);
                 return error.response;
             });
+    },
+    getExamsByTeacherId: (teacherId, currentPage) => {
+        const url = `${URL_PATH}/api/exams/teachers/${teacherId}?page=${currentPage}`;
+        return axios.get(url, null)
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error?.response?.data);
+                return error.response;
+            });
+    },
+    deleteExamById: (examId) => {
+        const url = `${URL_PATH}/api/exams/${examId}`;
+        return axios.delete(url, null)
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error?.response?.data);
+                return error.response;
+            });
     }
 
 
