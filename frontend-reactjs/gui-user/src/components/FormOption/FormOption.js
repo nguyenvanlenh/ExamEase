@@ -47,9 +47,9 @@ const FormOption = ({ questionParent, questionNumber, setCompleted }) => {
             questionNumber,
             question,
             [
-                RequestData().OptionRequest(correctAnswer, true),
+                RequestData().OptionRequest(0, correctAnswer, true),
                 ...incorrectAnswers.map(answer =>
-                    RequestData().OptionRequest(answer ?? "", false)
+                    RequestData().OptionRequest(0, answer ?? "", false)
                 )
             ]
         );
