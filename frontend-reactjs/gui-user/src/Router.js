@@ -14,6 +14,8 @@ import Result from "./pages/result/Result";
 import Register from "./pages/register/Register";
 import ExaminingRules from "./pages/examRules/ExaminingRules";
 import LoginStudent from "./pages/loginStudent/LoginStudent";
+import ExaminingStudent from "./pages/examiningStudent/ExaminingStudent";
+import ResultStudent from "./pages/resultStudent/ResultStudent";
 
 
 export const router = createBrowserRouter([
@@ -76,6 +78,14 @@ export const router = createBrowserRouter([
      {
         path: "/login-student",
         element: <LoginStudent />
+     },
+     {
+        path: "/examining-student",
+        element: <ExaminingStudent />
+     },
+     {
+        path: "/result-student",
+        element: <ResultStudent />
      }
 
 ]);

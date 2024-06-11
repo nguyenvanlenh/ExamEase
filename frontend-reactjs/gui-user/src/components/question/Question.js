@@ -2,18 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./Question.scss";
 import { Form } from "react-bootstrap";
 import { TYPE_ANSWERS } from "../../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateQuestion } from "../../redux/slices/listQuestionSlice";
 import { userAnswerService } from "../../services/userAnswerService";
-import { authLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
+import { listQuestionLocalStorage } from "../../utils/localStorage";
+import { studentAnswerService } from "../../services/studentAnswerService";
 
 function Question(prop) {
-  const [auth, setAuth] = useState(false);
+  const auth = useSelector(state => state.auth)
   useEffect(() => {
-    const authLocal = authLocalStorage.get();
-    if (authLocal) {
-      setAuth(authLocal);
-    }
     setSelectedExam(prop.idAnswerSelected)
   }, []);
   const [selectedExam, setSelectedExam] = useState(null); // State để lưu trữ giá trị của radio button được chọn
@@ -36,12 +33,20 @@ function Question(prop) {
 
   function handleRequest(idQuestion, idOption) {
     const question = listQuestionLocalStorage.getById(idQuestion)
-    if(question && selectedExam) {
-      userAnswerService.updateAnswer(auth?.userId, selectedExam, idOption)
+    // check account student?
+    if(auth?.studentId) {
+      if(question && selectedExam) {
+        studentAnswerService.update(auth?.studentId, selectedExam, idOption)
+      }else {
+        studentAnswerService.post(auth?.studentId, idOption)
+      }
     }else {
-      userAnswerService.postUserAnswer(auth?.userId, idOption)
+      if(question && selectedExam) {
+        userAnswerService.updateAnswer(auth?.userId, selectedExam, idOption)
+      }else {
+        userAnswerService.postUserAnswer(auth?.userId, idOption)
+      }
     }
-
   }
 
   return (

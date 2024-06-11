@@ -148,4 +148,16 @@ public class WorkTimeService {
 		}
 		return workTimeResponses;
     }
+
+	public boolean updateEndExamWorkTimeStudent(Long studentId, Integer examNumberId, Timestamp endExamTimestamp) {
+		// Find the existing WorkTime entry
+		WorkTime workTime = workTimeRepository.findByStudent_IdAndExamNumber_Id(studentId, examNumberId);
+
+		if (workTime == null) {
+			return false;
+		}
+		workTime.setEndExam(endExamTimestamp);
+		return workTimeRepository.save(workTime) != workTime;
+	}
+
 }

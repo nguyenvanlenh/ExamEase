@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { listQuestionLocalStorage } from '../../utils/localStorage';
 
+const initialState = listQuestionLocalStorage.get() || [];
 const listQuestionSlice = createSlice({
     name: 'listQuestion',
-    initialState: [],
+    initialState,
     reducers: {
         addListQuestion(state, action) {
             action.payload.map((question, index) => {

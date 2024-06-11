@@ -25,17 +25,18 @@ const LoginStudent = () => {
     event.preventDefault();
     setLoading(true);
     await delay(500);
-
-    const data =  await authService.login(RequestData().LoginRequest(inputEmail, inputPassword))
-    if (data.status >= 400) {
+    const data =  await authService.loginStudent(RequestData().LoginStudentRequest(inputEmail, inputPassword, inputCodeGroup))
+    if (data.status !== 200) {
       setShow(true);
     }else {
+        console.log("OK")
+        console.log(data)
     //   const response = await workTimeService.getAllWorkTimeUser(data.data);
     //   // localStorage.setItem('auth', JSON.stringify(data.data));
       dispatch(addAuth(data.data))
     //   dispatch(addExamWorked(response.data))
     //   localStorage.setItem('username', JSON.stringify(inputEmail))
-      navigation("/")
+      navigation("/examining-rules")
     }
     setLoading(false);
   };

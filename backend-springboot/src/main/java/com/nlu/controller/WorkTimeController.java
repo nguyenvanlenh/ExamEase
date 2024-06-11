@@ -134,4 +134,30 @@ public class WorkTimeController {
 				.data(workTimes)
 				.build();
 	}
+
+	@PutMapping("/students/{studentId}/exam-number/{examNumberId}")
+	public ResponseData updateWorkTimeStudent(
+			@PathVariable(name = "studentId") Long studentId,
+			@PathVariable(name = "examNumberId") Integer examNumberId,
+			@RequestParam(name = "endExam") String endExam) {
+		Timestamp endExamTimestamp;
+
+		try {
+			Instant instant = Instant.parse(endExam);
+			endExamTimestamp = Timestamp.from(instant);
+		} catch (Exception e) {
+			return ResponseData.builder()
+					.status(HttpStatus.BAD_REQUEST.value())
+					.message("Invalid date format")
+					.data(null)
+					.build();
+		}
+
+		boolean data = workTimeService.updateEndExamWorkTimeStudent(studentId, examNumberId, endExamTimestamp);
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("Update successfully")
+				.data(data)
+				.build();
+	}
 }

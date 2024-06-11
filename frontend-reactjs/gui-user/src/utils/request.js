@@ -45,6 +45,14 @@ export const RequestData = () => {
         };
     }
 
+    const LoginStudentRequest = (email, password, codeGroup) => {
+        return {
+            email: email,
+            password: password,
+            codeGroup: codeGroup
+        };
+    }
+
     const RegisterRequest = (username, password, email, listRoles) => {
         return {
             username: username,
@@ -60,6 +68,7 @@ export const RequestData = () => {
         ExamRequest,
         ExamNumberRequest,
         QuestionRequest,
-        OptionRequest
+        OptionRequest,
+        LoginStudentRequest
     };
 }

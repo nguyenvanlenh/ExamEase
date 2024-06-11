@@ -39,3 +39,13 @@ export const errorSwal = () => {
       return result.isConfirmed; // Trả về kết quả từ SweetAlert2
   });
 };
+
+export const outSideExamSwal = () => {
+  return MySwal.fire({
+      title: "Bài thi đã kết thúc",
+      text: "Bài thi đã kết thúc, ngoài thời gian thi!",
+      icon: "warning",
+  }).then((result) => {
+      return result.isConfirmed; // Trả về kết quả từ SweetAlert2
+  });
+};
