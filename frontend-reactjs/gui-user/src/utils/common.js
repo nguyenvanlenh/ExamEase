@@ -1,3 +1,5 @@
+import { MAX_SCORE } from "./constants";
+
 export const formatDate = (date) => {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -70,4 +72,14 @@ export const formatdMYFromString = (string) => {
     const day = date.getUTCDate();
     return `${day}/${month}/${year}`;
 }
+
+export const caculatorScore = (totalQuestion, totalAnswerCorrect) => {
+
+    const roundUpToNearestHalf = (score) => {
+        return Math.ceil(score * 2) / 2;
+    };
+    const score = (totalAnswerCorrect / totalQuestion) * MAX_SCORE;
+    return totalAnswerCorrect ? Math.min(MAX_SCORE, roundUpToNearestHalf(score)) : 0;
+}
+
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Col, Container, Nav, Row, Table, Modal, Form } from 'react-bootstrap';
+import { Button, Col, Container, Nav, Row, Table, Modal, Form, Stack } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { examService } from '../../services/examService';
 import Header from '../../components/header/Header';
@@ -9,11 +9,16 @@ import './ManagementQuestion.scss';
 import { questionService } from '../../services/questionService';
 import { ErrorModal, SuccessModal } from '../../components/Modal/ModalComponent';
 import { RequestData } from '../../utils/request';
-
+import { resultService } from '../../services/resultService';
+import AddIcon from '@mui/icons-material/Add';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
+import { caculatorScore } from '../../utils/common';
 export const ManagementQuestion = () => {
     const location = useLocation();
     const id = location.state;
     const [dataExam, setDataExam] = useState();
+    const [dataResult, setDataResult] = useState();
     const [activeTab, setActiveTab] = useState(null);
     const [tabIndex, setTabIndex] = useState(0);
     const [showModal, setShowModal] = useState(false);
@@ -29,10 +34,20 @@ export const ManagementQuestion = () => {
             setActiveTab(data.data.examNumbers[0].id);
         }
     };
+    const fetchingDataResultOfStudents = async (codeGroup) => {
+        const data = await resultService.getAllResultOfStudentByCodeGroup("af111fa9-dc25-4b18-82ce-3eb529935762");
+        console.log(data.data.listResult);
+        setDataResult(data.data.listResult);
+    };
 
     useEffect(() => {
         fetchingDataExam(id);
     }, [id, showSuccessAlert]);
+
+    useEffect(() => {
+        if (activeTab === "student-list")
+            fetchingDataResultOfStudents(dataExam.codeGroup);
+    }, [activeTab]);
 
     const handleShowModal = (question) => {
         setEditableQuestion({ ...question });
@@ -72,11 +87,16 @@ export const ManagementQuestion = () => {
         }
     };
 
+    const handleExport = async () => {
+        console.log("hello");
+        const codeGroup = 'af111fa9-dc25-4b18-82ce-3eb529935762';
+        return await resultService.exportFileResultByCodeGroup(codeGroup);
+    };
     return (
         <>
             <Header />
             <Container fluid="md">
-                <div className="manage-question mt-3">
+                <div className="manage-question mt-3 mb-3">
                     <Row>
                         <h1 className="title mt-2 mb-4">{dataExam?.title}</h1>
                     </Row>
@@ -102,7 +122,6 @@ export const ManagementQuestion = () => {
                                     eventKey="student-list"
                                     onClick={() => {
                                         setActiveTab("student-list");
-                                        // Set any specific actions you need when this tab is clicked
                                     }}
                                 >
                                     Danh sách sinh viên
@@ -112,32 +131,56 @@ export const ManagementQuestion = () => {
                     </Row>
                     <Row className="mt-4 mb-4">
                         <Col>
-                            {activeTab === "student-list" ? (
+
+                            {activeTab === "student-list" ? (<>
+                                <Stack direction="horizontal" gap={3}>
+                                    {/* <Button variant="outline-success" className="p-2">
+                                        <AddIcon /> Thêm học sinh</Button> */}
+                                    <Button variant="outline-danger" className="p-2 ms-auto">
+                                        <StackedLineChartIcon />
+                                        Thống kê</Button>
+                                    <Button variant="outline-success" className="p-2"
+                                        onClick={handleExport}
+                                    >
+                                        <FileDownloadIcon />
+                                        Xuất file Excel</Button>
+                                </Stack>
+                                <hr />
                                 <Table striped>
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th className="text-center">#</th>
                                             <th>Họ và Tên</th>
                                             <th>Email</th>
                                             <th>Đề thi</th>
-                                            <th>Số câu đúng</th>
-                                            <th>Số câu sai</th>
-                                            <th>Điểm</th>
+                                            <th className="text-center">Tổng số câu</th>
+                                            <th className="text-center">Số câu đúng</th>
+                                            <th className="text-center">Số câu sai</th>
+                                            <th className="text-center">Điểm</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>@mdo</td>
-                                            <td>@mdo</td>
-                                            <td>@mdo</td>
-                                        </tr>
+                                        {
+                                            dataResult && dataResult.map(rs => {
+                                                return (
+                                                    <tr>
+                                                        <td>{rs.studentCode}</td>
+                                                        <td>{rs.fullName}</td>
+                                                        <td>{rs.email}</td>
+                                                        <td>{rs.examNumberName}</td>
+                                                        <td className="text-center">{rs.totalQuestion}</td>
+                                                        <td className="text-center text-success">{rs.totalCorrect}</td>
+                                                        <td className="text-center text-danger">{rs.totalWrong}</td>
+                                                        <td className="text-center"><strong>{caculatorScore(rs.totalQuestion, rs.totalCorrect)}</strong></td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+
 
                                     </tbody>
                                 </Table>
+                            </>
                             ) : (
                                 <Table striped>
                                     <thead>
@@ -164,7 +207,7 @@ export const ManagementQuestion = () => {
                         </Col>
                     </Row>
                 </div>
-            </Container>
+            </Container >
             <Footer />
 
             <Modal show={showModal} onHide={handleCloseModal}>

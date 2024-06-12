@@ -14,4 +14,5 @@ export const CATEGORY = {
     COMPUTER_SCIENCE: "Tin học",
 }
 
-export const TYPE_ANSWERS = ["A","B","C","D","E","F"]
+export const TYPE_ANSWERS = ["A", "B", "C", "D", "E", "F"]
+export const MAX_SCORE = 10

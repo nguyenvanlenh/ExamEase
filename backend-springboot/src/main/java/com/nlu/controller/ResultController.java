@@ -21,7 +21,7 @@ public class ResultController {
 	
 	
 	@GetMapping("/students/{codeGroup}")
-	public ResponseData getAllWorkTimeByStudent(@PathVariable String codeGroup) {
+	public ResponseData getAllResultOfStudentByCodeGroup(@PathVariable String codeGroup) {
 		Map<String,Object> workTimes = resultService.getAllResultOfStudentByCodeGroup(codeGroup);
 		
 		return ResponseData.builder()
