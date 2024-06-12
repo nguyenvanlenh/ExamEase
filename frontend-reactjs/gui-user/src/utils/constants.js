@@ -16,3 +16,4 @@ export const CATEGORY = {
 
 export const TYPE_ANSWERS = ["A", "B", "C", "D", "E", "F"]
 export const MAX_SCORE = 10
+export const END_TIME_EXAM = "END"

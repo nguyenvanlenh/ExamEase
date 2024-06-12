@@ -135,8 +135,8 @@ export const ManagementExams = () => {
         <>
             <Header />
             <div className="container pb-0 manage-exam">
-                <h3>Đề của tôi</h3>
-                <Table striped bordered hover>
+                <h2>Đề của tôi</h2>
+                <Table bordered hover>
                     <thead>
                         <tr>
                             <th className="text-center">#</th>

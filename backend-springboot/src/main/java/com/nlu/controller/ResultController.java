@@ -30,6 +30,16 @@ public class ResultController {
 				.data(workTimes)
 				.build();
 	}
+	 @GetMapping("/send-mail/{codeGroup}")
+	    public ResponseData sendMailResultForStudent(@PathVariable String codeGroup) {
+	        resultService.sendMailResultForStudent(codeGroup);
+	        return ResponseData.builder()
+	                .status(HttpStatus.OK.value())
+	                .message("Emails with results have been sent successfully.")
+	                .build();
+	    }
+	
+	
 	
 	
 }

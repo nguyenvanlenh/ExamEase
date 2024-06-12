@@ -40,5 +40,20 @@ export const resultService = {
         } catch (error) {
             console.error('Error exporting file:', error);
         }
+    },
+    sendMailResultForStudent: (codeGroup) => {
+        const url = `${URL_PATH}/api/result/send-mail/${codeGroup}`
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error.response?.data.message);
+                return error.response;
+            });
     }
 }

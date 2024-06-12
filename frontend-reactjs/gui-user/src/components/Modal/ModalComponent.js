@@ -1,5 +1,5 @@
 import { Button, Modal } from "react-bootstrap";
-
+import SendIcon from '@mui/icons-material/Send';
 export const SuccessModal = ({ show, notice, onClose }) => {
     return (
         <Modal show={show} onHide={onClose}>
@@ -50,6 +50,26 @@ export const DeleteModal = ({ show, confirm, onClose, handleDelete }) => {
                 </Button>
                 <Button variant="danger" onClick={handleDelete}>
                     Xóa
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    );
+};
+export const SendMailModal = ({ show, notice, onClose, handleSendMail }) => {
+    return (
+        <Modal show={show} onHide={onClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Gửi kết quả cho học sinh</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {notice}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onClose}>
+                    Thoát
+                </Button>
+                <Button variant="primary" onClick={handleSendMail}>
+                    Gửi<SendIcon />
                 </Button>
             </Modal.Footer>
         </Modal>

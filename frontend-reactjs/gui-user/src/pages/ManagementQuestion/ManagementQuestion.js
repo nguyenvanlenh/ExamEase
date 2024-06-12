@@ -7,13 +7,18 @@ import Footer from '../../components/footer/Footer';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import './ManagementQuestion.scss';
 import { questionService } from '../../services/questionService';
-import { ErrorModal, SuccessModal } from '../../components/Modal/ModalComponent';
+import { ErrorModal, SendMailModal, SuccessModal } from '../../components/Modal/ModalComponent';
 import { RequestData } from '../../utils/request';
 import { resultService } from '../../services/resultService';
-import AddIcon from '@mui/icons-material/Add';
+import AttachEmailIcon from '@mui/icons-material/AttachEmail';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import { caculatorScore } from '../../utils/common';
+import { Chart as ChartJS } from 'chart.js/auto';
+import { Line, PolarArea } from 'react-chartjs-2';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import { END_TIME_EXAM } from '../../utils/constants';
+
 export const ManagementQuestion = () => {
     const location = useLocation();
     const id = location.state;
@@ -22,10 +27,14 @@ export const ManagementQuestion = () => {
     const [activeTab, setActiveTab] = useState(null);
     const [tabIndex, setTabIndex] = useState(0);
     const [showModal, setShowModal] = useState(false);
+    const [showMailModal, setShowMailModal] = useState(false);
+    const [showChartsModal, setShowChartsModal] = useState(false);
     const [editableQuestion, setEditableQuestion] = useState(null);
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [showSuccessAlertSendMail, setShowSuccessAlertSendMail] = useState(false);
+    const [showErrorAlertSendMail, setShowErrorAlertSendMail] = useState(false);
 
     const fetchingDataExam = async (id) => {
         const data = await examService.getExamById(id);
@@ -88,10 +97,115 @@ export const ManagementQuestion = () => {
     };
 
     const handleExport = async () => {
-        console.log("hello");
         const codeGroup = 'af111fa9-dc25-4b18-82ce-3eb529935762';
         return await resultService.exportFileResultByCodeGroup(codeGroup);
     };
+
+    const processResultsForCharts = () => {
+        const scoreCounts = new Array(21).fill(0); // Array to hold counts for each 0.5 increment from 0 to 10
+        if (dataResult) {
+            dataResult.forEach((result) => {
+                const score = caculatorScore(result.totalQuestion, result.totalCorrect);
+                const index = Math.round(score * 2);
+                scoreCounts[index]++;
+            });
+        }
+        return scoreCounts;
+    };
+
+    const generateLineChartData = () => {
+        const scoreCounts = processResultsForCharts();
+        return {
+            labels: Array.from({ length: 21 }, (_, i) => (i / 2).toString()),
+            datasets: [
+                {
+                    label: 'Số học sinh',
+                    data: scoreCounts,
+                    fill: false,
+                    backgroundColor: 'rgba(75,192,192,1)',
+                    borderColor: 'rgba(75,192,192,1)',
+                    tension: 0.1
+                }
+            ]
+        };
+    };
+
+    const generatePolarAreaChartData = () => {
+        const scoreCounts = processResultsForCharts();
+        return {
+            labels: Array.from({ length: 21 }, (_, i) => (i / 2).toString()),
+            datasets: [
+                {
+                    label: 'Số học sinh',
+                    data: scoreCounts,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }
+            ]
+        };
+    };
+
+    const handleSendMail = async () => {
+        const codeGroup = 'af111fa9-dc25-4b18-82ce-3eb529935762';
+        const response = await resultService.sendMailResultForStudent(codeGroup);
+        if (response.status < 400) {
+            setShowMailModal(false)
+            setShowSuccessAlertSendMail(true)
+        } else {
+            console.error("Error updating exam:", response.statusText);
+            setShowErrorAlertSendMail(true);
+
+        }
+    }
+    const [remainingTime, setRemainingTime] = useState("");
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (dataExam?.endTime) {
+                const now = new Date().getTime();
+                const endTime = new Date(dataExam.endTime).getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    setRemainingTime("Kết thúc");
+                    clearInterval(interval);
+                } else {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    const timeParts = [
+                        days > 0 ? `${days} ngày` : null,
+                        hours > 0 ? `${hours} giờ` : null,
+                        minutes > 0 ? `${minutes} phút` : null,
+                        `${seconds} giây`
+                    ].filter(part => part !== null).join(' ');
+
+                    setRemainingTime(timeParts);
+                }
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [dataExam]);
+
+
     return (
         <>
             <Header />
@@ -99,6 +213,7 @@ export const ManagementQuestion = () => {
                 <div className="manage-question mt-3 mb-3">
                     <Row>
                         <h1 className="title mt-2 mb-4">{dataExam?.title}</h1>
+                        <h4><ScheduleIcon />Trạng thái: {remainingTime === END_TIME_EXAM ? "Kết thúc" : "kết thúc sau " + remainingTime}</h4>
                     </Row>
                     <Row className="d-flex">
                         <Nav variant="tabs" activeKey={activeTab}>
@@ -134,11 +249,15 @@ export const ManagementQuestion = () => {
 
                             {activeTab === "student-list" ? (<>
                                 <Stack direction="horizontal" gap={3}>
-                                    {/* <Button variant="outline-success" className="p-2">
-                                        <AddIcon /> Thêm học sinh</Button> */}
-                                    <Button variant="outline-danger" className="p-2 ms-auto">
+                                    <Button variant="outline-info" className="p-2"
+                                        onClick={() => setShowMailModal(true)}
+                                    >
+                                        <AttachEmailIcon /> Gửi mail thông báo</Button>
+                                    <Button variant="outline-danger" className="p-2 ms-auto"
+                                        onClick={() => setShowChartsModal(true)}
+                                    >
                                         <StackedLineChartIcon />
-                                        Thống kê</Button>
+                                        Thống kê kết quả</Button>
                                     <Button variant="outline-success" className="p-2"
                                         onClick={handleExport}
                                     >
@@ -175,7 +294,10 @@ export const ManagementQuestion = () => {
                                                     </tr>
                                                 )
                                             })
-                                        }
+                                        }<tr>
+                                            <td ><strong>Tổng sỉ số:</strong></td>
+                                            <td colSpan={7}>{dataResult?.length}</td>
+                                        </tr>
 
 
                                     </tbody>
@@ -202,6 +324,9 @@ export const ManagementQuestion = () => {
                                                 </tr>
                                             ))
                                         }
+                                        <tr>
+                                            <td colSpan={2}><strong>Tổng số câu:{dataExam?.examNumbers[tabIndex]?.listQuestions?.length}</strong></td>
+                                        </tr>
                                     </tbody>
                                 </Table>)}
                         </Col>
@@ -251,12 +376,75 @@ export const ManagementQuestion = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showChartsModal} onHide={() => setShowChartsModal(false)} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Thống kê kết quả</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <div style={{ flex: 1 }}>
+                            <Line
+                                data={generateLineChartData()}
+                                options={{
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: 'Biểu đồ đường',
+                                            font: {
+                                                size: 14
+                                            }
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <PolarArea
+                                data={generatePolarAreaChartData()}
+                                options={{
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: 'Biểu đồ Polar',
+                                            font: {
+                                                size: 14
+                                            }
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                </Modal.Body>
+
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowChartsModal(false)}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <SuccessModal show={showSuccessAlert}
                 notice={"Đã cập nhật câu hỏi thành công."}
                 onClose={() => setShowSuccessAlert(false)} />
             <ErrorModal show={showErrorAlert}
                 notice={"Đã xảy ra lỗi khi cập nhật câu hỏi. Vui lòng thử lại sau."}
                 onClose={() => setShowErrorAlert(false)} />
+
+            <SendMailModal
+                show={showMailModal}
+                notice="Bạn có muốn gửi kết quả bài thi này cho toàn bộ học sinh trong lớp này hay không?"
+                onClose={() => setShowMailModal(false)}
+                handleSendMail={handleSendMail}
+            />
+            <SuccessModal show={showSuccessAlertSendMail}
+                notice={"Đã gửi mail thành công."}
+                onClose={() => setShowSuccessAlertSendMail(false)} />
+            <ErrorModal show={showErrorAlertSendMail}
+                notice={"Đã xảy ra lỗi khi gửi. Vui lòng thử lại sau."}
+                onClose={() => setShowErrorAlertSendMail(false)} />
         </>
     );
 };
