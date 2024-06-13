@@ -63,7 +63,7 @@ public class ExamNumberServiceImp implements ExamNumberService {
         long timeNow = new Timestamp(System.currentTimeMillis()).getTime();
 
         if(timeNow < startTime || timeNow > endTime) {
-            throw new ResourceNotExistException("Outside exam time");
+            return null;
         }
         return ExamResponse.fromEntity(exam);
     }

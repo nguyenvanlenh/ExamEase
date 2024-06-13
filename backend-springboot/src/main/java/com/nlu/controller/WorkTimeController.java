@@ -69,7 +69,6 @@ public class WorkTimeController {
 		if(data == null) return ResponseData.builder()
 					.status(HttpStatus.NOT_FOUND.value())
 					.message("Data not found")
-					.data(data)
 					.build();
 
 		return ResponseData.builder()
@@ -93,7 +92,6 @@ public class WorkTimeController {
             return ResponseData.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message("Invalid date format")
-                    .data(null)
                     .build();
         }
 
@@ -135,5 +133,47 @@ public class WorkTimeController {
 				.data(workTimes)
 				.build();
 	}
-	
+
+	@PutMapping("/students/{studentId}/exam-number/{examNumberId}")
+	public ResponseData updateWorkTimeStudent(
+			@PathVariable(name = "studentId") Long studentId,
+			@PathVariable(name = "examNumberId") Integer examNumberId,
+			@RequestParam(name = "endExam") String endExam) {
+		Timestamp endExamTimestamp;
+
+		try {
+			Instant instant = Instant.parse(endExam);
+			endExamTimestamp = Timestamp.from(instant);
+		} catch (Exception e) {
+			return ResponseData.builder()
+					.status(HttpStatus.BAD_REQUEST.value())
+					.message("Invalid date format")
+					.data(null)
+					.build();
+		}
+
+		boolean data = workTimeService.updateEndExamWorkTimeStudent(studentId, examNumberId, endExamTimestamp);
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("Update successfully")
+				.data(data)
+				.build();
+	}
+	@GetMapping("/students/{studentId}/exam-number/{examNumberId}")
+	public ResponseData getWorkTimeByIdStudent(
+			@PathVariable(name = "studentId") Long studentId,
+			@PathVariable(name = "examNumberId") Integer examNumberId) {
+
+		WorkTime data = workTimeService.getWorkTimeByStudent(studentId, examNumberId);
+		if(data == null) return ResponseData.builder()
+				.status(HttpStatus.NOT_FOUND.value())
+				.message("Data not found")
+				.build();
+
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("Data work time by id user and id exam number")
+				.data(data)
+				.build();
+	}
 }

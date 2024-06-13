@@ -1,22 +1,50 @@
 import React, { useState } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Col, Row } from 'react-bootstrap';
 import './ExaminingRules.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { formatdMYFromString } from '../../utils/common';
+import { examNumberService } from '../../services/examNumberService';
+import { addListQuestion } from '../../redux/slices/listQuestionSlice';
+import { useNavigate } from 'react-router-dom';
+import { outSideExamSwal } from '../../utils/mySwal';
+import { removeAuth } from '../../redux/slices/authSlice';
 
 function ExaminingRules() {
   const [agreed, setAgreed] = useState(false);
-
+  const navigate = useNavigate()
   const handleAgreeChange = () => {
     setAgreed(!agreed);
   };
+  const dispatch = useDispatch()
+  const auth = useSelector(state => state.auth)
+  const handleSubmit = async () => {
+    const data = await examNumberService.getExamNumberStudent(auth?.studentId);
+    console.log(data)
+    if(data.data && data.status === 200) {
+      const selectedExam = data.data?.examNumbers[0];
+      const listQuestions = selectedExam?.listQuestions;
+      dispatch(addListQuestion(listQuestions));
 
+      navigate("/examining-student")
+    }else {
+      outSideExamSwal()
+    }
+      console.log("submit")
+      
+      
+  }
+  const handleLogout = () => {
+    dispatch(removeAuth())
+    navigate("/login-student")
+  }
   return (
-    <Container className="examining-rules">
-      <h2 className="exam-title">Thi cuối kỳ môn Toán</h2>
+    <Container id="examining-rules">
+      <h2 className="exam-title">{auth?.title}</h2>
       <div className="exam-info">
-        <p><strong>Họ và tên thí sinh:</strong> Nguyễn Văn A</p>
-        <p><strong>Mã số sinh viên:</strong> 12345678</p>
-        <p><strong>Thời gian làm bài:</strong> 90 phút</p>
-        <p><strong>Ngày thi:</strong> 20/06/2024</p>
+        <p><strong>Họ và tên thí sinh:</strong> {auth?.fullname}</p>
+        <p><strong>Mã số sinh viên:</strong> {auth?.code}</p>
+        <p><strong>Thời gian làm bài:</strong> {auth?.timeExam} phút</p>
+        <p><strong>Ngày thi:</strong> {formatdMYFromString(auth?.dateExam)}</p>
         <p><strong>Giờ thi:</strong> 9:00 AM</p>
         <p><strong>Thông tin nội quy khi thi:</strong></p>
         <ul className="rules-list">
@@ -37,9 +65,21 @@ function ExaminingRules() {
             className="agree-checkbox"
           />
         </Form.Group>
-        <Button variant="primary" type="button" disabled={!agreed} className="start-exam-btn">
-          Làm bài thi
-        </Button>
+        <Row>
+          <Col sm={6}>
+            <Button variant="primary" type="button" disabled={!agreed} className="start-exam-btn" onClick={handleSubmit}>
+            Làm bài thi
+          </Button>
+          </Col>
+          <Col sm={6}>
+            <Button variant="danger" type="button" className="start-exam-btn" onClick={handleLogout}>
+            Đăng xuất
+            </Button>
+          </Col>
+        </Row>
+        
+
+        
       </Form>
     </Container>
   );

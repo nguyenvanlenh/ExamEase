@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeAuth } from "../../redux/slices/authSlice";
 import { removexamWorked } from "../../redux/slices/examWorkedSlice";
+import { removeQuestion } from "../../redux/slices/listQuestionSlice";
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +24,7 @@ function Header() {
     const handleLogOut = () => {
         dispatch(removeAuth())
         dispatch(removexamWorked())
+        dispatch(removeQuestion())
         localStorage.removeItem('username');
         localStorage.removeItem('category');
         localStorage.removeItem('timeExam');
@@ -44,9 +46,6 @@ function Header() {
                         </div>
                         <div className="p-3">
                             <Link to="/list-exams" className="text-item">Đề thi online</Link>
-                        </div>
-                        <div className="p-3">
-                            <Nav.Link href="#home" className="text-item">Thi trực tuyến</Nav.Link>
                         </div>
                         <div className="p-3">
                             <Nav.Link href="#home" className="text-item">Liên hệ</Nav.Link>
@@ -90,7 +89,7 @@ function Header() {
                         <Nav.Link href="/login" className="text-item">Đăng nhập</Nav.Link>
                     </div>
                     <div className="p-2">
-                        <Link to="/list-exams" className="text-item">Thi trực tuyến</Link>
+                        <Link to="/register" className="text-item">Đăng kí</Link>
                     </div>
                 </div>
                 <div className={`content-menu-mobile`} style={{ display: isMenuOpen ? 'block' : 'none' }}>

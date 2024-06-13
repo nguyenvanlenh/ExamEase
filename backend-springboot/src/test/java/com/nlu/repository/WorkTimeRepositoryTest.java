@@ -12,4 +12,5 @@ public class WorkTimeRepositoryTest {
     public void testGetAllWorkTimes() {
         System.out.println(workTimeRepository.findAllByUser_IdOrderByBeginExamDesc(2L));
     }
+
 }

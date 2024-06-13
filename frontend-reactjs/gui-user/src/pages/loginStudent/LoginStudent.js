@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import "./Login.scss";
+import "./LoginStudent.scss";
 
 import BackgroundImage from "../../data/imgs/backgroud.jpg";
 import Logo from "../../data/imgs/user_icon.webp";
@@ -12,9 +12,10 @@ import { addAuth } from "../../redux/slices/authSlice";
 import { workTimeService } from "../../services/workTimeService";
 import { addExamWorked } from "../../redux/slices/examWorkedSlice";
 
-const Login = () => {
+const LoginStudent = () => {
   const navigation = useNavigate()
-  const [inputUsername, setInputUsername] = useState("");
+  const [inputCodeGroup, setInputCodeGroup] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
   const [show, setShow] = useState(false);
@@ -24,17 +25,18 @@ const Login = () => {
     event.preventDefault();
     setLoading(true);
     await delay(500);
-
-    const data =  await authService.login(RequestData().LoginRequest(inputUsername, inputPassword))
-    if (data.status >= 400) {
+    const data =  await authService.loginStudent(RequestData().LoginStudentRequest(inputEmail, inputPassword, inputCodeGroup))
+    if (data.status !== 200) {
       setShow(true);
     }else {
-      const response = await workTimeService.getAllWorkTimeUser(data.data);
-      // localStorage.setItem('auth', JSON.stringify(data.data));
+        console.log("OK")
+        console.log(data)
+    //   const response = await workTimeService.getAllWorkTimeUser(data.data);
+    //   // localStorage.setItem('auth', JSON.stringify(data.data));
       dispatch(addAuth(data.data))
-      dispatch(addExamWorked(response.data))
-      localStorage.setItem('username', JSON.stringify(inputUsername))
-      navigation("/")
+    //   dispatch(addExamWorked(response.data))
+    //   localStorage.setItem('username', JSON.stringify(inputEmail))
+      navigation("/examining-rules")
     }
     setLoading(false);
   };
@@ -72,13 +74,23 @@ const Login = () => {
         ) : (
           <div />
         )}
-        <Form.Group className="mb-2" controlId="username">
-          <Form.Label>Tài khoản</Form.Label>
+        <Form.Group className="mb-2" controlId="codeGroup">
+          <Form.Label>Mã nhóm</Form.Label>
           <Form.Control
             type="text"
-            value={inputUsername}
-            placeholder="Tài khoản"
-            onChange={(e) => setInputUsername(e.target.value)}
+            value={inputCodeGroup}
+            placeholder="Mã nhóm"
+            onChange={(e) => setInputCodeGroup(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-2" controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            value={inputEmail}
+            placeholder="Email"
+            onChange={(e) => setInputEmail(e.target.value)}
             required
           />
         </Form.Group>
@@ -101,15 +113,6 @@ const Login = () => {
             Đang đăng nhập...
           </Button>
         )}
-        <div className="d-flex justify-content-between">
-          <Link to={"/register"} className="mt-2">Đăng ký?</Link>
-          <Button
-            className="text-muted px-0"
-            variant="link"
-          >
-            Quên mật khẩu?
-          </Button>
-        </div>
       </Form>
       {/* Footer */}
       <div className="w-100 mb-2 position-absolute bottom-0 start-50 translate-middle-x text-white text-center">
@@ -119,4 +122,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginStudent;

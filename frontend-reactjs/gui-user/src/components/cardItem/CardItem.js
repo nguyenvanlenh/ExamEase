@@ -31,7 +31,7 @@ function CardItem(prop) {
           </Card.Subtitle>
           <Card.Text className="text-sub text-begin-day">{prop.beginDay}</Card.Text>
           <Card.Text className="text-sub text-end-day">{prop.endDay}</Card.Text>
-          <Card.Text className="text-sub text-end-day">{prop.dateDone}</Card.Text>
+          <Card.Text className="text-sub text-end-day">{prop.dateDone && prop.dateDone + 's'}</Card.Text>
           <Card.Text className="text-sub text-end-day">{prop.timeDone}</Card.Text>
           <Card.Text className="text-sub text-end-day">{prop.result}</Card.Text>
           <Button onClick={handleButton} className="card-button">{prop.nameButton}</Button>

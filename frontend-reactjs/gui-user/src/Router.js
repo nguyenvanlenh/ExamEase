@@ -15,6 +15,9 @@ import Register from "./pages/register/Register";
 import ExaminingRules from "./pages/examRules/ExaminingRules";
 import { ManagementExams } from "./pages/ManagementExams/ManagementExams";
 import { ManagementQuestion } from "./pages/ManagementQuestion/ManagementQuestion";
+import LoginStudent from "./pages/loginStudent/LoginStudent";
+import ExaminingStudent from "./pages/examiningStudent/ExaminingStudent";
+import ResultStudent from "./pages/resultStudent/ResultStudent";
 
 
 export const router = createBrowserRouter([
@@ -35,13 +38,11 @@ export const router = createBrowserRouter([
         path: "/register",
         element: <Register />
 
-    }
-    ,
+    },
     {
         path: "/create-exam",
         element: <CreateExam />
-    }
-    ,
+    },
     {
         path: "/form-question",
         element: <FormQuestion />
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
     {
         path: "/examining-rules",
         element: <ExaminingRules />
+
     },
     {
         path: "/manage-exam",
@@ -81,7 +83,19 @@ export const router = createBrowserRouter([
     {
         path: "/manage-question",
         element: <ManagementQuestion />
-    }
+    },
+     {
+        path: "/login-student",
+        element: <LoginStudent />
+     },
+     {
+        path: "/examining-student",
+        element: <ExaminingStudent />
+     },
+     {
+        path: "/result-student",
+        element: <ResultStudent />
+     }
 
 ]);
 

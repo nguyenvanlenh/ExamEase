@@ -14,8 +14,9 @@ import lombok.NoArgsConstructor;
 public class ExamStudentResponse {
 	private Long studentId;
 	private Integer examNumberId;
+    private String title;
     private String fullname;
     private String code;
-    private String timeExam;
+    private Integer timeExam;
     private Timestamp dateExam;
 }

@@ -20,3 +20,6 @@ export const formatTimeMS = (seconds) => {
     return durationInSeconds;
   };
   
+  export const totalMins = (secs) => {
+    return Math.round(secs / 60);
+  }

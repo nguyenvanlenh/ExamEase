@@ -14,4 +14,5 @@ public interface WorkTimeRepository extends JpaRepository<WorkTime, Long>{
     List<WorkTime> findAllByUser_IdOrderByBeginExamDesc(Long id);
 
 	List<WorkTime> findByStudentIdIn(List<Long> collect);
+   WorkTime findByStudent_IdAndExamNumber_Id(Long students, Integer examNumberId);
 }

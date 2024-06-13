@@ -1,5 +1,5 @@
 @import "../../styles/root.scss";
-.examining-rules {
+#examining-rules {
     padding: 30px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -42,8 +42,6 @@
       width: 100%;
       font-size: 16px;
       padding: 10px;
-      background-color: #007bff;
-      border-color: #007bff;
   
       &:disabled {
         background-color: #ccc;

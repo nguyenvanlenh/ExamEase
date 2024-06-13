@@ -51,9 +51,14 @@ function Examining() {
   async function getTime(authObject, idExamNumber) { 
     console.log("idExamNumber: " + idExamNumber);
     const workTime = await workTimeService.getWorkTimeUser(authObject, idExamNumber);
-    console.log(workTime)
-    const now = new Date();
-    setTime(calculateDurationInSeconds(now, workTime?.data.endExam))
+    if(workTime.status === 200) {
+      console.log(workTime)
+      const now = new Date();
+      setTime(calculateDurationInSeconds(now, workTime?.data.endExam))
+    }else {
+      console.log("lỗi")
+    }
+    
   }
   
   useEffect(() => {
