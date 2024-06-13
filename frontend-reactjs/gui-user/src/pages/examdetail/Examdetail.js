@@ -61,7 +61,6 @@ function Examdetail() {
     try {
       // Directly call the service and handle the result
       const data = await examNumberService.getExamNumberUser(id);
-      // const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber)
       const workTime =  await workTimeService.addWorkTimeUser(
           auth,
           idExamNumber,
@@ -81,10 +80,9 @@ function Examdetail() {
             idExamNumber,
             auth
           );
-          await workTimeService.addWorkTimeUser(auth?.userId, idExamNumber, time);
+          await workTimeService.addWorkTimeUser(auth, idExamNumber, time);
           setData(data);
           console.log("xóa");
-
           navigate("/examining");
         }
       }

@@ -7,7 +7,7 @@ import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import { removeQuestion } from "../../redux/slices/listQuestionSlice";
 import { idExamNumberLocalStorage, } from "../../utils/localStorage";
-import { submitExaminingSwal } from "../../utils/mySwal";
+import { outSideExamSwal, submitExaminingSwal } from "../../utils/mySwal";
 import { useNavigate } from "react-router-dom";
 import { calculateDurationInSeconds, formatTimeMS } from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
@@ -47,8 +47,10 @@ function ExaminingStudent() {
       const workTimeStudent = await workTimeService.getWorkTimeStudent(auth.studentId, auth.examNumberId)
       const remainTime = calculateDurationInSeconds(new Date(), workTimeStudent?.data.endExam)
       if(remainTime <= 0) {
+        outSideExamSwal()
         navigate('/result-student', { state: { idExamNumber: idExamNumber } });
         dispatch(removeQuestion())
+        
       }else {
         setTime(remainTime)
       } 

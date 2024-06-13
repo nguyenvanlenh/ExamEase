@@ -14,6 +14,7 @@ const listQuestionSlice = createSlice({
                     contentQuestion: question.nameQuestion,
                     done: false,
                     idAnswerSelected: undefined,
+                    flag: false,
                     listAnswers: question.options.map(option => ({
                         id: option.id,
                         value: option.nameOption,
@@ -37,6 +38,14 @@ const listQuestionSlice = createSlice({
         removeQuestion() {
             listQuestionLocalStorage.remove()
             return []
+        },
+        updateFlag(state, action) {
+            const { idQuestion } = action.payload;
+            const question = state.find(question => question.id === idQuestion);
+            if (question) {
+                question.flag = !question.flag;
+            }
+            //update localstore
         }
         
     }

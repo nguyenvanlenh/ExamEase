@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeAuth } from "../../redux/slices/authSlice";
 import { removexamWorked } from "../../redux/slices/examWorkedSlice";
+import { removeQuestion } from "../../redux/slices/listQuestionSlice";
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +24,7 @@ function Header() {
     const handleLogOut = () => {
         dispatch(removeAuth())
         dispatch(removexamWorked())
+        dispatch(removeQuestion())
         localStorage.removeItem('username');
         localStorage.removeItem('category');
         localStorage.removeItem('timeExam');

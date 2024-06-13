@@ -53,6 +53,7 @@ function Question(prop) {
     <div id={"q-"+prop.id} className="question-container">
       <div className="wrap-number">
         <span className="number">{prop.numberSentence + 1}</span>
+        <span>đánh dấu</span>
       </div>
       <div className="content">
         <div className="content-question">{prop.contentQuestion}</div>
