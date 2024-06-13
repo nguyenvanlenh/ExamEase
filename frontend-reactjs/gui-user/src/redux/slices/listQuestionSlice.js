@@ -51,6 +51,6 @@ const listQuestionSlice = createSlice({
     }
 })
 
-export const { addListQuestion, updateQuestion, addedListQuestion, removeQuestion } = listQuestionSlice.actions
+export const { addListQuestion, updateQuestion, addedListQuestion, removeQuestion, updateFlag } = listQuestionSlice.actions
 export default listQuestionSlice
 
