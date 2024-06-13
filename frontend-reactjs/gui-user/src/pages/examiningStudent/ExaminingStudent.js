@@ -5,8 +5,8 @@ import { Button, CloseButton } from "react-bootstrap";
 import ListQuestion from "../../components/listQuestion/ListQuestion";
 import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
 import { useDispatch, useSelector } from "react-redux";
-import { addedListQuestion, removeQuestion } from "../../redux/slices/listQuestionSlice";
-import { examiningLocalStorage, idExamNumberLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
+import { removeQuestion } from "../../redux/slices/listQuestionSlice";
+import { idExamNumberLocalStorage, } from "../../utils/localStorage";
 import { submitExaminingSwal } from "../../utils/mySwal";
 import { useNavigate } from "react-router-dom";
 import { calculateDurationInSeconds, formatTimeMS } from "../../utils/utilsFunction";
@@ -38,12 +38,26 @@ function ExaminingStudent() {
     if (isConfirmed) {
       // update endExam workTime
       // await workTimeService.updateWorkTimeUser(auth, idExamNumber,new Date().toISOString())
-      navigate('/result', { state: { idExamNumber: idExamNumber } });
+      navigate('/result-student', { state: { idExamNumber: idExamNumber } });
       dispatch(removeQuestion())
     }
   };
+  useEffect(()=> {
+    async function getWorkTimeStudent() {
+      const workTimeStudent = await workTimeService.getWorkTimeStudent(auth.studentId, auth.examNumberId)
+      const remainTime = calculateDurationInSeconds(new Date(), workTimeStudent?.data.endExam)
+      if(remainTime <= 0) {
+        navigate('/result-student', { state: { idExamNumber: idExamNumber } });
+        dispatch(removeQuestion())
+      }else {
+        setTime(remainTime)
+      } 
+    }
+    getWorkTimeStudent();
+  },[])
 
   useEffect(() => {
+    
     if (time > 0) {
       const timerId = setInterval(() => {
         setTime(time => time - 1);
@@ -54,7 +68,7 @@ function ExaminingStudent() {
     } else {
       // Hiển thị thông báo khi hết thời gian
       console.log("Hết giờ");
-      // navigate('/result', { state: { idExamNumber: idExamNumber } });
+      navigate('/result-student', { state: { idExamNumber: idExamNumber } });
       dispatch(removeQuestion())
     }
   }, [time]);
@@ -62,12 +76,12 @@ function ExaminingStudent() {
   return (
     <>
       <Header />
-      <div id="examining">
+      <div id="examining-student">
         <div direction="horizontal" className="wrap-title">
           <h1 className="title">
             {auth?.title}
           </h1>
-          <Button className="btn-custom">Thoát</Button>
+          {/* <Button className="btn-custom">Thoát</Button> */}
         </div>
         <i className="note-top">
           Chú ý: bạn có thể click vào Part sau đó chọn câu mà bạn muốn làm.

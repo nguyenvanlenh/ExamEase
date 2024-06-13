@@ -20,15 +20,15 @@ function ExaminingRules() {
   const handleSubmit = async () => {
     const data = await examNumberService.getExamNumberStudent(auth?.studentId);
     console.log(data)
-    if(data.status === 200) {
+    if(data.data && data.status === 200) {
       const selectedExam = data.data?.examNumbers[0];
       const listQuestions = selectedExam?.listQuestions;
       dispatch(addListQuestion(listQuestions));
 
       navigate("/examining-student")
-      }else {
-        outSideExamSwal()
-      }
+    }else {
+      outSideExamSwal()
+    }
       console.log("submit")
       
       
@@ -38,7 +38,7 @@ function ExaminingRules() {
     navigate("/login-student")
   }
   return (
-    <Container className="examining-rules">
+    <Container id="examining-rules">
       <h2 className="exam-title">{auth?.title}</h2>
       <div className="exam-info">
         <p><strong>Họ và tên thí sinh:</strong> {auth?.fullname}</p>

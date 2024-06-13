@@ -1,6 +1,6 @@
 @import "../../styles/root.scss";
 
-#examining {
+#examining-student {
     background-color: $color-blue_four;
 
     .wrap-title {
@@ -15,6 +15,7 @@
         }
 
         .btn-custom {
+            width: 64px;
             border: 1px solid $color-blue_global;
             background-color: $color-blue_second;
             color: $color-black;

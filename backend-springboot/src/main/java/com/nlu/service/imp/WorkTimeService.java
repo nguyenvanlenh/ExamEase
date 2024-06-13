@@ -160,4 +160,8 @@ public class WorkTimeService {
 		return workTimeRepository.save(workTime) != workTime;
 	}
 
+	public WorkTime getWorkTimeByStudent(Long studentId, Integer examNumberId) {
+		return workTimeRepository.findByStudent_IdAndExamNumber_Id(studentId, examNumberId);
+	}
+
 }
