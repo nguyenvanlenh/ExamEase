@@ -63,7 +63,7 @@ public class ExamRequest implements Serializable{
 		exam.setQuantityQuestion(request.getQuantityQuestion());
 		exam.setStartTime(request.getStartTime());
 		exam.setEndTime(request.getEndTime());
-		exam.setExamNumbers(ExamNumberRequest.toEntities(request.getListExamNumberRequests()));
+//		exam.setExamNumbers(ExamNumberRequest.toEntities(request.getListExamNumberRequests()));
 	}
 	
 	

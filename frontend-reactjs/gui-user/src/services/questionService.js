@@ -3,7 +3,7 @@ import { URL_PATH } from "../utils/constants";
 import { getDataByKeyLS } from "../utils/common";
 const token = getDataByKeyLS("auth")?.token
 export const questionService = {
-  uploadFileQuestion: (file, answerFile) => {
+    uploadFileQuestion: (file, answerFile) => {
         const url = URL_PATH + "/api/upload"
         const formData = new FormData();
         formData.append('file', file);
@@ -32,13 +32,13 @@ export const questionService = {
                 Authorization: `Bearer ${authObject?.token}`
             }
         })
-        .then(response => {
-            return response.data;
-        })
-        .catch(error => {
-            console.log(error.response?.data.message);
-            return error.response;
-        });
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error.response?.data.message);
+                return error.response;
+            });
     },
     getQuestion: (idQuestion, authObject) => {
         const url = `${URL_PATH}/api/questions/${idQuestion}`
@@ -47,12 +47,27 @@ export const questionService = {
                 Authorization: `Bearer ${authObject?.token}`
             }
         })
-        .then(response => {
-            return response.data;
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error.response?.data.message);
+                return error.response;
+            });
+    },
+    updateQuestion: (data, id) => {
+        const url = `${URL_PATH}/api/questions/${id}`
+        return axios.put(url, data, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
-        .catch(error => {
-            console.log(error.response?.data.message);
-            return error.response;
-        });
-    }
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
+    },
 }

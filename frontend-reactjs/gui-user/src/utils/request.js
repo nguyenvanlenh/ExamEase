@@ -29,8 +29,9 @@ export const RequestData = () => {
             listOptionRequests: listOptionRequests
         };
     }
-    const OptionRequest = (content, isCorrect) => {
+    const OptionRequest = (id, content, isCorrect) => {
         return {
+            id: id,
             content: content,
             isCorrect: isCorrect
         };

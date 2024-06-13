@@ -1,0 +1,17 @@
+@import "../../styles/root.scss";
+.manage-question {
+    padding: $fs-14;
+    border: 1px solid #ccc;
+    border-radius: $fs-14;
+    a {
+        color: $color-blue_global;
+    }
+    .active > .page-link,
+    .page-link.active {
+        background-color: $color-blue_global !important;
+        color: #fff;
+    }
+    .page-link {
+        color: $color-blue_global;
+    }
+}

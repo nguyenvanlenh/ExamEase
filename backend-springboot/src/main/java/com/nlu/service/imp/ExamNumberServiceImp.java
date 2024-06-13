@@ -1,10 +1,12 @@
 package com.nlu.service.imp;
 
+import com.nlu.exception.NotFoundException;
 import com.nlu.exception.ResourceNotExistException;
 import com.nlu.model.dto.response.ExamResponse;
 import com.nlu.model.dto.response.ExamResultResponse;
 import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.ExamNumber;
+import com.nlu.model.entity.Student;
 import com.nlu.model.entity.WorkTime;
 import com.nlu.repository.ExamNumberRepository;
 import com.nlu.repository.ExamRepository;
@@ -97,6 +99,12 @@ public class ExamNumberServiceImp implements ExamNumberService {
     public ExamResultResponse getExamResultStudent(Long idExamNumber, Long idStudent) {
         int totalQuestion, totalCorrect, totalWrong, totalSkipped = 0;
         String examName;
+        
+        ExamNumber examNumber = examNumberRepository.findById(idExamNumber.intValue())
+        		.orElseThrow(()-> new NotFoundException("exam_number_not_found", idExamNumber));
+        Student student = studentRepository.findById(idStudent)
+        		.orElseThrow(()-> new NotFoundException("student_not_found", idStudent));
+        
         try {
             totalQuestion = examNumberRepository.getExamNumberCountById(idExamNumber);
 
@@ -105,6 +113,7 @@ public class ExamNumberServiceImp implements ExamNumberService {
             totalWrong = examNumberRepository.getExamNumberQuestionWrongByIdExamAndIdStudent(idExamNumber, idStudent);
 
             examName = examNumberRepository.getExamNumberExamTitleById(idExamNumber);
+            
         }catch (Exception e) {
             throw new ResourceNotExistException("ExamNumber Not Found");
         }
@@ -112,11 +121,14 @@ public class ExamNumberServiceImp implements ExamNumberService {
 
         return ExamResultResponse.builder()
                 .examName(examName)
+                .fullName(student.getFullname())
+                .studentCode(student.getCode())
+                .email(student.getEmail())
+                .examNumberName(examNumber.getName())
                 .totalCorrect(totalCorrect)
                 .totalWrong(totalWrong)
                 .totalQuestion(totalQuestion)
                 .totalSkipped(totalSkipped)
-//                .totalTime(totalTime)
                 .build();
     }
 }

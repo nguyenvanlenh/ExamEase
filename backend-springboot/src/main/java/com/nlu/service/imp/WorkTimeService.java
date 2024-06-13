@@ -2,16 +2,23 @@ package com.nlu.service.imp;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-import com.nlu.model.dto.response.WorkTimeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import com.nlu.exception.NotFoundException;
+import com.nlu.model.dto.response.ExamResultResponse;
+import com.nlu.model.dto.response.WorkTimeResponse;
 import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.ExamNumber;
 import com.nlu.model.entity.Student;
@@ -22,6 +29,7 @@ import com.nlu.repository.ExamRepository;
 import com.nlu.repository.StudentRepository;
 import com.nlu.repository.UserRepository;
 import com.nlu.repository.WorkTimeRepository;
+import com.nlu.service.ExamNumberService;
 
 @Service
 public class WorkTimeService {
@@ -36,42 +44,30 @@ public class WorkTimeService {
 	private WorkTimeRepository workTimeRepository;
 	@Autowired
     private ExamNumberRepository examNumberRepository;
+	@Autowired
+	private ExamNumberService examNumberService;
 
 	@Transactional
 	public boolean createWorkTime(Long examId) {
-		// Lấy thông tin về kỳ thi từ examId
-		Exam exam = examRepository.findById(examId).orElseThrow(() -> new NotFoundException("Exam not found"));
-
-		// Lấy mã nhóm của kỳ thi
+		Exam exam = examRepository.findById(examId)
+				.orElseThrow(() -> new NotFoundException("exam_not_found",examId));
 		String codeGroup = exam.getCodeGroup();
 
 		List<ExamNumber> listExamNumbers = exam.getExamNumbers().stream().toList();
 
 		List<Student> listStudents = studentRepository.findByCodeGroup(codeGroup);
 
-		List<WorkTime> workTimes = new ArrayList<>();
-
-		int examNumberIndex = 0;
-		for (Student student : listStudents) {
-
-			// Lấy đề cho học sinh hiện tại
-			ExamNumber examNumber = listExamNumbers.get(examNumberIndex);
-			// Tạo đối tượng chứa thông tin về thời gian làm việc của học sinh với đề
-			WorkTime workTime = createWorkTime(student, examNumber);
-			workTimes.add(workTime);
-			// Di chuyển đến số báo danh tiếp theo, lặp lại danh sách
-			examNumberIndex = (examNumberIndex + 1) % listExamNumbers.size();
-		}
+		AtomicInteger examNumberIndex = new AtomicInteger(0);
+		listStudents.forEach(student -> {
+		    ExamNumber examNumber = listExamNumbers.get(examNumberIndex.get());
+		    createWorkTime(student, examNumber);
+		    examNumberIndex.set((examNumberIndex.get() + 1) % listExamNumbers.size());
+		});
 
 		return true;
 	}
 
 	private WorkTime createWorkTime(Student student, ExamNumber examNumber) {
-		// Tạo và trả về đối tượng chứa thông tin về thời gian làm việc của học sinh với
-		// đề
-		// Bạn có thể tạo một đối tượng WorkTime hoặc sử dụng một cấu trúc dữ liệu phù
-		// hợp khác
-		// Trong ví dụ này, tôi sẽ trả về một String đơn giản
 		WorkTime workTime = new WorkTime();
 		workTime.setStudent(student);
 		workTime.setExamNumber(examNumber);
@@ -149,6 +145,7 @@ public class WorkTimeService {
 		return workTimeResponses;
     }
 
+
 	public boolean updateEndExamWorkTimeStudent(Long studentId, Integer examNumberId, Timestamp endExamTimestamp) {
 		// Find the existing WorkTime entry
 		WorkTime workTime = workTimeRepository.findByStudent_IdAndExamNumber_Id(studentId, examNumberId);
@@ -163,5 +160,4 @@ public class WorkTimeService {
 	public WorkTime getWorkTimeByStudent(Long studentId, Integer examNumberId) {
 		return workTimeRepository.findByStudent_IdAndExamNumber_Id(studentId, examNumberId);
 	}
-
 }

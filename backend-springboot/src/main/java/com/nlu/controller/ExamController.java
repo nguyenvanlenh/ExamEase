@@ -107,4 +107,18 @@ public class ExamController {
 				 .message("Exams deleted successfully")
 				 .build();
 	}
+	
+	@GetMapping("/teachers/{teacherId}")
+	public ResponseData getExamsByTeacherId(@PathVariable Long teacherId, 
+			@PageableDefault(page = 0, size = 6) 
+			@SortDefaults(
+			@SortDefault(direction = Sort.Direction.ASC, sort = {"title"})
+		) Pageable pageable) {
+		return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Exams data")
+				 .data(examService.getExamsByTeacherId(teacherId,pageable))
+				 .build();
+	}
+	
 }
