@@ -103,7 +103,7 @@ export default function Home() {
           {
             listResultExam && listResultExam.length > 0 &&
             (<div className="view-all">
-            <Link>
+            <Link to={"/statistics"}>
               <b>Xem tất cả</b>
               <KeyboardDoubleArrowRightIcon fontSize="16" />
             </Link>

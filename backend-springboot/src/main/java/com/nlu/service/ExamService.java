@@ -21,5 +21,7 @@ public interface ExamService {
 
 	PageResponse<List<ExamResponse>>
 		getExamsByCategoryAndKeyWord(String category, String keyword, Pageable pageable);
+	
+	PageResponse<List<ExamResponse>> getExamsByTeacherId(Long teacherId,Pageable pageable);
 
 }

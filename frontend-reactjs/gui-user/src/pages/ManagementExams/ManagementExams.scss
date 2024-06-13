@@ -1,0 +1,14 @@
+@import "../../styles/root.scss";
+.manage-exam {
+    a {
+        color: $color-blue_global;
+    }
+    .active > .page-link,
+    .page-link.active {
+        background-color: $color-blue_global !important;
+        color: #fff;
+    }
+    .page-link {
+        color: $color-blue_global;
+    }
+}

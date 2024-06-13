@@ -54,7 +54,7 @@ public class Question {
 	@Column(name = "name_question")
 	private String nameQuestion;
 
-	@OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Option> options;
 
 	@JsonIgnore
