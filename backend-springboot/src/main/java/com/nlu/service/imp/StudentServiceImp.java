@@ -161,9 +161,10 @@ public class StudentServiceImp implements StudentService{
 		return ExamStudentResponse.builder()
 				.studentId(student.getId())
 				.examNumberId(workTime.getExamNumber().getId())
+				.title(exam.getTitle())
 				.fullname(student.getFullname())
 				.code(student.getCode())
-				.timeExam(exam.getTimeExam().getName())
+				.timeExam(exam.getTimeExam().getId())
 				.dateExam(exam.getStartTime())
 				.build();
 	}

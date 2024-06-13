@@ -28,8 +28,11 @@ export const ListExams = () => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [category, setCategory] = useState("");
     const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
-
-
+    const [username, setUsername] = useState("user")
+    useEffect(() => {
+        const usernameLocal = JSON.parse(localStorage.getItem("username"));
+        setUsername(usernameLocal);
+    })
 
     // tải dữ liệu lúc đầu và theo dõi khi chuyển trang hoặc là chọn danh mục
     useEffect(() => {
@@ -140,7 +143,7 @@ export const ListExams = () => {
                                 <div className="user-target-info-box">
                                     <Image src={UserImage} roundedCircle height={70} />
                                     <div className="text-center">
-                                        <strong>20130302</strong>
+                                        <strong>{username}</strong>
                                     </div>
                                     <div className="user-target-info">
                                         <p>

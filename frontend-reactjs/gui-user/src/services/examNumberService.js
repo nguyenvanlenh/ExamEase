@@ -33,6 +33,17 @@ export const examNumberService = {
                 console.log(error.response?.data.message)
                 return error.response
             })
+    },
+    getResultExamNumberStudent: (examNumberId, studentId) => {
+        const url = `${URL_PATH}/api/exam-numbers/students/submit/${examNumberId}?idStudent=${studentId}`
+        return axios.get(url)
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
     }
 
 }

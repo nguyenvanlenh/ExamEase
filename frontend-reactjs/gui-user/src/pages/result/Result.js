@@ -25,7 +25,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { examNumberService } from "../../services/examNumberService";
-import { authLocalStorage } from "../../utils/localStorage";
 import {
   calculateDurationInSeconds,
   formatTimeHMS,
@@ -34,7 +33,7 @@ import { workTimeService } from "../../services/workTimeService";
 import { questionService } from "../../services/questionService";
 import { useSelector } from "react-redux";
 
-function Result({ navigation }) {
+function Result() {
   const location = useLocation();
   const auth = useSelector(state => state.auth)
   const { idExamNumber } = location.state || {};
@@ -80,7 +79,7 @@ function Result({ navigation }) {
 
   const handleTabNumber = (number) => {};
   const handleOpenDetailQuestion = async (idQuestion) => {
-    const question = await questionService.getQuestion(idQuestion);
+    const question = await questionService.getQuestion(idQuestion, auth);
     setContentQuestion(question.data);
     setModalShowQuestion(true);
   };
@@ -286,12 +285,13 @@ function Result({ navigation }) {
                   </i>
                 </p>
                 <div className="mt-3">
-                  <Button
-                    className="w-100 mt-3 btn-custom"
+                  <Link 
+                    to={"/statistics"}
+                    className="w-100 mt-3 btn btn-custom"
                     variant="outline-secondary"
                   >
                     <StackedLineChartIcon /> Thống kê kết quả
-                  </Button>
+                  </Link>
                 </div>
               </div>
             </div>

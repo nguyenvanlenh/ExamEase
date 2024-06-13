@@ -25,5 +25,16 @@ export const authService = {
                 console.log("Register fail:", error.response);
                 return error.response;
             })
+    },
+    loginStudent: (data) => {
+        const url = URL_PATH + "/api/students/login"
+        return axios.post(url, data)
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.log("Login student fail:", error.response);
+                return error.response;
+            });
     }
 }

@@ -75,6 +75,39 @@ export const workTimeService = {
                 console.log(error.response?.data.message)
                 return error.response
             })
+    },
+    // addWorkTimeStudent: (studentId, examNumberId, timeExam) => { 
+    //     const url = `${URL_PATH}/api/worktimes/students/${studentId}/exam-number/${examNumberId}?timeExam=${timeExam}`
+    //     return axios.post(url, {})
+    //        .then(response => {
+    //             return response.data;
+    //         })
+    //        .catch(error => {
+    //             console.log(error.response?.data.message)
+    //             return error.response
+    //         })
+    // },
+    updateWorkTimeStudent: (studentId, examNumberId, endExam) => { 
+        const url = `${URL_PATH}/api/worktimes/students/${studentId}/exam-number/${examNumberId}?endExam=${endExam}`
+        return axios.put(url)
+           .then(response => {
+                return response.data;
+            })
+           .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
+    },
+    getWorkTimeStudent: (studentId, examNumberId) => {
+        const url = `${URL_PATH}/api/worktimes/students/${studentId}/exam-number/${examNumberId}`
+        return axios.get(url)
+           .then(response => {
+                return response.data;
+            })
+           .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
     }
 
 }

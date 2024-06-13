@@ -177,7 +177,7 @@ const Register = () => {
       </Form>
       {/* Footer */}
       <div className="w-100 mb-2 position-absolute bottom-0 start-50 translate-middle-x text-white text-center">
-        @ 2024 - Bản quyền của Công ty TNHH Công Nghệ DL. | &copy;2024
+        @ 2024 - Bản quyền của Công ty TNHH Công Nghệ VLDL. | &copy;2024
       </div>
     </div>
   );

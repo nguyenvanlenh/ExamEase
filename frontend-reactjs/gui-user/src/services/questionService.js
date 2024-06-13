@@ -2,7 +2,6 @@ import axios from "axios";
 import { URL_PATH } from "../utils/constants";
 import { getDataByKeyLS } from "../utils/common";
 const token = getDataByKeyLS("auth")?.token
-const auth = JSON.parse(localStorage.getItem('auth'))
 export const questionService = {
   uploadFileQuestion: (file, answerFile) => {
         const url = URL_PATH + "/api/upload"
@@ -41,11 +40,11 @@ export const questionService = {
             return error.response;
         });
     },
-    getQuestion: (idQuestion) => {
+    getQuestion: (idQuestion, authObject) => {
         const url = `${URL_PATH}/api/questions/${idQuestion}`
         return axios.get(url, {
             headers: {
-                Authorization: `Bearer ${auth?.token}`
+                Authorization: `Bearer ${authObject?.token}`
             }
         })
         .then(response => {
