@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RequestData } from "../../utils/request";
 import { createExamRequest, removeExamRequest } from "../../redux/slices/examSlice";
-import { formatDate, getDataByKeyLS, parseDateString, setDataByKeyLS } from "../../utils/common";
+import { addMinutesToDate, formatDate, formatDateLocal, getDataByKeyLS, parseDateString, setDataByKeyLS } from "../../utils/common";
 import { categoryService } from "../../services/categoryService";
 import { timeExamService } from "../../services/timeExamService";
+import { PREPARATION_TIME } from "../../utils/constants";
 export const CreateExam = () => {
     const dispatch = useDispatch();
     const requestData = RequestData();
@@ -28,6 +29,7 @@ export const CreateExam = () => {
     const [timeId, setTimeId] = useState(10);
     const [categoryId, setCategoryId] = useState(1);
     const [endTime, setEndTime] = useState(null);
+    const [startTime, setStartTime] = useState(null);
     const [quantityExamNumber, setQuantityExamNumber] = useState(1);
     const [listCate, setListCate] = useState(getDataByKeyLS("category"))
     const [listTime, setListTime] = useState(getDataByKeyLS("timeExam"))
@@ -45,7 +47,6 @@ export const CreateExam = () => {
             if (!getDataByKeyLS("timeExam")) {
                 const timeExamData = await timeExamService.getAll()
                 setListTime(timeExamData?.data)
-                console.log(timeExamData?.data);
                 setDataByKeyLS("timeExam", timeExamData?.data)
             }
         };
@@ -53,7 +54,16 @@ export const CreateExam = () => {
     });
 
 
+
+
     useEffect(() => {
+        const currentTime = formatDateLocal(new Date());
+        const minutesNeedmore = 70; // format year-month-dayThours:minutes
+
+        console.log("Now: " + currentTime)
+
+        console.log("Added: " + addMinutesToDate(currentTime, minutesNeedmore))
+
         if (examRequest[0]) {
             setTitle(examRequest[0]?.title ?? "");
             setShortDescription(examRequest[0]?.shortDescription ?? "");
@@ -61,20 +71,20 @@ export const CreateExam = () => {
             setQuantityQuestion(examRequest[0]?.quantityQuestion ?? 1);
             setTimeId(examRequest[0]?.timeId);
             setCategoryId(examRequest[0]?.categoryId);
-            setEndTime(examRequest[0]?.endTime ?? null);
+            setStartTime(examRequest[0]?.startTime ?? null);
             setQuantityExamNumber(examRequest[0]?.quantityExamNumber ?? 1);
         }
     }, [examRequest]);
     useEffect(() => {
         const checkFormValidity = () => {
-            if (title && description && endTime && categoryId && timeId && quantityQuestion) {
+            if (title && description && startTime && categoryId && timeId && quantityQuestion) {
                 setIsFormValid(true);
             } else {
                 setIsFormValid(false);
             }
         };
         checkFormValidity();
-    }, [title, description, endTime, categoryId, timeId, quantityQuestion]);
+    }, [title, description, startTime, categoryId, timeId, quantityQuestion]);
 
     const handleSubmit = (event) => {
         if (!isFormValid) {
@@ -89,8 +99,8 @@ export const CreateExam = () => {
                 quantityQuestion,
                 timeId,
                 categoryId,
-                formatDate(new Date()),
-                endTime,
+                startTime,
+                addMinutesToDate(startTime, (timeId + PREPARATION_TIME)),
                 true,
                 listExamNumberRequests,
                 []
@@ -143,12 +153,14 @@ export const CreateExam = () => {
                                     <Form.Control.Feedback type="invalid">Bạn cần phải nhập mô tả</Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="timeExpiry">
-                                    <Form.Label>Ngày hết hạn</Form.Label>
-                                    <Form.Control type="date" placeholder="" required min={formatDate(new Date())}
+                                    <Form.Label>Thời gian bắt đầu</Form.Label>
+                                    <Form.Control type="datetime-local"
+                                        placeholder=""
+                                        required min={formatDateLocal(new Date())}
                                         onChange={(e) =>
-                                            setEndTime(e.target.value)
+                                            setStartTime(formatDateLocal(e.target.value))
                                         }
-                                        value={endTime ?? ""}
+                                        value={startTime ?? ""}
                                     />
                                     <Form.Control.Feedback type="invalid">Bạn cần phải chọn thời hạn</Form.Control.Feedback>
                                 </Form.Group>
@@ -162,7 +174,7 @@ export const CreateExam = () => {
                                     >
                                         {
                                             listCate?.map(cate => {
-                                                return <option value={cate.id}>{cate.name}</option>
+                                                return <option key={cate.id} value={cate.id}>{cate.name}</option>
                                             })
                                         }
                                     </Form.Select>
@@ -177,7 +189,7 @@ export const CreateExam = () => {
                                     >
                                         {
                                             listTime?.map(time => {
-                                                return <option value={time.id}>{time.name}</option>
+                                                return <option key={time.id} value={time.id}>{time.name}</option>
                                             })
                                         }
                                     </Form.Select>

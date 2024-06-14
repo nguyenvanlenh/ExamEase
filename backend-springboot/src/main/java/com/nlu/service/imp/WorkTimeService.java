@@ -2,22 +2,15 @@ package com.nlu.service.imp;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import com.nlu.exception.NotFoundException;
-import com.nlu.model.dto.response.ExamResultResponse;
 import com.nlu.model.dto.response.WorkTimeResponse;
 import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.ExamNumber;
@@ -29,7 +22,6 @@ import com.nlu.repository.ExamRepository;
 import com.nlu.repository.StudentRepository;
 import com.nlu.repository.UserRepository;
 import com.nlu.repository.WorkTimeRepository;
-import com.nlu.service.ExamNumberService;
 
 @Service
 public class WorkTimeService {
@@ -44,8 +36,6 @@ public class WorkTimeService {
 	private WorkTimeRepository workTimeRepository;
 	@Autowired
     private ExamNumberRepository examNumberRepository;
-	@Autowired
-	private ExamNumberService examNumberService;
 
 	@Transactional
 	public boolean createWorkTime(Long examId) {
@@ -60,15 +50,17 @@ public class WorkTimeService {
 		AtomicInteger examNumberIndex = new AtomicInteger(0);
 		listStudents.forEach(student -> {
 		    ExamNumber examNumber = listExamNumbers.get(examNumberIndex.get());
-		    createWorkTime(student, examNumber);
+		    createWorkTime(student, examNumber, exam.getStartTime(),exam.getEndTime());
 		    examNumberIndex.set((examNumberIndex.get() + 1) % listExamNumbers.size());
 		});
 
 		return true;
 	}
 
-	private WorkTime createWorkTime(Student student, ExamNumber examNumber) {
+	private WorkTime createWorkTime(Student student, ExamNumber examNumber,Timestamp begin, Timestamp end) {
 		WorkTime workTime = new WorkTime();
+		workTime.setBeginExam(begin);
+		workTime.setEndExam(end);
 		workTime.setStudent(student);
 		workTime.setExamNumber(examNumber);
 		return workTimeRepository.save(workTime);

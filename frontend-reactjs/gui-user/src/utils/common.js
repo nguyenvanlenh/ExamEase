@@ -21,10 +21,11 @@ export const parseDateString = (dateString) => {
     const [year, month, day] = dateString.split('-').map(Number);
     return new Date(year, month - 1, day);
 };
-export const timeStampToDate = (dateString) => {
-    const [year, month, day] = dateString.split('T')[0].split('-');
-    return new Date(year, month - 1, day);
-}
+export const addMinutesToDate = (date, minutes) => {
+    const result = new Date(date);
+    result.setMinutes(result.getMinutes() + minutes);
+    return formatDateLocal(result);
+};
 
 export const scrollToElement = (id) => {
     const element = document.getElementById(id);
