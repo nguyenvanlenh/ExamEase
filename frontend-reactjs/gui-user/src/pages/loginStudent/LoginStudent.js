@@ -29,13 +29,7 @@ const LoginStudent = () => {
     if (data.status !== 200) {
       setShow(true);
     }else {
-        console.log("OK")
-        console.log(data)
-    //   const response = await workTimeService.getAllWorkTimeUser(data.data);
-    //   // localStorage.setItem('auth', JSON.stringify(data.data));
       dispatch(addAuth(data.data))
-    //   dispatch(addExamWorked(response.data))
-    //   localStorage.setItem('username', JSON.stringify(inputEmail))
       navigation("/examining-rules")
     }
     setLoading(false);

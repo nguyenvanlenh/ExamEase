@@ -37,7 +37,7 @@ function ExaminingStudent() {
     const isConfirmed = await submitExaminingSwal();
     if (isConfirmed) {
       // update endExam workTime
-      // await workTimeService.updateWorkTimeUser(auth, idExamNumber,new Date().toISOString())
+      await workTimeService.updateWorkTimeStudent(auth?.studentId, auth?.examNumberId,new Date().toISOString())
       navigate('/result-student', { state: { idExamNumber: idExamNumber } });
       dispatch(removeQuestion())
     }

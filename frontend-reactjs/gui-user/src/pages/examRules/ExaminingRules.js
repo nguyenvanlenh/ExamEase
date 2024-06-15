@@ -19,7 +19,6 @@ function ExaminingRules() {
   const auth = useSelector(state => state.auth)
   const handleSubmit = async () => {
     const data = await examNumberService.getExamNumberStudent(auth?.studentId);
-    console.log(data)
     if(data.data && data.status === 200) {
       const selectedExam = data.data?.examNumbers[0];
       const listQuestions = selectedExam?.listQuestions;
@@ -29,7 +28,6 @@ function ExaminingRules() {
     }else {
       outSideExamSwal()
     }
-      console.log("submit")
       
       
   }
