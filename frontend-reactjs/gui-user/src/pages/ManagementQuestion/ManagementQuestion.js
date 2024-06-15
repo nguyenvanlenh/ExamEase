@@ -175,32 +175,35 @@ export const ManagementQuestion = () => {
     const [remainingTime, setRemainingTime] = useState("");
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (dataExam?.endTime) {
-                const now = new Date().getTime();
-                const endTime = new Date(dataExam.endTime).getTime();
-                const distance = endTime - now;
+        if (!dataExam?.endTime) return;
 
-                if (distance < 0) {
-                    setRemainingTime("Kết thúc");
-                    clearInterval(interval);
-                } else {
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const calculateTimeLeft = () => {
+            const now = new Date().getTime();
+            const endTime = new Date(dataExam.endTime).getTime();
+            const distance = endTime - now;
 
-                    const timeParts = [
-                        days > 0 ? `${days} ngày` : null,
-                        hours > 0 ? `${hours} giờ` : null,
-                        minutes > 0 ? `${minutes} phút` : null,
-                        `${seconds} giây`
-                    ].filter(part => part !== null).join(' ');
-
-                    setRemainingTime(timeParts);
-                }
+            if (distance < 0) {
+                setRemainingTime(END_TIME_EXAM);
+                return;
             }
-        }, 1000);
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const timeParts = [
+                days > 0 ? `${days} ngày` : null,
+                hours > 0 ? `${hours} giờ` : null,
+                minutes > 0 ? `${minutes} phút` : null,
+                `${seconds} giây`
+            ].filter(part => part !== null).join(' ');
+
+            setRemainingTime(timeParts);
+        };
+
+        const interval = setInterval(calculateTimeLeft, 1000);
+        calculateTimeLeft();
 
         return () => clearInterval(interval);
     }, [dataExam]);
@@ -280,9 +283,9 @@ export const ManagementQuestion = () => {
                                     </thead>
                                     <tbody>
                                         {
-                                            dataResult && dataResult.map(rs => {
+                                            dataResult && dataResult.map((rs, index) => {
                                                 return (
-                                                    <tr>
+                                                    <tr key={index}>
                                                         <td>{rs.studentCode}</td>
                                                         <td>{rs.fullName}</td>
                                                         <td>{rs.email}</td>

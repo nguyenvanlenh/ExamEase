@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Spinner, Table, Modal, Form, Pagination } from "react-bootstrap";
 import { examService } from "../../services/examService";
-import { formatDate, formatDateLocal, getDataByKeyLS, setDataByKeyLS, timeStampToDate } from "../../utils/common";
+import { formatDate, formatDateLocal, getDataByKeyLS, setDataByKeyLS } from "../../utils/common";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import EditIcon from '@mui/icons-material/Edit';
@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { PaginationComponent } from "../../components/Pagination/Pagination";
 import './ManagementExams.scss'
 import { RequestData } from "../../utils/request";
-import { DeleteModal, ErrorModal, ModalComponent, SuccessModal } from "../../components/Modal/ModalComponent";
+import { DeleteModal, ErrorModal, SuccessModal } from "../../components/Modal/ModalComponent";
 
 
 export const ManagementExams = () => {
@@ -136,18 +136,18 @@ export const ManagementExams = () => {
             <Header />
             <div className="container pb-0 manage-exam">
                 <h2>Đề của tôi</h2>
-                <Table bordered hover>
-                    <thead>
-                        <tr>
-                            <th className="text-center">#</th>
-                            <th>Tên đề</th>
-                            <th>Sửa</th>
-                            <th>Xóa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dataExam && dataExam.length > 0 ? (
-                            dataExam.map((exam) => (
+                {dataExam && dataExam.length > 0 ? (
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th className="text-center">#</th>
+                                <th>Tên đề</th>
+                                <th>Sửa</th>
+                                <th>Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dataExam.map((exam) => (
                                 <tr key={exam.id}>
                                     <td><Link to={"/manage-question"} state={exam.id}>{exam.codeGroup}</Link></td>
                                     <td>{exam.title}</td>
@@ -159,19 +159,20 @@ export const ManagementExams = () => {
                                     </td>
                                 </tr>
                             ))
-                        ) : (
-                            timeoutReached ? (
-                                <div className="d-flex justify-content-center">
-                                    Not found
-                                </div>
-                            ) : (
-                                <div className="d-flex justify-content-center">
-                                    <Spinner animation="border" />
-                                </div>
-                            )
-                        )}
-                    </tbody>
-                </Table>
+                            }
+                        </tbody>
+                    </Table>
+                ) : (
+                    timeoutReached ? (
+                        <span className="d-flex justify-content-center">
+                            Not found
+                        </span>
+                    ) : (
+                        <span className="d-flex justify-content-center">
+                            <Spinner animation="border" />
+                        </span>
+                    )
+                )}
 
                 <PaginationComponent
                     currentPage={currentPage}
