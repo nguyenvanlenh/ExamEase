@@ -142,8 +142,8 @@ export const ManagementExams = () => {
                             <tr>
                                 <th className="text-center">#</th>
                                 <th>Tên đề</th>
-                                <th>Sửa</th>
-                                <th>Xóa</th>
+                                <th className="text-center">Sửa</th>
+                                <th className="text-center">Xóa</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -151,8 +151,8 @@ export const ManagementExams = () => {
                                 <tr key={exam.id}>
                                     <td><Link to={"/manage-question"} state={exam.id}>{exam.codeGroup}</Link></td>
                                     <td>{exam.title}</td>
-                                    <td><Button variant="link" onClick={() => handleEdit(exam)}><EditIcon className="text-primary" /></Button></td>
-                                    <td>
+                                    <td className="text-center"><Button variant="link" onClick={() => handleEdit(exam)}><EditIcon className="text-primary" /></Button></td>
+                                    <td className="text-center">
                                         <Button variant="link" onClick={() => { setShowDeleteModal(true); setExamIdToDelete(exam.id); }}>
                                             <DeleteForeverIcon className="text-danger" />
                                         </Button>

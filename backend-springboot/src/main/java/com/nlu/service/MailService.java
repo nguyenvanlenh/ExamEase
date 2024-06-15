@@ -19,7 +19,9 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.nlu.model.dto.response.StudentResponse;
+import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.Student;
+import com.nlu.repository.ExamRepository;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -31,9 +33,14 @@ public class MailService {
 	private JavaMailSender mailSender;
 	@Autowired
 	private TemplateEngine templateEngine;
+	@Value("${client.url.login.user}")
+	private String urlLoginUser;
 
 	@Value("${spring.mail.username}")
 	private String sender;
+	
+	@Autowired
+	private ExamRepository examRepository;
 
 	@Async
 	public CompletableFuture<Void> sendMailNotification(Student student) {
@@ -41,9 +48,11 @@ public class MailService {
 			try {
 				String subject = "Exam notification from Study5";
 				String senderName = "Teacher";
+				Exam exam = examRepository.findByCodeGroup(student.getCodeGroup());
 				Map<String, Object> model = new HashMap<>();
 				model.put("user", student);
-				model.put("url", "https://translate.google.com/?sl=en&tl=vi&text=mails&op=translate");
+				model.put("exam", exam);
+				model.put("url", urlLoginUser);
 				model.put("senderName", senderName);
 				sendEmailFromTemplate(student.getEmail(), "mails/notifyExam", subject, senderName, model);
 			} catch (UnsupportedEncodingException | MessagingException e) {

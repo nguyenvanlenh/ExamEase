@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RequestData } from "../../utils/request";
 import { createExamRequest, removeExamRequest } from "../../redux/slices/examSlice";
-import { addMinutesToDate, formatDate, formatDateLocal, getDataByKeyLS, parseDateString, setDataByKeyLS } from "../../utils/common";
+import { formatDateLocal, getDataByKeyLS, setDataByKeyLS } from "../../utils/common";
 import { categoryService } from "../../services/categoryService";
 import { timeExamService } from "../../services/timeExamService";
 import { PREPARATION_TIME } from "../../utils/constants";
@@ -53,17 +53,20 @@ export const CreateExam = () => {
         fetching();
     });
 
+    const addMinutesToDate = (date, minutes) => {
+        const result = new Date(date);
+        console.log(result);
+        result.setMinutes(result.getMinutes() + minutes);
+        console.log(result);
+        const data = formatDateLocal(result)
+        console.log(minutes);
+        console.log(data);
+        return data;
+    };
 
 
 
     useEffect(() => {
-        const currentTime = formatDateLocal(new Date());
-        const minutesNeedmore = 70; // format year-month-dayThours:minutes
-
-        console.log("Now: " + currentTime)
-
-        console.log("Added: " + addMinutesToDate(currentTime, minutesNeedmore))
-
         if (examRequest[0]) {
             setTitle(examRequest[0]?.title ?? "");
             setShortDescription(examRequest[0]?.shortDescription ?? "");
@@ -100,7 +103,7 @@ export const CreateExam = () => {
                 timeId,
                 categoryId,
                 startTime,
-                addMinutesToDate(startTime, (timeId + PREPARATION_TIME)),
+                addMinutesToDate(startTime, Number(timeId)),
                 true,
                 listExamNumberRequests,
                 []

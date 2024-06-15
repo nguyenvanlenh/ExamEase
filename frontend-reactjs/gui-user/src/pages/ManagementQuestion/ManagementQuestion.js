@@ -44,7 +44,7 @@ export const ManagementQuestion = () => {
         }
     };
     const fetchingDataResultOfStudents = async (codeGroup) => {
-        const data = await resultService.getAllResultOfStudentByCodeGroup("af111fa9-dc25-4b18-82ce-3eb529935762");
+        const data = await resultService.getAllResultOfStudentByCodeGroup(codeGroup);
         console.log(data.data.listResult);
         setDataResult(data.data.listResult);
     };
@@ -55,7 +55,7 @@ export const ManagementQuestion = () => {
 
     useEffect(() => {
         if (activeTab === "student-list")
-            fetchingDataResultOfStudents(dataExam.codeGroup);
+            fetchingDataResultOfStudents(dataExam?.codeGroup);
     }, [activeTab]);
 
     const handleShowModal = (question) => {
@@ -97,8 +97,7 @@ export const ManagementQuestion = () => {
     };
 
     const handleExport = async () => {
-        const codeGroup = 'af111fa9-dc25-4b18-82ce-3eb529935762';
-        return await resultService.exportFileResultByCodeGroup(codeGroup);
+        return await resultService.exportFileResultByCodeGroup(dataExam?.codeGroup);
     };
 
     const processResultsForCharts = () => {
@@ -161,7 +160,7 @@ export const ManagementQuestion = () => {
     };
 
     const handleSendMail = async () => {
-        const codeGroup = 'af111fa9-dc25-4b18-82ce-3eb529935762';
+        const codeGroup = dataExam?.codeGroup;
         const response = await resultService.sendMailResultForStudent(codeGroup);
         if (response.status < 400) {
             setShowMailModal(false)

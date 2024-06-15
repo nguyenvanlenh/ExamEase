@@ -62,6 +62,9 @@ function Header() {
                                         <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
                                             <Link to="/create-exam" className="text-item">Tạo bài thi</Link>
                                         </NavDropdown.ItemText>
+                                        <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
+                                            <Link to="/manage-exam" className="text-item">Quản lý đề thi</Link>
+                                        </NavDropdown.ItemText>
                                         <NavDropdown.Divider />
                                         <NavDropdown.Item href="account">Trang cá nhân</NavDropdown.Item>
                                         <NavDropdown.ItemText onClick={handleLogOut}>Đăng xuất</NavDropdown.ItemText>
@@ -79,8 +82,8 @@ function Header() {
                     }
                     {
                         isAuthEmpty || (<div className="container-menu" onClick={handleMenuNoneLogin}>
-                        <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
-                    </div>)
+                            <svg width={24} height={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
+                        </div>)
                     }
 
                 </div>
@@ -98,6 +101,9 @@ function Header() {
                     </div>
                     <div className="p-2">
                         <Link to="/list-exams" className="text-item">Đề thi online</Link>
+                    </div>
+                    <div className="p-2">
+                        <Link to="/manage-exam" className="text-item">Quản lý đề thi</Link>
                     </div>
                     <div className="p-2">
                         <Link to="#home" className="text-item">Liên hệ</Link>
