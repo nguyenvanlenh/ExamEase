@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./Question.scss";
-import { Form } from "react-bootstrap";
+import { Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { TYPE_ANSWERS } from "../../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { updateQuestion } from "../../redux/slices/listQuestionSlice";
+import { updateFlag, updateQuestion } from "../../redux/slices/listQuestionSlice";
 import { userAnswerService } from "../../services/userAnswerService";
 import { listQuestionLocalStorage } from "../../utils/localStorage";
 import { studentAnswerService } from "../../services/studentAnswerService";
-
+import EmojiFlagsIcon from '@mui/icons-material/EmojiFlags';
 function Question(prop) {
   const auth = useSelector(state => state.auth)
+  const [flag, setFlag] = useState(false)
   useEffect(() => {
     setSelectedExam(prop.idAnswerSelected)
   }, []);
@@ -48,13 +49,21 @@ function Question(prop) {
       }
     }
   }
-
+  const handleFlag = () => {
+    setFlag(!flag)
+    dispatch(updateFlag({idQuestion: prop.id}))
+  }
   return (
     <div id={"q-"+prop.id} className="question-container">
-      <div className="wrap-number">
-        <span className="number">{prop.numberSentence + 1}</span>
-        <span>đánh dấu</span>
-      </div>
+      <OverlayTrigger
+        placement="top"
+        overlay={<Tooltip id={`tooltip-${prop.id}`}>{flag?`Bạn muốn hủy cắm cờ?`:`Bạn muốn cắm cờ?`}</Tooltip>}
+      >
+        <div className="wrap-number" onClick={handleFlag}>
+          <span className="number">{prop.numberSentence + 1}</span>
+          {flag && <EmojiFlagsIcon className="flag" />}
+        </div>
+      </OverlayTrigger>
       <div className="content">
         <div className="content-question">{prop.contentQuestion}</div>
         <Form className="list-answers">

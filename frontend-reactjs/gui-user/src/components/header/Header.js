@@ -38,17 +38,17 @@ function Header() {
             <div id="id-header" style={{ height: isMenuOpen ? 'auto' : '64px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div className="p-2 fs-2 fw-bold">
-                        <Nav.Link href="home">Study</Nav.Link>
+                        <Link className="text-dark" to={"/home"}>Study</Link>
                     </div>
                     <div className="content">
                         <div className="p-3 ms-auto">
-                            <Nav.Link href="home" className="text-item">Cộng đồng</Nav.Link>
+                            <Link to={"/home"} className="text-item">Cộng đồng</Link>
                         </div>
                         <div className="p-3">
                             <Link to="/list-exams" className="text-item">Đề thi online</Link>
                         </div>
                         <div className="p-3">
-                            <Nav.Link href="#home" className="text-item">Liên hệ</Nav.Link>
+                            <Link to={"/home"} className="text-item">Liên hệ</Link>
                         </div>
                         <div className="p-3">
                             {
@@ -86,7 +86,7 @@ function Header() {
                 </div>
                 <div className={`content-menu-mobile`} style={{ backgroundColor: "#ffffff", display: isMenuNoneLoginOpen ? 'block' : 'none' }}>
                     <div className="p-2 ms-auto">
-                        <Nav.Link href="/login" className="text-item">Đăng nhập</Nav.Link>
+                        <Link to={"/login"} className="text-item">Đăng nhập</Link>
                     </div>
                     <div className="p-2">
                         <Link to="/register" className="text-item">Đăng kí</Link>
@@ -94,22 +94,22 @@ function Header() {
                 </div>
                 <div className={`content-menu-mobile`} style={{ display: isMenuOpen ? 'block' : 'none' }}>
                     <div className="p-2 ms-auto">
-                        <Nav.Link href="home" className="text-item">Cộng đồng</Nav.Link>
+                        <Link to="/home" className="text-item">Cộng đồng</Link>
                     </div>
                     <div className="p-2">
                         <Link to="/list-exams" className="text-item">Đề thi online</Link>
                     </div>
                     <div className="p-2">
-                        <Nav.Link href="#home" className="text-item">Liên hệ</Nav.Link>
+                        <Link to="#home" className="text-item">Liên hệ</Link>
                     </div>
                     <div className="p-2">
-                        <Nav.Link href="#home" className="text-item">Trang cá nhân</Nav.Link>
+                        <Link to="#home" className="text-item">Trang cá nhân</Link>
                     </div>
                     <div className="p-2">
                         <Link to="/create-exam" className="text-item">Tạo đề thi</Link>
                     </div>
                     <div className="p-2">
-                        <Nav.Link onClick={handleLogOut} className="text-item">Đăng xuất</Nav.Link>
+                        <Link onClick={handleLogOut} className="text-item">Đăng xuất</Link>
                     </div>
                 </div>
             </div>

@@ -9,14 +9,17 @@ import EqualizerIcon from "@mui/icons-material/Equalizer";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam";
 import { examService } from "../../services/examService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { workTimeService } from "../../services/workTimeService";
+import { addExamWorked, removexamWorked } from "../../redux/slices/examWorkedSlice";
 
 export default function Home() {
   const [username, setUsername] = useState(null);
   const [listExams, setListExams] = useState([]);
   const [sizePage, setSizePage] = useState(8);
-  // const [listExamWorded, setListExamWorded] = useState([]);
   const listResultExam = useSelector((state) => state.examWorkeds)
+  const auth = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
   useEffect(() => {
     const usernameLocal = JSON.parse(localStorage.getItem('username'))
     if (usernameLocal) {
@@ -25,11 +28,16 @@ export default function Home() {
       setUsername(null)
     }
   }, []);
+  // double chỗ này
   useEffect(() => {
     const fetching = async () => {
       const response = await examService.searching("", "", 0, 8);
       setListExams(response?.data.content);
-      // setTotalPages(response?.data.totalPage);
+      if(auth && Object.keys(auth).length > 0) {
+        const listWorkTime = await workTimeService.getAllWorkTimeUser(auth);
+        dispatch(removexamWorked())
+        dispatch(addExamWorked(listWorkTime.data))
+      }
     };
     fetching();
   }, []);
@@ -95,7 +103,7 @@ export default function Home() {
           {
             listResultExam && listResultExam.length > 0 &&
             (<div className="view-all">
-            <Link>
+            <Link to={"/statistics"}>
               <b>Xem tất cả</b>
               <KeyboardDoubleArrowRightIcon fontSize="16" />
             </Link>

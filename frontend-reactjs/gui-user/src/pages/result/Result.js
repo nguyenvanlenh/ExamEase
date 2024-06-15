@@ -31,7 +31,8 @@ import {
 } from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
 import { questionService } from "../../services/questionService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addExamWorked, removexamWorked } from "../../redux/slices/examWorkedSlice";
 
 function Result() {
   const location = useLocation();
@@ -43,6 +44,7 @@ function Result() {
   const [userName, setUsername] = useState("user");
   const [modalShowQuestion, setModalShowQuestion] = useState(false);
   const [contentQuestion, setContentQuestion] = useState({});
+  const dispatch = useDispatch()
   // console.log(questionRes)
   // console.log(contentQuestion)
   useEffect(() => {
@@ -70,6 +72,10 @@ function Result() {
           auth
         );
         setQuestionRes(questionResults.data);
+        // cập nhập lại worktime
+        const listWorkTime = await workTimeService.getAllWorkTimeUser(auth);
+        dispatch(removexamWorked())
+        dispatch(addExamWorked(listWorkTime.data))
       } catch (error) {
         console.error("Error fetching data:", error);
       }

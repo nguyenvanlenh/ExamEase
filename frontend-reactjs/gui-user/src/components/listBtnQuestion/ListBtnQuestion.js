@@ -24,7 +24,7 @@ function ListBtnQuestion(props) {
         props.listQuestion.map((question) => (
           <span
             key={question.id}
-            className={`question-item ${question.done && "done"}`}
+            className={`question-item ${question.done && "done"} ${question.flag && "flag"}`}
             onClick={() => handleClick(question.id)}
           >
             {question.id}

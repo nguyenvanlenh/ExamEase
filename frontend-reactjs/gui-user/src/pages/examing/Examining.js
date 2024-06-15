@@ -115,7 +115,7 @@ function Examining() {
                 </Button>
                 <i className="note">
                   Chú ý: bạn có thể click vào số thứ tự câu hỏi trong bài để
-                  đánh dấu review
+                  cắm cờ nếu chưa chắc chắc
                 </i>
                 <strong>Part</strong>
                 <ListBtnQuestion listQuestion={listQuestion}/>

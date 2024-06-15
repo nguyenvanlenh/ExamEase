@@ -9,8 +9,6 @@ import { RequestData } from "../../utils/request";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../redux/slices/authSlice";
-import { workTimeService } from "../../services/workTimeService";
-import { addExamWorked } from "../../redux/slices/examWorkedSlice";
 
 const Login = () => {
   const navigation = useNavigate()
@@ -29,10 +27,7 @@ const Login = () => {
     if (data.status >= 400) {
       setShow(true);
     }else {
-      const response = await workTimeService.getAllWorkTimeUser(data.data);
-      // localStorage.setItem('auth', JSON.stringify(data.data));
       dispatch(addAuth(data.data))
-      dispatch(addExamWorked(response.data))
       localStorage.setItem('username', JSON.stringify(inputUsername))
       navigation("/")
     }
