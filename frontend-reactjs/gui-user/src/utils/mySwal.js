@@ -49,3 +49,13 @@ export const outSideExamSwal = () => {
       return result.isConfirmed; // Trả về kết quả từ SweetAlert2
   });
 };
+
+export const exitExamSwal = () => {
+  return MySwal.fire({
+      title: "Bạn đang thoát bài thi",
+      text: "Khi thoát, bài thi sẽ không được tính!",
+      icon: "warning",
+  }).then((result) => {
+      return result.isConfirmed; // Trả về kết quả từ SweetAlert2
+  });
+};

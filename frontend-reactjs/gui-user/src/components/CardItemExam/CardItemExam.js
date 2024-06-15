@@ -33,7 +33,7 @@ export const CardItemExam = (data) => {
                     </div>
 
                     <div className="btn-detail w-100 mt-3 ">
-                        <Link to="/exam-detail" state={data?.exam?.id} className="w-100 btn detail-button"
+                        <Link to="/exam-detail" state={{idExamNumber :data?.exam?.id}} className="w-100 btn detail-button"
                         >Chi tiết</Link>
                     </div>
                 </Card.Body>

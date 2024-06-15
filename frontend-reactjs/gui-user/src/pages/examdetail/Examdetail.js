@@ -28,13 +28,13 @@ import {
 } from "../../utils/localStorage";
 import { checkExaminingSwal } from "../../utils/mySwal";
 import { useDispatch, useSelector } from "react-redux";
-import { addListQuestion } from "../../redux/slices/listQuestionSlice";
+import { addListQuestion, removeQuestion } from "../../redux/slices/listQuestionSlice";
 function Examdetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = useSelector(state => state.auth)
   const location = useLocation();
-  const id = location.state;
+  const id = location.state?.idExamNumber;
   const times = {
     timeExam: [10, 15, 20, 25, 30, 40, 50, 60],
   };
@@ -53,8 +53,17 @@ function Examdetail() {
     setExamNumber(data.data);
     setIdExamNumber(data.data?.examNumbers[0]?.id);
   }
+
+  
   useEffect(() => {
-    dataExamNumber(id);
+    if (!id) {
+      // Xử lý khi không có idExamNumber trong state
+      console.log("idExamNumber không tồn tại trong state");
+    } else {
+      dataExamNumber(id);
+      dispatch(removeQuestion())
+    }
+    
   }, []);
 
   const handleSubmit = async () => {
@@ -68,7 +77,6 @@ function Examdetail() {
         );
       // kiểm tra đề đã thi chưa thi lại
       if (workTime?.data) {
-        console.log("tao thanh cong");
         setData(data);
         navigate("/examining");
       } else {
