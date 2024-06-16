@@ -1,0 +1,72 @@
+@import "/src/styles/root.scss";
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background-color: $color-blue_global;
+    color: #fff;
+
+    &.open {
+        width: 250px;
+    }
+
+    &.closed {
+        width: 80px;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        text-align: center;
+        background-color: $color-blue_global;
+        h3 {
+            margin-bottom: 0;
+        }
+    }
+
+    .sidebar-content {
+        padding: 10px;
+        .sidebar-menu {
+            list-style-type: none;
+            padding: 0;
+            li {
+                margin-bottom: 10px;
+                a,
+                .btn-link {
+                    display: flex;
+                    align-items: center;
+                    padding: 10px;
+                    color: $color-blue_second;
+                    text-decoration: none;
+                    &:hover {
+                        background-color: $color-blue_global;
+                    }
+                    &.active {
+                        border-radius: 0 10px 10px 0;
+                        background-color: rgba(172, 190, 235, 0.5);
+                    }
+                    .icon {
+                        margin-right: 10px;
+                    }
+                    .text {
+                        flex: 1;
+                        &.hidden-xs {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .sidebar-footer {
+        padding: 20px;
+        text-align: center;
+        color: #000;
+        background-color: #ffffff;
+        opacity: 0.8;
+    }
+}

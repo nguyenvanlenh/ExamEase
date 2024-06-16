@@ -49,7 +49,7 @@ export const DeleteModal = ({ show, confirm, onClose, handleDelete }) => {
                     Không
                 </Button>
                 <Button variant="danger" onClick={handleDelete}>
-                    Xóa
+                    Có
                 </Button>
             </Modal.Footer>
         </Modal>

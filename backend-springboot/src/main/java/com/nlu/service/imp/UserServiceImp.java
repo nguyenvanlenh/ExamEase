@@ -2,6 +2,7 @@ package com.nlu.service.imp;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,8 @@ public class UserServiceImp implements UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@Override
-	public List<UserResponse> getAllUsers() {
-		List<UserResponse> listUserResponses = userRepository.findAll().stream()
+	public List<UserResponse> getAllUsers(Pageable pageable) {
+		List<UserResponse> listUserResponses = userRepository.findAll(pageable).stream()
 				.map(UserResponse::fromEntity)
 				.toList();
 		return listUserResponses;

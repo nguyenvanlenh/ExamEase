@@ -384,8 +384,8 @@ export const ManagementQuestion = () => {
                     <Modal.Title>Thống kê kết quả</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <div style={{ flex: 1 }}>
+                    <div className="d-flex flex-column flex-md-row align-items-center">
+                        <div className="flex-fill mb-3 mb-md-0" style={{ minWidth: '300px' }}>
                             <Line
                                 data={generateLineChartData()}
                                 options={{
@@ -394,14 +394,14 @@ export const ManagementQuestion = () => {
                                             display: true,
                                             text: 'Biểu đồ đường',
                                             font: {
-                                                size: 14
-                                            }
-                                        }
-                                    }
+                                                size: 14,
+                                            },
+                                        },
+                                    },
                                 }}
                             />
                         </div>
-                        <div style={{ flex: 1 }}>
+                        <div className="flex-fill" style={{ minWidth: '300px' }}>
                             <PolarArea
                                 data={generatePolarAreaChartData()}
                                 options={{
@@ -410,10 +410,10 @@ export const ManagementQuestion = () => {
                                             display: true,
                                             text: 'Biểu đồ Polar',
                                             font: {
-                                                size: 14
-                                            }
-                                        }
-                                    }
+                                                size: 14,
+                                            },
+                                        },
+                                    },
                                 }}
                             />
                         </div>
