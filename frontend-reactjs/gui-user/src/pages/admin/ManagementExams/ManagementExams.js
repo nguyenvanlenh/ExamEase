@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
-import { Button, Spinner, Table, Modal, Form, Pagination } from "react-bootstrap";
-import { examService } from "../../services/examService";
-import { formatDate, formatDateLocal, getDataByKeyLS, setDataByKeyLS } from "../../utils/common";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
+import { Button, Spinner, Table, Modal, Form, Pagination, Stack } from "react-bootstrap";
+import { examService } from "../../../services/examService";
+import { formatDate, formatDateLocal, getDataByKeyLS, setDataByKeyLS } from "../../../utils/common";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { categoryService } from "../../services/categoryService";
-import { timeExamService } from "../../services/timeExamService";
 import { Link } from "react-router-dom";
-import { PaginationComponent } from "../../components/Pagination/Pagination";
-import './ManagementExams.scss'
-import { RequestData } from "../../utils/request";
-import { DeleteModal, ErrorModal, SuccessModal } from "../../components/Modal/ModalComponent";
+import '../../ManagementExams/ManagementExams.scss'
+import { categoryService } from "../../../services/categoryService";
+import { timeExamService } from "../../../services/timeExamService";
+import { RequestData } from "../../../utils/request";
+import { PaginationComponent } from "../../../components/Pagination/Pagination";
+import { DeleteModal, ErrorModal, SuccessModal } from "../../../components/Modal/ModalComponent";
 
 
-export const ManagementExams = () => {
+export const Exams = () => {
     const [dataExam, setDataExam] = useState([]);
     const [teacher, setTeacher] = useState(getDataByKeyLS("auth"));
     const [timeoutReached, setTimeoutReached] = useState(false);
@@ -61,15 +59,15 @@ export const ManagementExams = () => {
     }, []);
     useEffect(() => {
         const fetching = async () => {
-            const response = await examService.getExamsByTeacherId(teacher?.userId, currentPage);
+            const response = await examService.getAllExams(currentPage);
             setDataExam(response?.data.content);
             setTotalPages(response?.data.totalPage);
         };
 
+        fetching();
         if (teacher?.userId) {
-            fetching();
         }
-    }, [currentPage, teacher?.userId, showSuccessAlert]);
+    }, [currentPage, showSuccessAlert]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -133,9 +131,16 @@ export const ManagementExams = () => {
 
     return (
         <>
-            <Header />
             <div className="container pb-0 manage-exam">
-                <h2>Đề của tôi</h2>
+                <h2>Danh sách đề thi</h2>
+                <Stack direction="horizontal" className="mb-3" gap={3}>
+                    <Button variant="outline-danger" className="p-2"
+                    >
+                        Thêm đề thi</Button>
+                    <Button variant="outline-success" className="p-2"
+                    >
+                        Xuất file Excel</Button>
+                </Stack>
                 {dataExam && dataExam.length > 0 ? (
                     <Table bordered hover>
                         <thead>
@@ -149,7 +154,7 @@ export const ManagementExams = () => {
                         <tbody>
                             {dataExam.map((exam) => (
                                 <tr key={exam.id}>
-                                    <td><Link to={"/manage-question"} state={exam.id}>{exam.codeGroup}</Link></td>
+                                    <td><Link to={"/admin/question"} state={exam.id}>{exam.codeGroup}</Link></td>
                                     <td>{exam.title}</td>
                                     <td className="text-center"><Button variant="link" onClick={() => handleEdit(exam)}><EditIcon className="text-primary" /></Button></td>
                                     <td className="text-center">
@@ -180,7 +185,6 @@ export const ManagementExams = () => {
                     onPageChange={handlePageChange}
                 />
             </div>
-            <Footer />
             <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Chỉnh sửa đề thi</Modal.Title>

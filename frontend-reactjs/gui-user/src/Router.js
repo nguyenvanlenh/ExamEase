@@ -13,11 +13,16 @@ import Examining from "./pages/examing/Examining";
 import Result from "./pages/result/Result";
 import Register from "./pages/register/Register";
 import ExaminingRules from "./pages/examRules/ExaminingRules";
-import { ManagementExams } from "./pages/ManagementExams/ManagementExams";
 import { ManagementQuestion } from "./pages/ManagementQuestion/ManagementQuestion";
 import LoginStudent from "./pages/loginStudent/LoginStudent";
 import ExaminingStudent from "./pages/examiningStudent/ExaminingStudent";
 import ResultStudent from "./pages/resultStudent/ResultStudent";
+import { AdminLayout } from "./components/admin/Layout/AdminLayout";
+import { Dashboard } from "./pages/admin/Dashboard/Dashboard";
+import { ManagementExams } from "./pages/ManagementExams/ManagementExams";
+import { Exams } from "./pages/admin/ManagementExams/ManagementExams";
+import { Questions } from "./pages/admin/ManagementExams/ManagementQuestions";
+import { Users } from "./pages/admin/ManagementUsers/ManagementUsers";
 
 
 export const router = createBrowserRouter([
@@ -84,18 +89,40 @@ export const router = createBrowserRouter([
         path: "/manage-question",
         element: <ManagementQuestion />
     },
-     {
+    {
         path: "/login-student",
         element: <LoginStudent />
-     },
-     {
+    },
+    {
         path: "/examining-student",
         element: <ExaminingStudent />
-     },
-     {
+    },
+    {
         path: "/result-student",
         element: <ResultStudent />
-     }
+    },
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "dashboard",
+                element: <Dashboard />
+            },
+            {
+                path: "users",
+                element: <Users />
+            },
+            {
+                path: "exams",
+                element: <Exams />
+            },
+            {
+                path: "question",
+                element: <Questions />
+            }
+        ]
+    }
 
 ]);
 

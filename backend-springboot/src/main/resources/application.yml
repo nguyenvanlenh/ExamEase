@@ -40,3 +40,7 @@ nlu:
   expiration: 86400000
   secret: xIozWdD9r3RiqzaaRxJTYMvVvoKVk4G9Iq4kZ7ZEXXpePPxgtRQKj/O43HYbWhKy
 
+client:
+  url:
+    login:
+      user: http://localhost:3000/login-student

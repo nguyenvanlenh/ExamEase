@@ -89,7 +89,7 @@ public class ExamController {
 
 	@GetMapping("/all")
 	public ResponseData getExams(
-			@PageableDefault(page = 0, size = 4) 
+			@PageableDefault(page = 0, size = 10) 
 			@SortDefaults(
 			@SortDefault(direction = Sort.Direction.ASC, sort = {"title"})
 	) Pageable pageable) {

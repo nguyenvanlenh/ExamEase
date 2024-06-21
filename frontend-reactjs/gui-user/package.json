@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "cdbreact": "^1.5.19",
     "chart.js": "^4.4.3",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",

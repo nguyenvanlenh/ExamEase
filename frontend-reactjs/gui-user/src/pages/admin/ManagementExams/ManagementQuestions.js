@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Col, Container, Nav, Row, Table, Modal, Form, Stack } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
-import { examService } from '../../services/examService';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
+import { examService } from '../../../services/examService';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import './ManagementQuestion.scss';
-import { questionService } from '../../services/questionService';
-import { ErrorModal, SendMailModal, SuccessModal } from '../../components/Modal/ModalComponent';
-import { RequestData } from '../../utils/request';
-import { resultService } from '../../services/resultService';
-import AttachEmailIcon from '@mui/icons-material/AttachEmail';
+import '../../ManagementQuestion/ManagementQuestion.scss';
+import { questionService } from '../../../services/questionService';
+import { ErrorModal, SendMailModal, SuccessModal } from '../../../components/Modal/ModalComponent';
+import { RequestData } from '../../../utils/request';
+import { resultService } from '../../../services/resultService';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
-import { caculatorScore } from '../../utils/common';
+import { caculatorScore } from '../../../utils/common';
 import { Chart as ChartJS } from 'chart.js/auto';
 import { Line, PolarArea } from 'react-chartjs-2';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import { END_TIME_EXAM } from '../../utils/constants';
 
-export const ManagementQuestion = () => {
+export const Questions = () => {
     const location = useLocation();
     const id = location.state;
     const [dataExam, setDataExam] = useState();
@@ -171,51 +166,13 @@ export const ManagementQuestion = () => {
 
         }
     }
-    const [remainingTime, setRemainingTime] = useState("");
-
-    useEffect(() => {
-        if (!dataExam?.endTime) return;
-
-        const calculateTimeLeft = () => {
-            const now = new Date().getTime();
-            const endTime = new Date(dataExam.endTime).getTime();
-            const distance = endTime - now;
-
-            if (distance < 0) {
-                setRemainingTime(END_TIME_EXAM);
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            const timeParts = [
-                days > 0 ? `${days} ngày` : null,
-                hours > 0 ? `${hours} giờ` : null,
-                minutes > 0 ? `${minutes} phút` : null,
-                `${seconds} giây`
-            ].filter(part => part !== null).join(' ');
-
-            setRemainingTime(timeParts);
-        };
-
-        const interval = setInterval(calculateTimeLeft, 1000);
-        calculateTimeLeft();
-
-        return () => clearInterval(interval);
-    }, [dataExam]);
-
 
     return (
         <>
-            <Header />
             <Container fluid="md">
                 <div className="manage-question mt-3 mb-3">
                     <Row>
                         <h1 className="title mt-2 mb-4">{dataExam?.title}</h1>
-                        <h4><ScheduleIcon />Trạng thái: {remainingTime === END_TIME_EXAM ? "Kết thúc" : "kết thúc sau " + remainingTime}</h4>
                     </Row>
                     <Row className="d-flex">
                         <Nav variant="tabs" activeKey={activeTab}>
@@ -241,7 +198,7 @@ export const ManagementQuestion = () => {
                                         setActiveTab("student-list");
                                     }}
                                 >
-                                    Danh sách sinh viên
+                                    Danh sách người dùng đã làm
                                 </Nav.Link>
                             </Nav.Item>
                         </Nav>
@@ -251,10 +208,6 @@ export const ManagementQuestion = () => {
 
                             {activeTab === "student-list" ? (<>
                                 <Stack direction="horizontal" gap={3}>
-                                    <Button variant="outline-info" className="p-2"
-                                        onClick={() => setShowMailModal(true)}
-                                    >
-                                        <AttachEmailIcon /> Gửi mail thông báo</Button>
                                     <Button variant="outline-danger" className="p-2 ms-auto"
                                         onClick={() => setShowChartsModal(true)}
                                     >
@@ -335,7 +288,6 @@ export const ManagementQuestion = () => {
                     </Row>
                 </div>
             </Container >
-            <Footer />
 
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
