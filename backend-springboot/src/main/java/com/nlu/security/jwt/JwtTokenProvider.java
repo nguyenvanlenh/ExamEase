@@ -2,9 +2,12 @@ package com.nlu.security.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.StringJoiner;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.nlu.config.Translator;
 import com.nlu.security.CustomUserDetails;
@@ -37,8 +40,18 @@ public class JwtTokenProvider {
 				.setSubject(userDetails.getUsername())
 				.setIssuedAt(now)
 				.setExpiration(dateExpiration)
+				.claim("roles", buildClaimRoles(userDetails))
 				.signWith(getSecretKey(), SignatureAlgorithm.HS512)
 				.compact();
+	}
+	private String buildClaimRoles(UserDetails userDetails) {
+		  StringJoiner stringJoiner = new StringJoiner(" ");
+		  if(!CollectionUtils.isEmpty(userDetails.getAuthorities()))
+			  userDetails.getAuthorities()
+			  .forEach(authority ->
+				  stringJoiner.add(authority.getAuthority())
+			  );
+		return stringJoiner.toString();
 	}
 
 	public String getUsernameFromJwt(String token) {

@@ -3,6 +3,7 @@ package com.nlu.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
@@ -20,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.nlu.model.enumeration.ERole;
 import com.nlu.security.ExceptionHandlerFilter;
 import com.nlu.security.jwt.JwtAuthenticationFilter;
 
@@ -32,13 +34,7 @@ public class SecurityConfig{
 	private final static String[] PUBLIC_ENDPOINTS = {
 			"/api/auth/login",
 			"/api/auth/register",
-			"/api/exams/**",
 			"/api/students/login",
-			"/api/exam-numbers/**",
-			"/api/user_answers/**",
-			"/api/upload/**",
-			"/api/categories/**",
-			"/api/time-exams/**",
 			"/api/worktimes/students/**"
 	};
 	private final static String[] SWAGGER_ENDPOINTS = {
@@ -85,7 +81,21 @@ public class SecurityConfig{
 
 			.authorizeHttpRequests(authorize ->
 					authorize.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-							.anyRequest().authenticated())
+					.requestMatchers(HttpMethod.GET,"/api/categories/**").permitAll()
+					.requestMatchers(HttpMethod.GET,"/api/time-exams/**").permitAll()
+					
+					// role teacher
+					.requestMatchers("/api/students/import").hasRole(ERole.TEACHER.toString())
+					.requestMatchers("/api/students/revoke/**").hasRole(ERole.TEACHER.toString())
+					.requestMatchers("/api/students/download/**").hasRole(ERole.TEACHER.toString())
+					
+					//role admin
+					
+					.requestMatchers("/api/result/**").hasAnyRole(ERole.TEACHER.toString(),ERole.ADMIN.toString())
+					.requestMatchers(HttpMethod.POST,"/api/exams").hasAnyRole(ERole.TEACHER.toString(),ERole.ADMIN.toString())
+					.requestMatchers("/api/exams/all").hasRole(ERole.ADMIN.toString())
+					.requestMatchers("/api/upload/**").hasAnyRole(ERole.TEACHER.toString(),ERole.ADMIN.toString())
+						.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationFilter.class)
