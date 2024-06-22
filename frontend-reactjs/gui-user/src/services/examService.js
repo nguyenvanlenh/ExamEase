@@ -64,8 +64,8 @@ export const examService = {
 
     searching: (keyword, category, currentPage, size) => {
         const cateparam = category ? `&category=${category}` : "";
-        const url = `${URL_PATH}/api/exams?&keyword=${keyword}${cateparam}&page=${currentPage}&size=${size}`;
-        return axios.get(url, examService.createHeaders())
+        const url = `${URL_PATH}/api/exams?&keyword=${keyword}${cateparam}&page=${currentPage}&size=${size ? size : ""}`;
+        return axios.get(url)
             .then(response => response.data)
             .catch(error => {
                 console.error("Error searching exams:", error?.response?.data);

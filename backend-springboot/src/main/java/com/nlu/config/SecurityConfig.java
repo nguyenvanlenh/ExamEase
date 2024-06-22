@@ -35,7 +35,9 @@ public class SecurityConfig{
 			"/api/auth/login",
 			"/api/auth/register",
 			"/api/students/login",
-			"/api/worktimes/students/**"
+			"/api/worktimes/students/**",
+			"/api/exam-numbers/students/submit/**",
+			"/api/user_answers/students/**",
 	};
 	private final static String[] SWAGGER_ENDPOINTS = {
 			"swagger-ui.html",
@@ -81,6 +83,7 @@ public class SecurityConfig{
 
 			.authorizeHttpRequests(authorize ->
 					authorize.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+					.requestMatchers(HttpMethod.GET,"/api/exams/**").permitAll()
 					.requestMatchers(HttpMethod.GET,"/api/categories/**").permitAll()
 					.requestMatchers(HttpMethod.GET,"/api/time-exams/**").permitAll()
 					
@@ -91,8 +94,8 @@ public class SecurityConfig{
 					
 					//role admin
 					
-					.requestMatchers("/api/result/**").hasAnyRole(ERole.TEACHER.toString(),ERole.ADMIN.toString())
 					.requestMatchers(HttpMethod.POST,"/api/exams").hasAnyRole(ERole.TEACHER.toString(),ERole.ADMIN.toString())
+					.requestMatchers("/api/result/**").hasAnyRole(ERole.TEACHER.toString(),ERole.ADMIN.toString())
 					.requestMatchers("/api/exams/all").hasRole(ERole.ADMIN.toString())
 					.requestMatchers("/api/upload/**").hasAnyRole(ERole.TEACHER.toString(),ERole.ADMIN.toString())
 						.anyRequest().authenticated())

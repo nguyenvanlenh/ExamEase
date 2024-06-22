@@ -6,10 +6,10 @@ export const AdminLayout = () => {
     return (
         <Container fluid>
             <Row>
-                <Col sm={2} xs={1}>
+                <Col md={2} xs={1}>
                     <Sidebar />
                 </Col>
-                <Col sm={10} xs={11}>
+                <Col md={10} xs={11}>
                     <Container fluid>
                         <Outlet />
                     </Container>

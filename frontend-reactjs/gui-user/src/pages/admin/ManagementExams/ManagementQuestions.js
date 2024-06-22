@@ -33,7 +33,7 @@ export const Questions = () => {
 
     const fetchingDataExam = async (id) => {
         const data = await examService.getExamById(id);
-        setDataExam(data.data);
+        setDataExam(data?.data);
         if (data.data && data.data.examNumbers && data.data.examNumbers.length > 0) {
             setActiveTab(data.data.examNumbers[0].id);
         }
@@ -68,7 +68,7 @@ export const Questions = () => {
         if (name === 'question') {
             setEditableQuestion({ ...editableQuestion, nameQuestion: value });
         } else {
-            const updatedOptions = editableQuestion.options.map((option, idx) =>
+            const updatedOptions = editableQuestion.options?.map((option, idx) =>
                 idx === optionIdx ? { ...option, nameOption: value } : option
             );
             setEditableQuestion({ ...editableQuestion, options: updatedOptions });
@@ -177,7 +177,7 @@ export const Questions = () => {
                     <Row className="d-flex">
                         <Nav variant="tabs" activeKey={activeTab}>
                             {
-                                dataExam && dataExam.examNumbers.map((examNumber, index) => (
+                                dataExam && dataExam.examNumbers?.map((examNumber, index) => (
                                     <Nav.Item key={examNumber.id}>
                                         <Nav.Link
                                             eventKey={examNumber.id}
@@ -235,7 +235,7 @@ export const Questions = () => {
                                     </thead>
                                     <tbody>
                                         {
-                                            dataResult && dataResult.map((rs, index) => {
+                                            dataResult && dataResult?.map((rs, index) => {
                                                 return (
                                                     <tr key={index}>
                                                         <td>{rs.studentCode}</td>
@@ -268,7 +268,7 @@ export const Questions = () => {
                                     </thead>
                                     <tbody>
                                         {
-                                            dataExam && dataExam.examNumbers[tabIndex].listQuestions?.map((question, index) => (
+                                            dataExam && dataExam?.examNumbers[tabIndex].listQuestions?.map((question, index) => (
                                                 <tr key={index}>
                                                     <td style={{ width: '90%' }}>Câu {index + 1}: {question.nameQuestion}</td>
                                                     <td style={{ width: '10%' }}>
@@ -306,7 +306,7 @@ export const Questions = () => {
                                     onChange={handleInputChange}
                                 />
                             </Form.Group>
-                            {editableQuestion.options.map((option, idx) => (
+                            {editableQuestion.options?.map((option, idx) => (
                                 <Form.Group className="mb-3" key={option.id}>
                                     <Form.Label>Đáp án {idx + 1}</Form.Label>
                                     <Form.Control
