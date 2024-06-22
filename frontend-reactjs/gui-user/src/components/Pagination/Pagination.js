@@ -1,17 +1,17 @@
 import { Col, Pagination, Row } from "react-bootstrap";
-
+import { v4 as uuidv4 } from 'uuid';
 export const PaginationComponent = ({ currentPage, totalPages, onPageChange }) => {
     const createPaginationItems = () => {
         const paginationItems = [];
         const totalPagesToShow = 5;
-        const ellipsis = <Pagination.Ellipsis disabled />;
+        const ellipsis = <Pagination.Ellipsis key={uuidv4()} disabled />;
 
         // Trường hợp đặc biệt: tổng số trang ít hơn hoặc bằng totalPagesToShow
         if (totalPages <= totalPagesToShow) {
             for (let i = 0; i < totalPages; i++) {
                 paginationItems.push(
                     <Pagination.Item
-                        key={i}
+                        key={uuidv4()}
                         active={i === currentPage}
                         onClick={() => onPageChange(i)}
                     >
@@ -27,7 +27,7 @@ export const PaginationComponent = ({ currentPage, totalPages, onPageChange }) =
             // Thêm nút "Trang đầu tiên" nếu không ở trang đầu tiên
             if (currentPage > 0) {
                 paginationItems.push(
-                    <Pagination.First key="first" onClick={() => onPageChange(0)} />
+                    <Pagination.First key={uuidv4()} onClick={() => onPageChange(0)} />
                 );
             }
 
@@ -40,7 +40,7 @@ export const PaginationComponent = ({ currentPage, totalPages, onPageChange }) =
             for (let i = leftBoundary; i <= rightBoundary; i++) {
                 paginationItems.push(
                     <Pagination.Item
-                        key={i}
+                        key={uuidv4()}
                         active={i === currentPage}
                         onClick={() => onPageChange(i)}
                     >
@@ -57,7 +57,7 @@ export const PaginationComponent = ({ currentPage, totalPages, onPageChange }) =
             // Thêm nút "Trang cuối cùng" nếu không ở trang cuối cùng
             if (currentPage < totalPages - 1) {
                 paginationItems.push(
-                    <Pagination.Last key="last" onClick={() => onPageChange(totalPages - 1)} />
+                    <Pagination.Last key={uuidv4()} onClick={() => onPageChange(totalPages - 1)} />
                 );
             }
         }

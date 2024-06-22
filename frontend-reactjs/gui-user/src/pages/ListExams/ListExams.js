@@ -106,6 +106,8 @@ export const ListExams = () => {
     const handleSearch = async (title) => {
         if (!title && !searchQuery?.trim())
             return;
+        dispatch(removePage())
+        setCurrentPage(0)
         setShowSuggestions(false);
         const response = await examService.searching(
             title || searchQuery,

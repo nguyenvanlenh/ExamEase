@@ -23,6 +23,9 @@ import { ManagementExams } from "./pages/ManagementExams/ManagementExams";
 import { Exams } from "./pages/admin/ManagementExams/ManagementExams";
 import { Questions } from "./pages/admin/ManagementExams/ManagementQuestions";
 import { Users } from "./pages/admin/ManagementUsers/ManagementUsers";
+import ProtectedRoute from "./ProtectedRoute";
+import NotFound from "./pages/Error/NotFound";
+import { ROLE_ADMIN } from "./utils/constants";
 
 
 export const router = createBrowserRouter([
@@ -103,7 +106,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/admin",
-        element: <AdminLayout />,
+        element: <ProtectedRoute roles={[ROLE_ADMIN]}><AdminLayout /></ProtectedRoute>,
         children: [
             {
                 path: "dashboard",
@@ -122,6 +125,10 @@ export const router = createBrowserRouter([
                 element: <Questions />
             }
         ]
+    },
+    {
+        path: "*",
+        element: <NotFound />
     }
 
 ]);

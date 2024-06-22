@@ -13,7 +13,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { DeleteModal } from '../../Modal/ModalComponent';
 export const Sidebar = () => {
-    const [isOpen, setIsOpen] = useState(window.innerWidth >= 768);
+    const [isOpen, setIsOpen] = useState(window.innerWidth >= 1200);
 
     const [confirm, setConfirm] = useState(false)
     const navigation = useNavigate()
@@ -26,7 +26,7 @@ export const Sidebar = () => {
     }
 
     const handleResize = () => {
-        setIsOpen(window.innerWidth >= 768);
+        setIsOpen(window.innerWidth >= 1200);
     };
 
     useEffect(() => {
@@ -59,7 +59,8 @@ export const Sidebar = () => {
                             <li>
                                 <NavLink
                                     className="d-flex justify-content-center"
-                                    exact to="/admin/dashboard" activeClassName="active">
+                                    to="/admin/dashboard"
+                                    title='Dashboard'>
                                     <span className="icon"><AssessmentIcon /></span>
                                     <span className={`text ${isOpen ? '' : 'hidden-xs'}`}>Dashboard</span>
                                 </NavLink>
@@ -67,7 +68,8 @@ export const Sidebar = () => {
                             <li>
                                 <NavLink
                                     className="d-flex justify-content-center"
-                                    exact to="/admin/exams" activeClassName="active">
+                                    to="/admin/exams"
+                                    title='Quản lý bài thi'>
                                     <span className="icon"><LibraryBooksIcon /></span>
                                     <span className={`text ${isOpen ? '' : 'hidden-xs'}`}>Quản lý bài thi</span>
                                 </NavLink>
@@ -75,7 +77,8 @@ export const Sidebar = () => {
                             <li>
                                 <NavLink
                                     className="d-flex justify-content-center"
-                                    exact to="/admin/users" activeClassName="active">
+                                    to="/admin/users"
+                                    title='Quản lý người dùng'>
                                     <span className="icon"><GroupIcon /></span>
                                     <span className={`text ${isOpen ? '' : 'hidden-xs'}`}>Quản lý người dùng</span>
                                 </NavLink>
@@ -83,7 +86,7 @@ export const Sidebar = () => {
                             <li>
                                 <NavLink
                                     className="d-flex justify-content-center"
-                                    exact to="/admin/reports" activeClassName="active">
+                                    to="/admin/reports">
                                     <span className="icon"><ReportIcon /></span>
                                     <span className={`text ${isOpen ? '' : 'hidden-xs'}`}>Báo cáo</span>
                                 </NavLink>
@@ -91,7 +94,7 @@ export const Sidebar = () => {
                             <li>
                                 <NavLink
                                     className="d-flex justify-content-center"
-                                    exact to="/admin/logging" activeClassName="active">
+                                    to="/admin/logging">
                                     <span className="icon"><ImportContactsIcon /></span>
                                     <span className={`text ${isOpen ? '' : 'hidden-xs'}`}>Quản lý nhật ký</span>
                                 </NavLink>
@@ -99,7 +102,7 @@ export const Sidebar = () => {
                             <li>
                                 <NavLink
                                     className="d-flex justify-content-center"
-                                    exact to="/admin/logging" activeClassName="active">
+                                    to="/admin/logging">
                                     <span className="icon"><NotificationsActiveIcon /></span>
                                     <span className={`text ${isOpen ? '' : 'hidden-xs'}`}>Thông báo</span>
                                 </NavLink>
@@ -107,7 +110,7 @@ export const Sidebar = () => {
                             <li>
                                 <NavLink
                                     className="d-flex justify-content-center"
-                                    exact to="/admin/logging" activeClassName="active">
+                                    to="/admin/logging">
                                     <span className="icon"><AccountBoxIcon /></span>
                                     <span className={`text ${isOpen ? '' : 'hidden-xs'}`}>Cá nhân</span>
                                 </NavLink>

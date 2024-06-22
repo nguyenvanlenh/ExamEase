@@ -103,7 +103,7 @@ const popularQuestions = [
 
 export const Dashboard = () => {
     return (
-        <Container>
+        <Container fluid>
             <h2 className="my-4">Tổng quát</h2>
             <Row className="mb-4">
                 <Col md={6} className="mb-4">

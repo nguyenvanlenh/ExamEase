@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeAuth } from "../../redux/slices/authSlice";
 import { removexamWorked } from "../../redux/slices/examWorkedSlice";
 import { removeQuestion } from "../../redux/slices/listQuestionSlice";
+import { getDataByKeyLS } from "../../utils/common";
+import { ROLE_TEACHER } from "../../utils/constants";
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,6 +34,21 @@ function Header() {
         setIsMenuOpen(false)
         navigation("/")
     }
+    const [currentRoles, setCurrentRoles] = useState([]);
+    const [isRole, setIsRole] = useState(false);
+
+    useEffect(() => {
+        const getRoles = () => {
+            const authData = getDataByKeyLS("auth");
+            return authData?.listRoles || [];
+        };
+        setCurrentRoles(getRoles());
+    }, []);
+
+    useEffect(() => {
+        setIsRole(currentRoles.some(role => role === ROLE_TEACHER));
+        console.log(currentRoles.some(role => role === ROLE_TEACHER));
+    }, [currentRoles]);
 
     return (
         <>
@@ -59,18 +76,19 @@ function Header() {
                                         id="basic-nav-dropdown">
                                         <NavDropdown.ItemText style={{ color: '#8c98a4', fontWeight: 600 }}>Thông báo</NavDropdown.ItemText>
                                         <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>Bạn chưa có thông báo mới.</NavDropdown.ItemText>
-                                        <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
-                                            <Link to="/create-exam" className="text-item">Tạo bài thi</Link>
-                                        </NavDropdown.ItemText>
-                                        <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
-                                            <Link to="/manage-exam" className="text-item">Quản lý đề thi</Link>
-                                        </NavDropdown.ItemText>
+                                        {isRole ? <>
+                                            <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
+                                                <Link to="/create-exam" className="text-item">Tạo bài thi</Link>
+                                            </NavDropdown.ItemText>
+                                            <NavDropdown.ItemText style={{ width: '250px', fontSize: '14px' }}>
+                                                <Link to="/manage-exam" className="text-item">Quản lý đề thi</Link>
+                                            </NavDropdown.ItemText></> : null}
                                         <NavDropdown.Divider />
                                         <NavDropdown.Item href="account">Trang cá nhân</NavDropdown.Item>
                                         <NavDropdown.ItemText onClick={handleLogOut}>Đăng xuất</NavDropdown.ItemText>
                                     </NavDropdown>
                                 ) :
-                                    (<Button className="btn-login"><Link to={"/login"}>Đăng nhập</Link></Button>)
+                                    (<Link to={"/login"} className="btn-login btn">Đăng nhập</Link>)
                             }
 
                         </div>
@@ -111,9 +129,15 @@ function Header() {
                     <div className="p-2">
                         <Link to="#home" className="text-item">Trang cá nhân</Link>
                     </div>
-                    <div className="p-2">
-                        <Link to="/create-exam" className="text-item">Tạo đề thi</Link>
-                    </div>
+                    {isRole ? <>
+                        <div className="p-2">
+                            <Link to="/create-exam" className="text-item">Tạo đề thi</Link>
+                        </div>
+                        <div className="p-2">
+                            <Link to="/manage-exam" className="text-item">Quản lý đề thi</Link>
+                        </div>
+                    </> : null
+                    }
                     <div className="p-2">
                         <Link onClick={handleLogOut} className="text-item">Đăng xuất</Link>
                     </div>
