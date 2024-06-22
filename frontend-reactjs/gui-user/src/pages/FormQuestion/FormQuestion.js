@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Alert, Button, Card, Col, Form, FormControl, InputGroup, Modal, ProgressBar, Row, Stack
+    Alert, Button, Card, Col, Form, FormControl, InputGroup, Modal, ProgressBar, Row, Stack, OverlayTrigger, Tooltip, Container
 } from 'react-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,19 +10,17 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { RequestData } from '../../utils/request';
 import { scrollToElement, setDataByKeyLS } from '../../utils/common';
-import { addQuestionsIntoExamRequest, removeExamRequest, updateCreateExamRequest } from '../../redux/slices/examSlice';
+import { addQuestionsIntoExamRequest, removeExamRequest } from '../../redux/slices/examSlice';
 import { examService } from '../../services/examService';
 import { questionService } from '../../services/questionService';
-
-
-
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import imgGUI from "../../data/imgs/Guide-upload.png"
+import imgExcel from "../../data/imgs/Guide-excel.png"
 export const FormQuestion = () => {
     const now = 60;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const examRequest = useSelector(state => state.exams);
-    const [questions, setQuestions] = useState([]);
-    const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState(null);
     const [errorFile, setErrorFile] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -30,6 +28,8 @@ export const FormQuestion = () => {
     const [fileType, setFileType] = useState("");
     const [answerFile, setAnswerFile] = useState("");
     const [showModalUpload, setShowModalUpload] = useState(false);
+    const [showModalUploadGuide, setShowModalUploadGuide] = useState(false);
+    const [showModalUploadExcel, setShowModalUploadExcel] = useState(false);
     const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
     const [examData, setExamData] = useState(examRequest[0]);
     useEffect(() => {
@@ -62,7 +62,7 @@ export const FormQuestion = () => {
                     index + 1,
                     q.question,
                     q.listOptionRequests.map(o => {
-                        return RequestData().OptionRequest(o.content, o.isCorrect)
+                        return RequestData().OptionRequest(o.id??0,o.content, o.isCorrect)
                     })
                 )
             })
@@ -226,7 +226,14 @@ export const FormQuestion = () => {
                         </Alert>
                     )}
                     <Form>
-                        <Form.Label>Tải lên danh sách câu hỏi:</Form.Label>
+                        <Form.Label>Tải lên danh sách câu hỏi: 
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip>Hướng dẫn upload </Tooltip>}
+                            >
+                                <HelpOutlineIcon style={{cursor: "pointer"}} onClick={()=> setShowModalUploadGuide(true)}/>
+                            </OverlayTrigger> 
+                        </Form.Label>
                         <InputGroup className="mb-3">
                             <FileUploadIcon style={{ fontSize: "38px" }} />
                             <FormControl
@@ -239,7 +246,14 @@ export const FormQuestion = () => {
                             />
                             <Form.Control.Feedback type="invalid">Bạn cần phải chọn file phù hợp</Form.Control.Feedback>
                         </InputGroup>
-                        <Form.Label>Tải lên file excel đáp án:</Form.Label>
+                        <Form.Label>Tải lên file excel đáp án:
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip>Hướng dẫn upload </Tooltip>}
+                            >
+                                <HelpOutlineIcon style={{cursor: "pointer"}} onClick={() => setShowModalUploadExcel(true)}/>
+                            </OverlayTrigger>
+                        </Form.Label>
                         <InputGroup className="mb-3">
                             <FileUploadIcon style={{ fontSize: "38px" }} />
                             <FormControl
@@ -259,6 +273,45 @@ export const FormQuestion = () => {
                         Tải lên
                     </Button>
                 </Modal.Footer>
+            </Modal>
+            <Modal className="modal-lg" show={showModalUploadGuide} onHide={() => setShowModalUploadGuide(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Hướng dẫn upload file docx</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
+                <Container>
+                    <h5 className="mb-4">Định dạng câu hỏi và đáp án như mẫu:</h5>
+                        <div>
+                            Câu 1. Làm thế nào để upload file docx lên hệ thống?
+                            <ol type="A">
+                                <li>Mở trang web và chọn nút "Upload".</li>
+                                <li>Kéo thả file vào khu vực được đánh dấu.</li>
+                                <li>Chọn file từ máy tính và nhấn "Upload".</li>
+                                <li>Tất cả các phương án trên.</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <strong >Lưu ý: </strong>
+                            <i>"A, B, C, D dùng định dạng Document Number Formarts, mỗi đáp án trên 1 hàng"</i>
+                        </div>
+                    <img src={imgGUI} alt="Ví dụ minh họa" className="img-fluid"/>
+                </Container>
+                </Modal.Body>
+            </Modal>
+            <Modal className="modal-lg" show={showModalUploadExcel} onHide={() => setShowModalUploadExcel(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Hướng dẫn upload file excel</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
+                <Container>
+                    <h5 className="mb-4">Tạo 2 cột như hình dưới</h5>
+                    <div className="mb-2">
+                        <strong >Lưu ý: </strong>
+                        <i>Cột 1 thứ tự câu hỏi, cột 2 thứ đáp án đúng của câu hỏi đó</i>
+                    </div>
+                    <img src={imgExcel} alt="Ví dụ minh họa" className="img-fluid"/>
+                </Container>
+                </Modal.Body>
             </Modal>
         </>
     );
