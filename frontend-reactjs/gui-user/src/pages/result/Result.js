@@ -54,7 +54,8 @@ function Result() {
       try {
         const data = await examNumberService.getResultExamNumberUser(
           idExamNumber,
-          auth?.userId
+          auth?.userId,
+          auth
         );
         setResult(data.data);
         const workTime = await workTimeService.getWorkTimeUser(
