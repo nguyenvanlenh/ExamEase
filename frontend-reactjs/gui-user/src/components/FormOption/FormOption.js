@@ -32,7 +32,6 @@ const FormOption = ({ questionParent, questionNumber, setCompleted }) => {
     useEffect(() => {
         autoCheckCompletion();
     }, [question, correctAnswer, incorrectAnswers]);
-
     const autoCheckCompletion = () => {
         const isQuestionFilled = question.trim() !== '';
         const isCorrectAnswerFilled = correctAnswer.trim() !== '';
