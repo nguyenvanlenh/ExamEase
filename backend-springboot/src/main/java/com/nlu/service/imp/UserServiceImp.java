@@ -1,7 +1,11 @@
 package com.nlu.service.imp;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.nlu.model.dto.response.ExamResponse;
+import com.nlu.model.dto.response.PageResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,11 +34,22 @@ public class UserServiceImp implements UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@Override
-	public List<UserResponse> getAllUsers(Pageable pageable) {
-		List<UserResponse> listUserResponses = userRepository.findAll(pageable).stream()
-				.map(UserResponse::fromEntity)
-				.toList();
-		return listUserResponses;
+	public PageResponse<List<UserResponse>> getAllUsers(List<String> roles , Pageable pageable) {
+		Page<User> pageUser = userRepository.findByListRoles_NameIn(roles, pageable);
+		return PageResponse.<List<UserResponse>>builder()
+				.content(UserResponse.fromEntities(pageUser.getContent()))
+				.totalPage(pageUser.getTotalPages())
+				.totalElement(pageUser.getTotalElements())
+				.size(pageUser.getSize())
+				.currentPage(pageUser.getPageable().getPageNumber())
+				.build();
+	}
+
+	@Override
+	public void updateUser(Long id, Boolean active) {
+		User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
+		user.setActive(active);
+		userRepository.save(user);
 	}
 
 }
