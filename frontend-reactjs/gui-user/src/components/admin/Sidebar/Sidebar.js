@@ -18,10 +18,7 @@ export const Sidebar = () => {
     const [confirm, setConfirm] = useState(false)
     const navigation = useNavigate()
     const handleLogout = () => {
-        localStorage.removeItem('username');
-        localStorage.removeItem('category');
-        localStorage.removeItem('timeExam');
-        localStorage.removeItem('examSaved');
+        localStorage.clear();
         navigation("/login")
     }
 

@@ -134,9 +134,9 @@ export const Exams = () => {
             <div className="container pb-0 manage-exam">
                 <h2>Danh sách đề thi</h2>
                 <Stack direction="horizontal" className="mb-3" gap={3}>
-                    <Button variant="outline-danger" className="p-2"
+                    <Link className="btn text-danger btn-outline-danger p-2" to="/admin/create-exam"
                     >
-                        Thêm đề thi</Button>
+                        Thêm đề thi</Link>
                     <Button variant="outline-success" className="p-2"
                     >
                         Xuất file Excel</Button>
