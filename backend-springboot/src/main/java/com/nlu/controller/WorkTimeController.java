@@ -1,7 +1,11 @@
 package com.nlu.controller;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
+import com.nlu.model.dto.response.WorkTimeResponse;
 import com.nlu.service.UserAnswerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +66,11 @@ public class WorkTimeController {
 			@PathVariable(name = "examNumberId") Integer examNumberId) {
 
 		WorkTime data = workTimeService.getWorkTimeByUser(userId, examNumberId);
+		if(data == null) return ResponseData.builder()
+					.status(HttpStatus.NOT_FOUND.value())
+					.message("Data not found")
+					.build();
+
 		return ResponseData.builder()
 				.status(HttpStatus.OK.value())
 				.message("Data work time by id user and id exam number")
@@ -83,7 +92,6 @@ public class WorkTimeController {
             return ResponseData.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message("Invalid date format")
-                    .data(null)
                     .build();
         }
 
@@ -108,6 +116,64 @@ public class WorkTimeController {
 				.status(HttpStatus.OK.value())
 				.message("Delete successfully!")
 				.data(removeWorkTime && removeUserAnswer)
+				.build();
+	}
+	@GetMapping("/users/{id}")
+	public ResponseData getAllWorkTimeByUser(@PathVariable Long id) {
+		List<WorkTimeResponse> workTimes = workTimeService.getAllWorkTimeByUser(id);
+		if(workTimes.isEmpty())
+				return ResponseData.builder()
+						.status(HttpStatus.OK.value())
+						.message("Empty data!")
+						.data(workTimes)
+						.build();
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("All work times by user")
+				.data(workTimes)
+				.build();
+	}
+
+	@PutMapping("/students/{studentId}/exam-number/{examNumberId}")
+	public ResponseData updateWorkTimeStudent(
+			@PathVariable(name = "studentId") Long studentId,
+			@PathVariable(name = "examNumberId") Integer examNumberId,
+			@RequestParam(name = "endExam") String endExam) {
+		Timestamp endExamTimestamp;
+
+		try {
+			Instant instant = Instant.parse(endExam);
+			endExamTimestamp = Timestamp.from(instant);
+		} catch (Exception e) {
+			return ResponseData.builder()
+					.status(HttpStatus.BAD_REQUEST.value())
+					.message("Invalid date format")
+					.data(null)
+					.build();
+		}
+
+		boolean data = workTimeService.updateEndExamWorkTimeStudent(studentId, examNumberId, endExamTimestamp);
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("Update successfully")
+				.data(data)
+				.build();
+	}
+	@GetMapping("/students/{studentId}/exam-number/{examNumberId}")
+	public ResponseData getWorkTimeByIdStudent(
+			@PathVariable(name = "studentId") Long studentId,
+			@PathVariable(name = "examNumberId") Integer examNumberId) {
+
+		WorkTime data = workTimeService.getWorkTimeByStudent(studentId, examNumberId);
+		if(data == null) return ResponseData.builder()
+				.status(HttpStatus.NOT_FOUND.value())
+				.message("Data not found")
+				.build();
+
+		return ResponseData.builder()
+				.status(HttpStatus.OK.value())
+				.message("Data work time by id user and id exam number")
+				.data(data)
 				.build();
 	}
 }

@@ -22,14 +22,16 @@ export const RequestData = () => {
             name: name
         };
     }
-    const QuestionRequest = (question, listOptionRequests) => {
+    const QuestionRequest = (id, question, listOptionRequests) => {
         return {
+            id: id,
             question: question,
             listOptionRequests: listOptionRequests
         };
     }
-    const OptionRequest = (content, isCorrect) => {
+    const OptionRequest = (id, content, isCorrect) => {
         return {
+            id: id,
             content: content,
             isCorrect: isCorrect
         };
@@ -41,6 +43,14 @@ export const RequestData = () => {
         return {
             username: username,
             password: password
+        };
+    }
+
+    const LoginStudentRequest = (email, password, codeGroup) => {
+        return {
+            email: email,
+            password: password,
+            codeGroup: codeGroup
         };
     }
 
@@ -59,6 +69,7 @@ export const RequestData = () => {
         ExamRequest,
         ExamNumberRequest,
         QuestionRequest,
-        OptionRequest
+        OptionRequest,
+        LoginStudentRequest
     };
 }

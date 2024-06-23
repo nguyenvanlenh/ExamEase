@@ -8,6 +8,8 @@
         height: 40px;
         width: 40px;
         margin-right: 12px;
+        position: relative;
+        cursor: pointer;
         .number {
             padding: 12px;
             width: 40px;
@@ -18,6 +20,13 @@
             justify-content: center;
             color: $color-blue_global;
             background-color: $color-blue_second;
+        }
+        .flag {
+            color: $color-orange;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            z-index: 2;
         }
     }
     .content {

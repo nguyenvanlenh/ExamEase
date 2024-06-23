@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.nlu.model.dto.response.QuestionResultResponse;
+import com.nlu.utils.AuthenticationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,24 +35,26 @@ public class QuestionService {
 		return QuestionResponse.fromEntities(questionRepository.findByListExamNumbers_Id(examNumberId));
 	}
 	
-	
+	@Transactional
 	public void updateQuestion(Long idQuestion, QuestionRequest request) {
 		Question question = questionRepository.findById(idQuestion)
-				.orElseThrow(() -> new NotFoundException("Question not found"));
+				.orElseThrow(() -> new NotFoundException("question_not_found",idQuestion));
 		question.setNameQuestion(request.getQuestion());
 		Question questionUpdated = questionRepository.save(question);
-		List<Option> listOptionsFromRequest = OptionRequest.toEntities(request.getListOptionRequests());
-		Set<Option> listOptions = listOptionsFromRequest.stream()
-				.map(option -> {
+		
+		request.getListOptionRequests().forEach(rq -> {
+				Option option = optionRepository.findById(rq.getId())
+						.orElseThrow(() -> new NotFoundException("option_not_found",rq.getId()));
 				option.setQuestion(questionUpdated);
-				return optionRepository.save(option);
-				})
-				.collect(Collectors.toSet());
-		question.setOptions(listOptions);
+				option.setId(request.getId());
+				option.setNameOption(rq.getContent());
+				option.setCorrect(rq.getIsCorrect());
+				optionRepository.save(option);
+				});
 	}
-	
-	
-	
-	
-	
+
+	public List<QuestionResultResponse> getQuestionResult(Integer examNumberId) {
+		Long idUser = AuthenticationUtils.extractUserId();
+		return questionRepository.questionResult(examNumberId, idUser);
+	}
 }

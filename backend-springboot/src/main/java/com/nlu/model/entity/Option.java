@@ -42,7 +42,6 @@ public class Option {
 	@JoinColumn(name="question_id")
 	private Question question;
 	@JsonBackReference
-	@OneToMany(mappedBy = "option",cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "option",cascade = CascadeType.ALL)
 	private Set<UserAnswer> listUserAnswers;
-	
 }

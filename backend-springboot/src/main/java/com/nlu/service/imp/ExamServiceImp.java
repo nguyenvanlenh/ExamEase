@@ -1,5 +1,6 @@
 package com.nlu.service.imp;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import com.nlu.utils.AuthenticationUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 /**
  * Implementation of the ExamService interface providing operations related to exams.
  * This service handles the creation, update, deletion, and retrieval of exams.
@@ -44,6 +46,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class ExamServiceImp implements ExamService {
 
 	TimeExamRepository timeExamRepository;
@@ -79,7 +82,7 @@ public class ExamServiceImp implements ExamService {
 		/**
 		 * sequence: save exam -> save question(shuffled) -> save option -> save exam number
 		 */
-		
+		log.info("Exam request: {}", request);
 		Exam exam = new Exam();
 		exam.setTimeExam(timeExam);
 		exam.setCategory(category);
@@ -89,8 +92,8 @@ public class ExamServiceImp implements ExamService {
 		exam.setQuantityQuestion(request.getQuantityQuestion());
 		exam.setPublic(request.getIsPublic());
 		exam.setTeacher(user);
-		exam.setStartTime(request.getStartTime());
-		exam.setEndTime(request.getEndTime());
+		exam.setStartTime(Timestamp.valueOf(request.getStartTime()));
+		exam.setEndTime(Timestamp.valueOf(request.getEndTime()));
 		Exam examSaved = examRepository.save(exam);
 
 		List<ExamNumber> listExamNumbers = request.getListExamNumberRequests().stream().map(itemExamNumber -> {
@@ -103,7 +106,7 @@ public class ExamServiceImp implements ExamService {
 			Collections.shuffle(shuffledQuestionRequests);
 			List<Question> listQuestions = saveQuestion(shuffledQuestionRequests);
 
-			examNumber.setListQuestions(new HashSet<>(listQuestions));
+			examNumber.setListQuestions(listQuestions);
 			return examNumber;
 		}).toList();
 		// save exam number
@@ -165,7 +168,15 @@ public class ExamServiceImp implements ExamService {
 					.orElseThrow(() -> new NotFoundException("category_not_found",request.getCategoryId()));
 			exam.setCategory(category);
 		}
-
+		if(!exam.getTitle().equals(request.getTitle()))
+			exam.setTitle(request.getTitle());
+		if(!exam.getShortDescription().equals(request.getShortDescription()))
+			exam.setShortDescription(request.getShortDescription());
+		if(!exam.getDescription().equals(request.getShortDescription()))
+			exam.setDescription(request.getShortDescription());
+		if(exam.isPublic()!= request.getIsPublic())
+			exam.setPublic(request.getIsPublic());
+		examRepository.save(exam);
 	}
 
 	@Override
@@ -236,6 +247,20 @@ public class ExamServiceImp implements ExamService {
 				pageExams = examRepository.findByCategory_NameAndTitleContainingAndIsPublic(category, keyword, true, pageable);
 			}
 
+		return PageResponse.<List<ExamResponse>>builder()
+				.content(ExamResponse.fromEntities(pageExams.getContent()))
+				.totalPage(pageExams.getTotalPages())
+				.totalElement(pageExams.getTotalElements())
+				.size(pageExams.getSize())
+				.currentPage(pageExams.getPageable().getPageNumber())
+				.build();
+	}
+	
+	@Override
+	public PageResponse<List<ExamResponse>> getExamsByTeacherId(Long teacherId,Pageable pageable) {
+		Page<Exam> pageExams = examRepository.findByTeacher_Id(teacherId, pageable);
+		if(ObjectUtils.isEmpty(pageExams.getContent()))
+			throw new NotFoundException("Not found data");
 		return PageResponse.<List<ExamResponse>>builder()
 				.content(ExamResponse.fromEntities(pageExams.getContent()))
 				.totalPage(pageExams.getTotalPages())

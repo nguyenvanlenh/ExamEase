@@ -34,6 +34,11 @@ public class ExamNumberController {
     public ResponseData
     getExamNumberStudent(@PathVariable Long idStudent) {
     	ExamResponse data = examNumberService.getExamNumberStudent(idStudent);
+        if(data==null)
+            return ResponseData.builder()
+                    .status(HttpStatus.NO_CONTENT.value())
+                    .message("Out side exam time!")
+                    .build();
         return ResponseData.builder()
 				 .status(HttpStatus.OK.value())
 				 .message("Data exam by studentId")

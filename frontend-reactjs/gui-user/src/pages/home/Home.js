@@ -9,11 +9,17 @@ import EqualizerIcon from "@mui/icons-material/Equalizer";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { CardItemExam } from "../../components/CardItemExam/CardItemExam";
 import { examService } from "../../services/examService";
+import { useDispatch, useSelector } from "react-redux";
+import { workTimeService } from "../../services/workTimeService";
+import { addExamWorked, removexamWorked } from "../../redux/slices/examWorkedSlice";
 
 export default function Home() {
   const [username, setUsername] = useState(null);
   const [listExams, setListExams] = useState([]);
   const [sizePage, setSizePage] = useState(8);
+  const listResultExam = useSelector((state) => state.examWorkeds)
+  const auth = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
   useEffect(() => {
     const usernameLocal = JSON.parse(localStorage.getItem('username'))
     if (usernameLocal) {
@@ -22,12 +28,16 @@ export default function Home() {
       setUsername(null)
     }
   }, []);
+  // double chỗ này
   useEffect(() => {
     const fetching = async () => {
       const response = await examService.searching("", "", 0, 8);
       setListExams(response?.data.content);
-      // setTotalPages(response?.data.totalPage);
-
+      if(auth && Object.keys(auth).length > 0) {
+        const listWorkTime = await workTimeService.getAllWorkTimeUser(auth);
+        dispatch(removexamWorked())
+        dispatch(addExamWorked(listWorkTime?.data))
+      }
     };
     fetching();
   }, []);
@@ -64,30 +74,11 @@ export default function Home() {
     nameButton: "Làm bài",
     listExam: listExam,
   };
-  const listResultExam = [
-    {
-      id: 1,
-      title: "Practice Set 2023 TOEIC Test 10",
-      time: "40",
-      dateDone: "Ngày làm bài: 03/01/2024",
-      timeDone: "Thời gian hoàn thành: 0:10:04",
-      result: "Kết quả: 2/6",
-    },
-    {
-      id: 2,
-      title: "Practice Set 2023 TOEIC Test 10",
-      time: "40",
-      dateDone: "Ngày làm bài: 03/01/2024",
-      timeDone: "Thời gian hoàn thành: 0:10:04",
-      result: "Kết quả: 2/6",
-    },
-  ];
   const objectTookExams = {
     type: "TOOK_EXAM",
     nameButton: "Xem chi tiết",
     listExam: listResultExam,
   };
-  // const listExams = [1, 2, 3, 4, 5, 6];
   return (
     <div id="id-home">
       <Header />
@@ -102,19 +93,23 @@ export default function Home() {
         <div className="part">
           <Stack direction="horizontal">
             <h2 className="title2">Kết quả luyện thi mới nhất</h2>
-            <Link className="link-chart">
+            <Link to={"/statistics"} className="link-chart">
               <EqualizerIcon />
               <div className="text-chart">Thống kê kết quả luyện thi</div>
             </Link>
           </Stack>
-
+          
           <ListCardItem objectExams={objectTookExams} />
-          <div className="view-all">
-            <Link>
+          {
+            listResultExam && listResultExam.length > 0 &&
+            (<div className="view-all">
+            <Link to={"/statistics"}>
               <b>Xem tất cả</b>
               <KeyboardDoubleArrowRightIcon fontSize="16" />
             </Link>
-          </div>
+          </div>)
+          }
+          
         </div>
       </Container>
       <div className="exam-bottom">

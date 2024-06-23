@@ -1,13 +1,11 @@
 import axios from "axios";
 import { URL_PATH } from "../utils/constants"
-import { authLocalStorage } from "../utils/localStorage";
-const auth = authLocalStorage.get("auth");
 export const workTimeService = {
-    getWorkTimeUser: (userId, examNumberId) => {
-        const url = `${URL_PATH}/api/worktimes/users/${userId}/exam-number/${examNumberId}`
+    getWorkTimeUser: (authObject, examNumberId) => {
+        const url = `${URL_PATH}/api/worktimes/users/${authObject?.userId}/exam-number/${examNumberId}`
         return axios.get(url, {
             headers: {
-                Authorization: `Bearer ${auth?.token}`
+                Authorization: `Bearer ${authObject?.token}`
             }
         })
            .then(response => {
@@ -18,11 +16,11 @@ export const workTimeService = {
                 return error.response
             })
     },
-    addWorkTimeUser: (userId, examNumberId, timeExam) => { 
-        const url = `${URL_PATH}/api/worktimes/users/${userId}/exam-number/${examNumberId}?timeExam=${timeExam}`
+    addWorkTimeUser: (authObject, examNumberId, timeExam) => { 
+        const url = `${URL_PATH}/api/worktimes/users/${authObject?.userId}/exam-number/${examNumberId}?timeExam=${timeExam}`
         return axios.post(url,{},{
             headers: {
-                Authorization: `Bearer ${auth?.token}`
+                Authorization: `Bearer ${authObject?.token}`
             }
         })
            .then(response => {
@@ -33,11 +31,11 @@ export const workTimeService = {
                 return error.response
             })
     },
-    updateWorkTimeUser: (userId, examNumberId, endExam) => { 
-        const url = `${URL_PATH}/api/worktimes/users/${userId}/exam-number/${examNumberId}?endExam=${endExam}`
+    updateWorkTimeUser: (authObject, examNumberId, endExam) => { 
+        const url = `${URL_PATH}/api/worktimes/users/${authObject?.userId}/exam-number/${examNumberId}?endExam=${endExam}`
         return axios.put(url,{},{
             headers: {
-                Authorization: `Bearer ${auth?.token}`
+                Authorization: `Bearer ${authObject?.token}`
             }
         })
            .then(response => {
@@ -48,13 +46,50 @@ export const workTimeService = {
                 return error.response
             })
     },
-    removeWorkTimeAndUserAnswerUser: (examNumberId, userId) => {
-        const url = `${URL_PATH}/api/worktimes/users/${userId}/exam-number/${examNumberId}`
+    removeWorkTimeAndUserAnswerUser: (examNumberId, authOject) => {
+        const url = `${URL_PATH}/api/worktimes/users/${authOject?.userId}/exam-number/${examNumberId}`
         return axios.delete(url, {
             headers: {
-                Authorization: `Bearer ${auth?.token}`
+                Authorization: `Bearer ${authOject?.token}`
             }
         })
+           .then(response => {
+                return response.data;
+            })
+           .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
+    },
+    getAllWorkTimeUser: (authObject) => {
+        const url = `${URL_PATH}/api/worktimes/users/${authObject?.userId}`
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${authObject?.token}`
+            }
+        })
+           .then(response => {
+                return response.data;
+            })
+           .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
+    },
+    updateWorkTimeStudent: (studentId, examNumberId, endExam) => { 
+        const url = `${URL_PATH}/api/worktimes/students/${studentId}/exam-number/${examNumberId}?endExam=${endExam}`
+        return axios.put(url)
+           .then(response => {
+                return response.data;
+            })
+           .catch(error => {
+                console.log(error.response?.data.message)
+                return error.response
+            })
+    },
+    getWorkTimeStudent: (studentId, examNumberId) => {
+        const url = `${URL_PATH}/api/worktimes/students/${studentId}/exam-number/${examNumberId}`
+        return axios.get(url)
            .then(response => {
                 return response.data;
             })

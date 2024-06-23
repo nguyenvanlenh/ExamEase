@@ -14,6 +14,7 @@ import { getDataByKeyLS, setDataByKeyLS } from '../../utils/common';
 import { categoryService } from '../../services/categoryService';
 import { useDispatch, useSelector } from 'react-redux';
 import { removePage, setPage } from '../../redux/slices/pageSlice';
+import { PaginationComponent } from '../../components/Pagination/Pagination';
 
 
 export const ListExams = () => {
@@ -24,12 +25,16 @@ export const ListExams = () => {
     const [currentPage, setCurrentPage] = useState(!page ? 0 : page);
     const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isSearch, setIsSearch] = useState(false)
     const [suggestions, setSuggestions] = useState();
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [category, setCategory] = useState("");
     const [selectedSuggestion, setSelectedSuggestion] = useState(-1);
-
-
+    const [username, setUsername] = useState("user")
+    useEffect(() => {
+        const usernameLocal = JSON.parse(localStorage.getItem("username"));
+        setUsername(usernameLocal);
+    }, [])
 
     // tải dữ liệu lúc đầu và theo dõi khi chuyển trang hoặc là chọn danh mục
     useEffect(() => {
@@ -45,7 +50,7 @@ export const ListExams = () => {
             }
         };
         fetching();
-    }, [currentPage, category]);
+    }, [currentPage, category, isSearch]);
 
     // xử lý khi click chọn category
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -65,17 +70,17 @@ export const ListExams = () => {
     const handleInputChange = (event) => {
         const query = event.target.value;
         setSearchQuery(query);
-        if (query.length > 0) {
+        if (query?.trim().length > 0) {
             setShowSuggestions(true);
             const fetching = async () => {
-                const response = await examService.searching(query, category);
+                const response = await examService.searching(query?.trim(), category);
                 setSuggestions(response?.data.content);
-                setSelectedSuggestion(-1); // Reset selected suggestion when input changes
+                setSelectedSuggestion(-1);
             };
             fetching();
         } else {
             setShowSuggestions(false);
-            setSelectedSuggestion(-1); // Reset selected suggestion when input is empty
+            setSelectedSuggestion(-1);
         }
     };
 
@@ -90,14 +95,19 @@ export const ListExams = () => {
         else if (event.key === 'Enter') {
             if (selectedSuggestion !== -1) {
                 handleSearchBySuggestion(suggestions[selectedSuggestion]);
+                setIsSearch(true)
             } else {
                 handleSearch();
             }
         }
     };
 
-
+    // search core
     const handleSearch = async (title) => {
+        if (!title && !searchQuery?.trim())
+            return;
+        dispatch(removePage())
+        setCurrentPage(0)
         setShowSuggestions(false);
         const response = await examService.searching(
             title || searchQuery,
@@ -106,7 +116,14 @@ export const ListExams = () => {
         );
         setListExams(response?.data.content);
         setTotalPages(response?.data.totalPage);
+        setIsSearch(true)
     };
+    // hủy search
+    const handleCancelSearch = () => {
+        setSearchQuery("");
+        setIsSearch(false)
+    }
+    // search bằng gợi ý
     const handleSearchBySuggestion = (suggestion) => {
         setSearchQuery(suggestion.title);
         handleSearch(suggestion.title);
@@ -140,7 +157,7 @@ export const ListExams = () => {
                                 <div className="user-target-info-box">
                                     <Image src={UserImage} roundedCircle height={70} />
                                     <div className="text-center">
-                                        <strong>20130302</strong>
+                                        <strong>{username}</strong>
                                     </div>
                                     <div className="user-target-info">
                                         <p>
@@ -194,9 +211,16 @@ export const ListExams = () => {
                                             onChange={handleInputChange}
                                             onKeyDown={handleKeyDown}
                                         />
-                                        <Button className="btn-search" onClick={(e) => handleSearch(e.target.value)}>
-                                            Tìm kiếm
-                                        </Button>
+                                        {
+                                            isSearch ?
+                                                <Button className="btn-search" onClick={handleCancelSearch}>
+                                                    Hủy
+                                                </Button>
+                                                :
+                                                <Button className="btn-search" onClick={(e) => handleSearch(e.target.value)}>
+                                                    Tìm kiếm
+                                                </Button>
+                                        }
                                     </InputGroup>
                                     {showSuggestions && (
                                         <ListGroup className="position-absolute w-100" style={{ zIndex: 9999 }}>
@@ -248,27 +272,11 @@ export const ListExams = () => {
                                     </div>
                                 )
                             )}
-                            <Pagination className="pagination">
-                                <Pagination.First onClick={() => handlePageChange(0)} />
-                                <Pagination.Prev
-                                    onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
-                                    disabled={currentPage === 0}
-                                />
-                                {Array.from({ length: totalPages }, (_, index) => (
-                                    <Pagination.Item
-                                        key={index}
-                                        active={index === currentPage}
-                                        onClick={() => handlePageChange(index)}
-                                    >
-                                        {index + 1}
-                                    </Pagination.Item>
-                                ))}
-                                <Pagination.Next
-                                    onClick={() => handlePageChange(Math.min(totalPages - 1, currentPage + 1))}
-                                    disabled={currentPage === totalPages - 1}
-                                />
-                                <Pagination.Last onClick={() => handlePageChange(totalPages - 1)} />
-                            </Pagination>
+                            <PaginationComponent
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={handlePageChange}
+                            />
                         </div>
                     </div>
                 </div>

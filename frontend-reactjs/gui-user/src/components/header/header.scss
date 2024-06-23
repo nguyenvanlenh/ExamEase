@@ -1,12 +1,14 @@
-@import '/src/styles/root.scss';
+@import "/src/styles/root.scss";
 
 #id-header {
     height: 64px;
-    z-index: 99; 
+    z-index: 99;
     position: fixed;
     background-color: white;
     width: 100%;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    box-shadow:
+        rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     .content {
         display: flex;
         align-items: center;
@@ -15,11 +17,10 @@
             background-color: $color-blue_global;
             border-radius: 20px;
             padding-top: 4px;
-            a {
-                color: white;
-                text-decoration: none;
-                font-weight: 600;
-            }
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+
             &:hover {
                 opacity: 0.8;
             }
@@ -55,7 +56,6 @@
     .container-menu {
         display: none;
         padding: 12px 24px;
-
     }
     .btn-login-menu {
         padding: 6px 12px;
@@ -64,14 +64,22 @@
         opacity: 0.8;
         cursor: pointer;
     }
+    .mobile {
+        display: none;
+    }
 
-    @media screen  and (max-width: 800px){
-        .content{
+    @media screen and (max-width: 800px) {
+        .content {
             display: none;
         }
         .container-menu {
             display: block;
         }
+        .btn-login-menu {
+            display: none;
+        }
+        .mobile {
+            display: block;
+        }
     }
-
 }

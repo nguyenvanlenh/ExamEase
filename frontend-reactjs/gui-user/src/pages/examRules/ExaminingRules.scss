@@ -1,0 +1,53 @@
+@import "../../styles/root.scss";
+#examining-rules {
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+  
+    .exam-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  
+    .exam-info {
+      font-size: 16px;
+      color: #555;
+  
+      p {
+        margin-bottom: 10px;
+        line-height: 1.6;
+      }
+    }
+  
+    .rules-list {
+      list-style-type: disc;
+      margin: 10px 0 20px 20px;
+  
+      li {
+        margin-bottom: 10px;
+      }
+    }
+  
+    .agree-checkbox {
+      font-size: 14px;
+    }
+  
+    .start-exam-btn {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+  
+      &:disabled {
+        background-color: #ccc;
+        border-color: #ccc;
+      }
+    }
+  }
+  
+  

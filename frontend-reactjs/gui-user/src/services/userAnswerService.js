@@ -19,9 +19,6 @@ export const userAnswerService = {
         });
     },
     updateAnswer: (idUser, idOptionFirst, idOptionLast) => {
-        console.log("idUser: " + idUser)
-        console.log("idOptionFirst: "+ idOptionFirst)
-        console.log("idOptionLast: "+ idOptionLast)
         const url = `${URL_PATH}/api/user_answers/users/${idUser}?idOptionFirst=${idOptionFirst}&idOptionLast=${idOptionLast}`
         return axios.put(url, {}, {
             headers: {

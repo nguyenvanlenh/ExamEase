@@ -2,8 +2,10 @@ package com.nlu.model.dto.request;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nlu.model.entity.Exam;
 
 import jakarta.validation.Valid;
@@ -14,12 +16,14 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ExamRequest implements Serializable{
+public class ExamRequest implements Serializable {
 
     @NotBlank(message = "{exam_title_blank}")
     String title;
@@ -39,10 +43,12 @@ public class ExamRequest implements Serializable{
     Integer categoryId;
 
     @NotNull(message = "{exam_start_time_null}")
-    Timestamp startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
+    LocalDateTime startTime;
 
     @NotNull(message = "{exam_end_time_null}")
-    Timestamp endTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
+    LocalDateTime endTime;
 
     @NotNull(message = "{exam_is_public_null}")
     Boolean isPublic;
@@ -55,16 +61,14 @@ public class ExamRequest implements Serializable{
     @Size(min = 1, message = "{exam_list_question_requests_size}")
     List<@Valid QuestionRequest> listQuestionRequests;
 
-	public static void setForEntity(Exam exam, ExamRequest request) {
-		exam.setShortDescription(request.getShortDescription());
-		exam.setDescription(request.getDescription());
-		exam.setTitle(request.getTitle());
-		exam.setPublic(request.getIsPublic());
-		exam.setQuantityQuestion(request.getQuantityQuestion());
-		exam.setStartTime(request.getStartTime());
-		exam.setEndTime(request.getEndTime());
-		exam.setExamNumbers(ExamNumberRequest.toEntities(request.getListExamNumberRequests()));
-	}
-	
-	
+    public static void setForEntity(Exam exam, ExamRequest request) {
+        exam.setShortDescription(request.getShortDescription());
+        exam.setDescription(request.getDescription());
+        exam.setTitle(request.getTitle());
+        exam.setPublic(request.getIsPublic());
+        exam.setQuantityQuestion(request.getQuantityQuestion());
+        exam.setStartTime(Timestamp.valueOf(request.getStartTime()));
+        exam.setEndTime(Timestamp.valueOf(request.getEndTime()));
+    }
+
 }

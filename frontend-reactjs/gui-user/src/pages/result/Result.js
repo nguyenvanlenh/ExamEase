@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Image, Row, Stack } from "react-bootstrap";
+import {
+  Accordion,
+  Alert,
+  Button,
+  Col,
+  Container,
+  Dropdown,
+  Image,
+  Modal,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
 import "./Result.scss";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import { Link, useLocation, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
@@ -14,34 +25,102 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { examNumberService } from "../../services/examNumberService";
-import { authLocalStorage } from "../../utils/localStorage";
-import { calculateDurationInSeconds, formatTimeHMS } from "../../utils/utilsFunction";
+import {
+  calculateDurationInSeconds,
+  formatTimeHMS,
+} from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
+import { questionService } from "../../services/questionService";
+import { useDispatch, useSelector } from "react-redux";
+import { addExamWorked, removexamWorked } from "../../redux/slices/examWorkedSlice";
 
-function Result({ navigation }) {
+function Result() {
   const location = useLocation();
-  const auth = authLocalStorage.get()
+  const auth = useSelector(state => state.auth)
   const { idExamNumber } = location.state || {};
   const [result, setResult] = useState(null);
   const [totalTime, setTotalTime] = useState(0);
+  const [questionRes, setQuestionRes] = useState([]);
+  const [userName, setUsername] = useState("user");
+  const [modalShowQuestion, setModalShowQuestion] = useState(false);
+  const [contentQuestion, setContentQuestion] = useState({});
+  const dispatch = useDispatch()
+  // console.log(questionRes)
+  // console.log(contentQuestion)
   useEffect(() => {
+    const usernameLocal = JSON.parse(localStorage.getItem("username"));
+    setUsername(usernameLocal);
     const fetchData = async () => {
       try {
-        const data = await examNumberService.getResultExamNumberUser(idExamNumber, auth?.userId);
+        const data = await examNumberService.getResultExamNumberUser(
+          idExamNumber,
+          auth?.userId,
+          auth
+        );
         setResult(data.data);
-        const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber);
-        setTotalTime(calculateDurationInSeconds(workTime?.data.beginExam, workTime?.data.endExam))
+        const workTime = await workTimeService.getWorkTimeUser(
+          auth,
+          idExamNumber
+        );
+        setTotalTime(
+          calculateDurationInSeconds(
+            workTime?.data.beginExam,
+            workTime?.data.endExam
+          )
+        );
+        const questionResults = await questionService.getQuestionResult(
+          idExamNumber,
+          auth
+        );
+        setQuestionRes(questionResults.data);
+        // cập nhập lại worktime
+        const listWorkTime = await workTimeService.getAllWorkTimeUser(auth);
+        dispatch(removexamWorked())
+        dispatch(addExamWorked(listWorkTime.data))
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-    
   }, []);
 
-  
-
   const handleTabNumber = (number) => {};
+  const handleOpenDetailQuestion = async (idQuestion) => {
+    const question = await questionService.getQuestion(idQuestion, auth);
+    setContentQuestion(question.data);
+    setModalShowQuestion(true);
+  };
+  function handleSetNameOption(index) {
+    handleSetColorSelected(722)
+    if (index === 0) {
+      return "A";
+    } else if (index === 1) {
+      return "B";
+    } else if (index === 2) {
+      return "C";
+    }
+    return  "D"
+  }
+  function handleSetColor(correct) {
+    if (correct === true) {
+      return "color-correct";
+    } else if (correct === false) {
+      return "color-error";
+    }
+    return "color-pass";
+  }
+  function handleSetColorSelected(idOption) {
+    const q = questionRes.find(question => question.selectedOptionId === idOption)
+    if(q) {
+      if(q.correct === true) {
+        return "color-correct";
+      } else if (q.correct === false) {
+        return "color-error";
+      }
+    }
+    return "color-pass";
+  }
+
   return (
     <div id="id-result">
       <Header />
@@ -49,9 +128,7 @@ function Result({ navigation }) {
         <Row className="mg">
           <Col md={9} xs={12}>
             <div className="content-block">
-              <h1 className="title">
-                Kết quả luyện tập: {result?.examName}
-              </h1>
+              <h1 className="title">Kết quả luyện tập: {result?.examName}</h1>
               <div className="tab-container">
                 <Stack direction="horizontal" gap={2}>
                   <Button
@@ -61,9 +138,9 @@ function Result({ navigation }) {
                     Xem đáp án
                   </Button>
                   <Link
-                    style={{ padding: '6px'}}
+                    style={{ padding: "6px" }}
                     to={{
-                      pathname: "/list-exams"
+                      pathname: "/list-exams",
                     }}
                     className={`tab-pill active2`}
                   >
@@ -81,7 +158,8 @@ function Result({ navigation }) {
                               Kết quả bài thi
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {result ? result?.totalCorrect : 0}/{result ? result?.totalQuestion : 0}
+                              {result ? result?.totalCorrect : 0}/
+                              {result ? result?.totalQuestion : 0}
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -90,7 +168,14 @@ function Result({ navigation }) {
                               Độ chính xác (#đúng/#tổng)
                             </div>
                             <div className="h6" style={{ flex: 1 }}>
-                              {result ? (result?.totalCorrect/ result?.totalQuestion)*100.0 : 0}%
+                              {result
+                                ? (
+                                    (result?.totalCorrect /
+                                      result?.totalQuestion) *
+                                    100.0
+                                  ).toFixed(1)
+                                : 0}
+                              %
                             </div>
                           </div>
                           <div className="d-flex flex-row justify-content-evenly mb-3">
@@ -153,44 +238,31 @@ function Result({ navigation }) {
                           <td>{result?.totalCorrect}</td>
                           <td>{result?.totalWrong}</td>
                           <td>{result?.totalSkipped}</td>
-                          <td>{(result?.totalCorrect/ result?.totalQuestion)*100.0}%</td>
+                          <td>
+                            {result
+                              ? (
+                                  (result?.totalCorrect /
+                                    result?.totalQuestion) *
+                                  100.0
+                                ).toFixed(1)
+                              : 0}
+                            %
+                          </td>
                           <td className="d-flex flex-wrap">
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
-                            <div className="wrap-question color-error">
-                              <div className="question">1</div>
-                            </div>
-                            <div className="wrap-question color-correct">
-                              <div className="question">2</div>
-                            </div>
-                            <div className="wrap-question color-pass">
-                              <div className="question">3</div>
-                            </div>
+                            {questionRes.length > 0 &&
+                              questionRes.map((q, index) => {
+                                return (
+                                  <div
+                                    onClick={() =>
+                                      handleOpenDetailQuestion(q.id)
+                                    }
+                                    key={index}
+                                    className={`wrap-question ${handleSetColor(q.correct)}`}
+                                  >
+                                    <div className="question">{index + 1}</div>
+                                  </div>
+                                );
+                              })}
                           </td>
                         </tr>
                       </tbody>
@@ -204,7 +276,7 @@ function Result({ navigation }) {
             <div className="user-target-info-box">
               <Image src={UserImage} roundedCircle height={70} />
               <div className="text-center">
-                <strong>20130302</strong>
+                <strong>{userName}</strong>
               </div>
               <div className="user-target-info">
                 <p>
@@ -220,18 +292,73 @@ function Result({ navigation }) {
                   </i>
                 </p>
                 <div className="mt-3">
-                  <Button
-                    className="w-100 mt-3 btn-custom"
+                  <Link 
+                    to={"/statistics"}
+                    className="w-100 mt-3 btn btn-custom"
                     variant="outline-secondary"
                   >
                     <StackedLineChartIcon /> Thống kê kết quả
-                  </Button>
+                  </Link>
                 </div>
               </div>
             </div>
           </Col>
         </Row>
       </Container>
+      <Modal
+        size="lg"
+        show={modalShowQuestion}
+        onHide={() => setModalShowQuestion(false)}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-lg">Đáp án</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col>
+                <h4>{contentQuestion?.nameQuestion}</h4>
+              </Col>
+            </Row>
+            {contentQuestion?.options &&
+              contentQuestion?.options.length > 0 &&
+              contentQuestion?.options.map((o, index) => {
+                return (
+                  <Row className="ps-3" key={index}>
+                    <Col className={`mb-1 ${handleSetColorSelected(o.id)}`} >
+                      {handleSetNameOption(index)}. {o.nameOption}
+                    </Col>
+                  </Row>
+                );
+              })}
+            <Row>
+              <Col className="ps-4 pt-4">
+                <Accordion defaultActiveKey="1">
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>Đáp án</Accordion.Header>
+                    <Accordion.Body>
+                      {contentQuestion?.options &&
+                        contentQuestion?.options.length > 0 &&
+                        contentQuestion?.options.map((o, index) => {
+                          return (
+                            <Row className="ps-1" key={index}>
+                              <Col
+                                style={o.correct ? { color: "#198754" } : {}}
+                              >
+                                {handleSetNameOption(index)}. {o.nameOption}
+                              </Col>
+                            </Row>
+                          );
+                        })}
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
       <Footer />
     </div>
   );

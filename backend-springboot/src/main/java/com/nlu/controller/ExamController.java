@@ -69,7 +69,7 @@ public class ExamController {
 			@RequestParam(required = false) String keyword,
 			@PageableDefault(page = 0, size = 4) 
 			@SortDefaults(
-			@SortDefault(direction = Sort.Direction.ASC, sort = {"title"})
+			@SortDefault(direction = Sort.Direction.DESC, sort = {"startTime"})
 	) Pageable pageable) {
 		PageResponse<List<ExamResponse>> data = examService.getExamsByCategoryAndKeyWord(category, keyword, pageable);
 		 return ResponseData.builder()
@@ -89,9 +89,9 @@ public class ExamController {
 
 	@GetMapping("/all")
 	public ResponseData getExams(
-			@PageableDefault(page = 0, size = 4) 
+			@PageableDefault(page = 0, size = 10) 
 			@SortDefaults(
-			@SortDefault(direction = Sort.Direction.ASC, sort = {"title"})
+			@SortDefault(direction = Sort.Direction.DESC, sort = {"startTime"})
 	) Pageable pageable) {
 		return ResponseData.builder()
 				 .status(HttpStatus.OK.value())
@@ -107,4 +107,18 @@ public class ExamController {
 				 .message("Exams deleted successfully")
 				 .build();
 	}
+	
+	@GetMapping("/teachers/{teacherId}")
+	public ResponseData getExamsByTeacherId(@PathVariable Long teacherId, 
+			@PageableDefault(page = 0, size = 6) 
+			@SortDefaults(
+			@SortDefault(direction = Sort.Direction.DESC, sort = {"startTime"})
+		) Pageable pageable) {
+		return ResponseData.builder()
+				 .status(HttpStatus.OK.value())
+				 .message("Exams data")
+				 .data(examService.getExamsByTeacherId(teacherId,pageable))
+				 .build();
+	}
+	
 }

@@ -1,18 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { listQuestionLocalStorage } from '../../utils/localStorage';
 
+const initialState = listQuestionLocalStorage.get() || [];
 const listQuestionSlice = createSlice({
     name: 'listQuestion',
-    initialState: [],
+    initialState,
     reducers: {
         addListQuestion(state, action) {
-            action.payload.map((question, index) => {
+                state.length === 0 && action.payload.map((question, index) => {
                 return state.push({
                     id: index+1,
                     idReal: question.id,
                     contentQuestion: question.nameQuestion,
                     done: false,
                     idAnswerSelected: undefined,
+                    flag: false,
                     listAnswers: question.options.map(option => ({
                         id: option.id,
                         value: option.nameOption,
@@ -36,11 +38,19 @@ const listQuestionSlice = createSlice({
         removeQuestion() {
             listQuestionLocalStorage.remove()
             return []
+        },
+        updateFlag(state, action) {
+            const { idQuestion } = action.payload;
+            const question = state.find(question => question.id === idQuestion);
+            if (question) {
+                question.flag = !question.flag;
+            }
+            //update localstore
         }
         
     }
 })
 
-export const { addListQuestion, updateQuestion, addedListQuestion, removeQuestion } = listQuestionSlice.actions
+export const { addListQuestion, updateQuestion, addedListQuestion, removeQuestion, updateFlag } = listQuestionSlice.actions
 export default listQuestionSlice
 

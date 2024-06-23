@@ -5,23 +5,24 @@ import { Button, CloseButton } from "react-bootstrap";
 import ListQuestion from "../../components/listQuestion/ListQuestion";
 import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
 import { useDispatch, useSelector } from "react-redux";
-import { addedListQuestion, removeQuestion } from "../../redux/slices/listQuestionSlice";
-import { authLocalStorage, examiningLocalStorage, idExamNumberLocalStorage, listQuestionLocalStorage } from "../../utils/localStorage";
-import { submitExaminingSwal } from "../../utils/mySwal";
+import { removeQuestion } from "../../redux/slices/listQuestionSlice";
+import { examiningLocalStorage, idExamNumberLocalStorage } from "../../utils/localStorage";
+import { exitExamSwal, submitExaminingSwal } from "../../utils/mySwal";
 import { useNavigate } from "react-router-dom";
 import { calculateDurationInSeconds, formatTimeMS } from "../../utils/utilsFunction";
 import { workTimeService } from "../../services/workTimeService";
+
 function Examining() {
-  const auth = authLocalStorage.get("auth");
+  const auth = useSelector(state => state.auth);
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [move, setMove] = useState(false);
   const [part, setPart] = useState(false);
-    // set time vao day, 100 la phut mac dinh
+  // set time vao day, 100 la phut mac dinh
   const [time, setTime] = useState(100 * 60);
   const [examNumber, setExamNumber] = useState()
   const listQuestion = useSelector((state) => state.listQuestion)
-  const questions = listQuestionLocalStorage.get();
+  // const questions = listQuestionLocalStorage.get();
   const data = examiningLocalStorage.get();
   const idExamNumber = idExamNumberLocalStorage.get();
   useEffect(() => {
@@ -33,35 +34,37 @@ function Examining() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const handleHidden = () => {
     setPart(!part);
   };
+
   const handleSubmit = async () => {
     const isConfirmed = await submitExaminingSwal();
     if (isConfirmed) {
       // update endExam workTime
-      await workTimeService.updateWorkTimeUser(auth?.userId, idExamNumber,new Date().toISOString())
+      await workTimeService.updateWorkTimeUser(auth, idExamNumber, new Date().toISOString())
       navigate('/result', { state: { idExamNumber: idExamNumber } });
       examiningLocalStorage.remove();
-      listQuestionLocalStorage.remove(); 
       dispatch(removeQuestion())
     }
   };
 
-  async function getTime(idUser, idExamNumber) { 
-    console.log("idExamNumber: " + idExamNumber);
-    const workTime = await workTimeService.getWorkTimeUser(idUser, idExamNumber);
-    console.log(workTime)
-    const now = new Date();
-    setTime(calculateDurationInSeconds(now, workTime?.data.endExam))
-  }
-  
-  useEffect(() => {
-    getTime(auth?.userId , idExamNumber)
-    setExamNumber(data)
-    dispatch(addedListQuestion(questions))
-  }, [])
+  async function getTime(authObject, idExamNumber) {
+    const workTime = await workTimeService.getWorkTimeUser(authObject, idExamNumber);
+    if (workTime.status === 200) {
+      const now = new Date();
+      setTime(calculateDurationInSeconds(now, workTime?.data.endExam))
+    } else {
+      console.log("lỗi")
+    }
 
+  }
+
+  useEffect(() => {
+    getTime(auth, idExamNumber)
+    setExamNumber(data)
+  }, [])
 
   useEffect(() => {
     if (time > 0) {
@@ -72,14 +75,24 @@ function Examining() {
       // Clear interval khi component unmount hoặc khi time thay đổi
       return () => clearInterval(timerId);
     } else {
-      // Hiển thị thông báo khi hết thời gian
-      console.log("Hết giờ");
+
       navigate('/result', { state: { idExamNumber: idExamNumber } });
       examiningLocalStorage.remove();
-      listQuestionLocalStorage.remove();
       dispatch(removeQuestion())
     }
   }, [time]);
+
+  const handleExit = async () => {
+    const isConfirmed = await exitExamSwal();
+    if (isConfirmed) {
+      await workTimeService.removeWorkTimeAndUserAnswerUser(
+        idExamNumber,
+        auth
+      );
+      dispatch(removeQuestion())
+      navigate(-1)
+    }
+  }
 
   return (
     <>
@@ -89,7 +102,7 @@ function Examining() {
           <h1 className="title">
             {examNumber?.title}
           </h1>
-          <Button className="btn-custom">Thoát</Button>
+          <Button onClick={handleExit} className="btn-custom">Thoát</Button>
         </div>
         <i className="note-top">
           Chú ý: bạn có thể click vào Part sau đó chọn câu mà bạn muốn làm.
@@ -97,7 +110,7 @@ function Examining() {
         <div className="wrap-content">
           <div className="container-left">
             <div className="content">
-              <ListQuestion listQuestion={listQuestion}/>
+              <ListQuestion listQuestion={listQuestion} />
             </div>
           </div>
           <div className="container-right d-b">
@@ -110,10 +123,10 @@ function Examining() {
                 </Button>
                 <i className="note">
                   Chú ý: bạn có thể click vào số thứ tự câu hỏi trong bài để
-                  đánh dấu review
+                  cắm cờ nếu chưa chắc chắc
                 </i>
                 <strong>Part</strong>
-                <ListBtnQuestion listQuestion={listQuestion}/>
+                <ListBtnQuestion listQuestion={listQuestion} />
               </div>
             </div>
           </div>
@@ -138,7 +151,7 @@ function Examining() {
             <strong>Part</strong>
             <CloseButton onClick={() => handleHidden()} />
           </div>
-          <ListBtnQuestion listQuestion={listQuestion}/>
+          <ListBtnQuestion listQuestion={listQuestion} />
         </div>
       </div>
     </>

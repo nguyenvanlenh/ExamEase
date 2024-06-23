@@ -3,12 +3,15 @@ package com.nlu.service.imp;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nlu.exception.NotFoundException;
+import com.nlu.model.dto.response.WorkTimeResponse;
 import com.nlu.model.entity.Exam;
 import com.nlu.model.entity.ExamNumber;
 import com.nlu.model.entity.Student;
@@ -36,40 +39,28 @@ public class WorkTimeService {
 
 	@Transactional
 	public boolean createWorkTime(Long examId) {
-		// Lấy thông tin về kỳ thi từ examId
-		Exam exam = examRepository.findById(examId).orElseThrow(() -> new NotFoundException("Exam not found"));
-
-		// Lấy mã nhóm của kỳ thi
+		Exam exam = examRepository.findById(examId)
+				.orElseThrow(() -> new NotFoundException("exam_not_found",examId));
 		String codeGroup = exam.getCodeGroup();
 
 		List<ExamNumber> listExamNumbers = exam.getExamNumbers().stream().toList();
 
 		List<Student> listStudents = studentRepository.findByCodeGroup(codeGroup);
 
-		List<WorkTime> workTimes = new ArrayList<>();
-
-		int examNumberIndex = 0;
-		for (Student student : listStudents) {
-
-			// Lấy đề cho học sinh hiện tại
-			ExamNumber examNumber = listExamNumbers.get(examNumberIndex);
-			// Tạo đối tượng chứa thông tin về thời gian làm việc của học sinh với đề
-			WorkTime workTime = createWorkTime(student, examNumber);
-			workTimes.add(workTime);
-			// Di chuyển đến số báo danh tiếp theo, lặp lại danh sách
-			examNumberIndex = (examNumberIndex + 1) % listExamNumbers.size();
-		}
+		AtomicInteger examNumberIndex = new AtomicInteger(0);
+		listStudents.forEach(student -> {
+		    ExamNumber examNumber = listExamNumbers.get(examNumberIndex.get());
+		    createWorkTime(student, examNumber, exam.getStartTime(),exam.getEndTime());
+		    examNumberIndex.set((examNumberIndex.get() + 1) % listExamNumbers.size());
+		});
 
 		return true;
 	}
 
-	private WorkTime createWorkTime(Student student, ExamNumber examNumber) {
-		// Tạo và trả về đối tượng chứa thông tin về thời gian làm việc của học sinh với
-		// đề
-		// Bạn có thể tạo một đối tượng WorkTime hoặc sử dụng một cấu trúc dữ liệu phù
-		// hợp khác
-		// Trong ví dụ này, tôi sẽ trả về một String đơn giản
+	private WorkTime createWorkTime(Student student, ExamNumber examNumber,Timestamp begin, Timestamp end) {
 		WorkTime workTime = new WorkTime();
+		workTime.setBeginExam(begin);
+		workTime.setEndExam(end);
 		workTime.setStudent(student);
 		workTime.setExamNumber(examNumber);
 		return workTimeRepository.save(workTime);
@@ -120,4 +111,45 @@ public class WorkTimeService {
 		 return true;
 	}
 
+	@Transactional
+    public List<WorkTimeResponse> getAllWorkTimeByUser(Long id) {
+		List<WorkTime> workTimes = workTimeRepository.findAllByUser_IdOrderByBeginExamDesc(id);
+		List<WorkTimeResponse> workTimeResponses = new ArrayList<>();
+		for (WorkTime workTime : workTimes) {
+			Long idExamNumber = Long.valueOf(workTime.getExamNumber().getId());
+			Integer totalCorrect = examNumberRepository.getExamNumberQuestionCorrectByIdExamAndIdUser(idExamNumber, id);
+			Integer totalQuestion = examNumberRepository.getExamNumberCountById(idExamNumber);
+			String title = examNumberRepository.getExamNumberExamTitleById(idExamNumber);
+			String result = totalCorrect +"/"+ totalQuestion;
+			long milliseconds = workTime.getEndExam().getTime() - workTime.getBeginExam().getTime();
+			Integer completionTime = (int) TimeUnit.MILLISECONDS.toSeconds(milliseconds);
+			WorkTimeResponse workTimeResponse = WorkTimeResponse.builder()
+					.id(workTime.getId())
+					.idExamNumber(workTime.getExamNumber().getId())
+					.time(workTime.getExamNumber().getExam().getTimeExam().getId()+"")
+					.completionTime(completionTime)
+					.workDay(workTime.getBeginExam())
+					.result(result)
+					.title(title)
+					.build();
+			workTimeResponses.add(workTimeResponse);
+		}
+		return workTimeResponses;
+    }
+
+
+	public boolean updateEndExamWorkTimeStudent(Long studentId, Integer examNumberId, Timestamp endExamTimestamp) {
+		// Find the existing WorkTime entry
+		WorkTime workTime = workTimeRepository.findByStudent_IdAndExamNumber_Id(studentId, examNumberId);
+
+		if (workTime == null) {
+			return false;
+		}
+		workTime.setEndExam(endExamTimestamp);
+		return workTimeRepository.save(workTime) != workTime;
+	}
+
+	public WorkTime getWorkTimeByStudent(Long studentId, Integer examNumberId) {
+		return workTimeRepository.findByStudent_IdAndExamNumber_Id(studentId, examNumberId);
+	}
 }

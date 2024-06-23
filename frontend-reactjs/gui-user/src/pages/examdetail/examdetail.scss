@@ -71,7 +71,6 @@
                 .nav-link.active {
                     color: $color-blue_global;
                 }
-
             }
             .note {
                 margin-top: 12px;
@@ -91,7 +90,6 @@
                     opacity: 0.8;
                 }
             }
-
         }
     }
     .user-target-info-box {
@@ -100,8 +98,8 @@
         background-color: #fff;
         padding: 1.5rem 1rem;
         border: 1px solid #efefef;
-        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .05);
-        border-radius: .65rem;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
+        border-radius: 0.65rem;
         align-items: center;
         justify-content: center;
         margin-left: 17.8px;
@@ -133,12 +131,11 @@
                 }
             }
         }
-
     }
     @media screen and (max-width: 780px) {
         .wrap .mg {
             margin: 0;
-            .row>* {
+            .row > * {
                 padding-left: 0;
                 padding-right: 0;
             }

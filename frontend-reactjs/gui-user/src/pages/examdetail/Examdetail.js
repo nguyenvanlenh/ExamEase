@@ -6,7 +6,6 @@ import {
   Container,
   Form,
   Image,
-  InputGroup,
   Row,
   Stack,
   Tab,
@@ -14,7 +13,7 @@ import {
 } from "react-bootstrap";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
-import "./examdetail.scss";
+// import "./Examdetail.scss";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonIcon from "@mui/icons-material/Person";
 import Header from "../../components/header/Header";
@@ -24,19 +23,19 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { examNumberService } from "../../services/examNumberService";
 import { workTimeService } from "../../services/workTimeService";
 import {
-  authLocalStorage,
   examiningLocalStorage,
   idExamNumberLocalStorage,
 } from "../../utils/localStorage";
+import './examdetail.scss'
 import { checkExaminingSwal } from "../../utils/mySwal";
-import { useDispatch } from "react-redux";
-import { addListQuestion } from "../../redux/slices/listQuestionSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addListQuestion, removeQuestion } from "../../redux/slices/listQuestionSlice";
 function Examdetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const auth = authLocalStorage.get("auth");
+  const auth = useSelector(state => state.auth)
   const location = useLocation();
-  const id = location.state;
+  const id = location.state?.idExamNumber;
   const times = {
     timeExam: [10, 15, 20, 25, 30, 40, 50, 60],
   };
@@ -55,25 +54,30 @@ function Examdetail() {
     setExamNumber(data.data);
     setIdExamNumber(data.data?.examNumbers[0]?.id);
   }
+
+
   useEffect(() => {
-    dataExamNumber(id);
+    if (!id) {
+      // Xử lý khi không có idExamNumber trong state
+      console.log("idExamNumber không tồn tại trong state");
+    } else {
+      dataExamNumber(id);
+      dispatch(removeQuestion())
+    }
+
   }, []);
 
   const handleSubmit = async () => {
     try {
       // Directly call the service and handle the result
       const data = await examNumberService.getExamNumberUser(id);
-      // const workTime = await workTimeService.getWorkTimeUser(auth?.userId, idExamNumber)
-      const workTime =  await workTimeService.addWorkTimeUser(
-          auth?.userId,
-          idExamNumber,
-          time
-        );
-      console.log("idExamNumber: ", idExamNumber);
-      console.log(workTime);
+      const workTime = await workTimeService.addWorkTimeUser(
+        auth,
+        idExamNumber,
+        time
+      );
       // kiểm tra đề đã thi chưa thi lại
       if (workTime?.data) {
-        console.log("tao thanh cong");
         setData(data);
         navigate("/examining");
       } else {
@@ -83,12 +87,11 @@ function Examdetail() {
           // gọi api xóa dữ liệu
           await workTimeService.removeWorkTimeAndUserAnswerUser(
             idExamNumber,
-            auth?.userId
+            auth
           );
-          await workTimeService.addWorkTimeUser(auth?.userId, idExamNumber, time);
+          await workTimeService.addWorkTimeUser(auth, idExamNumber, time);
           setData(data);
           console.log("xóa");
-
           navigate("/examining");
         }
       }
@@ -98,7 +101,7 @@ function Examdetail() {
   };
 
   function setData(data) {
-    
+
     // setData cho redux, localStorage
     examiningLocalStorage.save(data.data);
     idExamNumberLocalStorage.save(idExamNumber)
@@ -107,7 +110,6 @@ function Examdetail() {
     const listQuestions = selectedExam?.listQuestions;
     dispatch(addListQuestion(listQuestions));
   }
-
   const handleRadioChange = (id) => {
     setIdExamNumber(id);
   };
@@ -120,10 +122,7 @@ function Examdetail() {
             <div className="content-block">
               <Stack direction="horizontal" gap={2}>
                 <Badge pill bg="secondary">
-                  # IELTS Academic
-                </Badge>
-                <Badge pill bg="secondary">
-                  # IELTS Academic
+                  # {examNumber?.category}
                 </Badge>
               </Stack>
               <h1 className="title">{examNumber?.title}</h1>
@@ -190,7 +189,7 @@ function Examdetail() {
                         </Form>
 
                         <span className="note">
-                          Giới hạn thời gian để trống mặc định là 45 phút
+                          Giới hạn thời gian( để trống mặc định là 45 phút )
                         </span>
 
                         <Form.Select
@@ -221,18 +220,11 @@ function Examdetail() {
                 <div className={`tab-content ${tabNumber === 1 || "d-none"}`}>
                   <span>Các phần thi:</span>
                   <ul>
-                    <li>
-                      <Link className="p-2">Đề 1</Link>
-                    </li>
-                    <li>
-                      <Link className="p-2">Đề 2</Link>
-                    </li>
-                    <li>
-                      <Link className="p-2">Đề 3</Link>
-                    </li>
-                    <li>
-                      <Link className="p-2">Đề 4</Link>
-                    </li>
+                    {examNumber?.examNumbers.map((e, index) => (
+                      <li key={index}>
+                        <Link to={`/test/${e.id}`} className="p-2">Đề {index + 1}</Link>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>

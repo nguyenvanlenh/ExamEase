@@ -17,9 +17,13 @@ import lombok.Setter;
 public class OptionResponse {
 	private Long id;
 	private String nameOption;
-
+	private Boolean correct;
 	public static OptionResponse fromEntity(Option option) {
-		return OptionResponse.builder().id(option.getId()).nameOption(option.getNameOption()).build();
+		return OptionResponse.builder()
+				.id(option.getId())
+				.nameOption(option.getNameOption())
+				.correct(option.getCorrect())
+				.build();
 	}
 
 	public static List<OptionResponse> fromEntities(Set<Option> options) {

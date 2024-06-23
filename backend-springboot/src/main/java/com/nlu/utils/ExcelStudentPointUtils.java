@@ -31,7 +31,7 @@ public class ExcelStudentPointUtils {
         this.filePath = filePath;
     }
     private void writeHeader() {
-        sheet = workbook.createSheet("Point student");
+        sheet = workbook.createSheet("Score students");
         Row row = sheet.createRow(0);
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
@@ -42,7 +42,7 @@ public class ExcelStudentPointUtils {
         createCell(row, 1, "code", style);
         createCell(row, 2, "fullname", style);
         createCell(row, 3, "email", style);
-        createCell(row, 4, "point", style);
+        createCell(row, 4, "score", style);
     }
 
     private void createCell(Row row, int columnCount, Object valueOfCell, CellStyle style) {
