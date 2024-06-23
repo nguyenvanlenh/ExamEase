@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, InputGroup, ProgressBar, Row, Table, FormControl, Alert, Modal } from 'react-bootstrap';
 import Footer from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
@@ -15,6 +15,12 @@ export const CreateStudent = () => {
     const [showModal, setShowModal] = useState(false); // State to control the modal visibility
     const examSaved = getDataByKeyLS("examSaved");
 
+    useEffect(() => {
+        if (!examSaved) {
+            navigate('/create-exam')
+        }
+    }, [])
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -30,7 +36,7 @@ export const CreateStudent = () => {
                 const workTimeResponse = await studentService.createWorkTime(examSaved.id);
                 if (workTimeResponse.status === 200) {
                     console.log(workTimeResponse.data);
-                    setDataByKeyLS("examSaved", {});
+                    localStorage.removeItem("examSaved");
                     setShowModal(true); // Show modal on success
                 } else {
                     setError('Lỗi khi tạo học sinh, Vui lòng kiểm tra lại file');
@@ -145,7 +151,10 @@ export const CreateStudent = () => {
                 </div>
             </div>
             <Footer />
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal show={showModal} onHide={() => {
+                setShowModal(false)
+                navigate('/manage-exam')
+            }}>
                 <Modal.Header closeButton>
                     <Modal.Title>Thông báo</Modal.Title>
                 </Modal.Header>
@@ -153,7 +162,7 @@ export const CreateStudent = () => {
                     <p>Danh sách học sinh đã được tạo thành công!</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => navigate('/')}>
+                    <Button variant="primary" onClick={() => navigate('/manage-exam')}>
                         Đóng
                     </Button>
                 </Modal.Footer>

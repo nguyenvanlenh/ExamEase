@@ -271,7 +271,7 @@ export const ManagementExams = () => {
                                 <Form.Check
                                     type="checkbox"
                                     label="Công khai"
-                                    name="public"
+                                    name="isPublic"
                                     checked={editExamData.isPublic}
                                     onChange={handleInputChange}
                                 />

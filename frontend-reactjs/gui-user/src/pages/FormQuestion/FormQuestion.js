@@ -202,7 +202,7 @@ export const FormQuestion = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => {
                         dispatch(removeExamRequest())
-                        navigate('/list-exams')
+                        navigate('/manage-exam')
                     }}>
                         Không
                     </Button>
