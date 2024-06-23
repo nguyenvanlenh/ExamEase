@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
-import "./Examdetail.scss";
+// import "./Examdetail.scss";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonIcon from "@mui/icons-material/Person";
 import Header from "../../components/header/Header";
@@ -26,6 +26,7 @@ import {
   examiningLocalStorage,
   idExamNumberLocalStorage,
 } from "../../utils/localStorage";
+import './examdetail.scss'
 import { checkExaminingSwal } from "../../utils/mySwal";
 import { useDispatch, useSelector } from "react-redux";
 import { addListQuestion, removeQuestion } from "../../redux/slices/listQuestionSlice";
@@ -54,7 +55,7 @@ function Examdetail() {
     setIdExamNumber(data.data?.examNumbers[0]?.id);
   }
 
-  
+
   useEffect(() => {
     if (!id) {
       // Xử lý khi không có idExamNumber trong state
@@ -63,18 +64,18 @@ function Examdetail() {
       dataExamNumber(id);
       dispatch(removeQuestion())
     }
-    
+
   }, []);
 
   const handleSubmit = async () => {
     try {
       // Directly call the service and handle the result
       const data = await examNumberService.getExamNumberUser(id);
-      const workTime =  await workTimeService.addWorkTimeUser(
-          auth,
-          idExamNumber,
-          time
-        );
+      const workTime = await workTimeService.addWorkTimeUser(
+        auth,
+        idExamNumber,
+        time
+      );
       // kiểm tra đề đã thi chưa thi lại
       if (workTime?.data) {
         setData(data);
@@ -100,7 +101,7 @@ function Examdetail() {
   };
 
   function setData(data) {
-    
+
     // setData cho redux, localStorage
     examiningLocalStorage.save(data.data);
     idExamNumberLocalStorage.save(idExamNumber)
@@ -221,7 +222,7 @@ function Examdetail() {
                   <ul>
                     {examNumber?.examNumbers.map((e, index) => (
                       <li key={index}>
-                        <Link to={`/test/${e.id}`} className="p-2">Đề {index+1}</Link>
+                        <Link to={`/test/${e.id}`} className="p-2">Đề {index + 1}</Link>
                       </li>
                     ))}
                   </ul>

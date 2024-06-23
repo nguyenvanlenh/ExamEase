@@ -42,7 +42,7 @@ public class UserController {
 			@SortDefault(direction = Sort.Direction.ASC, sort = {"fullname"})
 	) Pageable pageable
 			) {
-		PageResponse<List<UserResponse>> data = userService.getAllUsers( List.of("USER", "TEACHER"), pageable);
+		PageResponse<List<UserResponse>> data = userService.getAllUsers( List.of("STUDENT", "TEACHER"), pageable);
 		return ResponseData.builder()
 				.status(HttpStatus.OK.value())
 				.message("Users infor")

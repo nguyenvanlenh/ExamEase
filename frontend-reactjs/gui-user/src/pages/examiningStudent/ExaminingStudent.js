@@ -17,7 +17,7 @@ function ExaminingStudent() {
   const dispatch = useDispatch()
   const [move, setMove] = useState(false);
   const [part, setPart] = useState(false);
-    // set time vao day, 100 la phut mac dinh
+  // set time vao day, 100 la phut mac dinh
   const [time, setTime] = useState(100 * auth?.timeExam);
   const listQuestion = useSelector((state) => state.listQuestion)
   const idExamNumber = idExamNumberLocalStorage.get();
@@ -37,29 +37,29 @@ function ExaminingStudent() {
     const isConfirmed = await submitExaminingSwal();
     if (isConfirmed) {
       // update endExam workTime
-      await workTimeService.updateWorkTimeStudent(auth?.studentId, auth?.examNumberId,new Date().toISOString())
+      await workTimeService.updateWorkTimeStudent(auth?.studentId, auth?.examNumberId, new Date().toISOString())
       navigate('/result-student', { state: { idExamNumber: idExamNumber } });
       dispatch(removeQuestion())
     }
   };
-  useEffect(()=> {
+  useEffect(() => {
     async function getWorkTimeStudent() {
       const workTimeStudent = await workTimeService.getWorkTimeStudent(auth.studentId, auth.examNumberId)
       const remainTime = calculateDurationInSeconds(new Date(), workTimeStudent?.data.endExam)
-      if(remainTime <= 0) {
+      if (remainTime <= 0) {
         outSideExamSwal()
         navigate('/result-student', { state: { idExamNumber: idExamNumber } });
         dispatch(removeQuestion())
-        
-      }else {
+
+      } else {
         setTime(remainTime)
-      } 
+      }
     }
     getWorkTimeStudent();
-  },[])
+  }, [])
 
   useEffect(() => {
-    
+
     if (time > 0) {
       const timerId = setInterval(() => {
         setTime(time => time - 1);
@@ -77,7 +77,6 @@ function ExaminingStudent() {
 
   return (
     <>
-      <Header />
       <div id="examining-student">
         <div direction="horizontal" className="wrap-title">
           <h1 className="title">
@@ -91,7 +90,7 @@ function ExaminingStudent() {
         <div className="wrap-content">
           <div className="container-left">
             <div className="content">
-              <ListQuestion listQuestion={listQuestion}/>
+              <ListQuestion listQuestion={listQuestion} />
             </div>
           </div>
           <div className="container-right d-b">
@@ -107,7 +106,7 @@ function ExaminingStudent() {
                   cắm cờ nếu chưa chắc chắc
                 </i>
                 <strong>Part</strong>
-                <ListBtnQuestion listQuestion={listQuestion}/>
+                <ListBtnQuestion listQuestion={listQuestion} />
               </div>
             </div>
           </div>
@@ -132,7 +131,7 @@ function ExaminingStudent() {
             <strong>Part</strong>
             <CloseButton onClick={() => handleHidden()} />
           </div>
-          <ListBtnQuestion listQuestion={listQuestion}/>
+          <ListBtnQuestion listQuestion={listQuestion} />
         </div>
       </div>
     </>
