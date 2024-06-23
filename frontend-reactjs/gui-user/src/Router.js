@@ -25,7 +25,9 @@ import { Questions } from "./pages/admin/ManagementExams/ManagementQuestions";
 import { Users } from "./pages/admin/ManagementUsers/ManagementUsers";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "./pages/Error/NotFound";
-import { ROLE_ADMIN } from "./utils/constants";
+import { ROLE_ADMIN, ROLE_TEACHER } from "./utils/constants";
+import { CreateExamAdmin } from "./pages/admin/ManagementExams/CreateExamAdmin";
+import { CreateQuestionAdmin } from "./pages/admin/ManagementExams/CreateQuestionAdmin";
 
 
 export const router = createBrowserRouter([
@@ -49,15 +51,15 @@ export const router = createBrowserRouter([
     },
     {
         path: "/create-exam",
-        element: <CreateExam />
+        element: <ProtectedRoute roles={[ROLE_TEACHER]}><CreateExam /></ProtectedRoute>
     },
     {
         path: "/form-question",
-        element: <FormQuestion />
+        element: <ProtectedRoute roles={[ROLE_TEACHER]}><FormQuestion /></ProtectedRoute>
     },
     {
         path: "/create-student",
-        element: <CreateStudent />
+        element: <ProtectedRoute roles={[ROLE_TEACHER]}><CreateStudent /></ProtectedRoute>
     },
     {
         path: "/statistics",
@@ -86,11 +88,11 @@ export const router = createBrowserRouter([
     },
     {
         path: "/manage-exam",
-        element: <ManagementExams />
+        element: <ProtectedRoute roles={[ROLE_TEACHER]}><ManagementExams /></ProtectedRoute>
     },
     {
         path: "/manage-question",
-        element: <ManagementQuestion />
+        element: <ProtectedRoute roles={[ROLE_TEACHER]}><ManagementQuestion /></ProtectedRoute>
     },
     {
         path: "/login-student",
@@ -123,6 +125,13 @@ export const router = createBrowserRouter([
             {
                 path: "question",
                 element: <Questions />
+            },
+            {
+                path: "create-exam",
+                element: <CreateExamAdmin />
+            }, {
+                path: "create-question",
+                element: <CreateQuestionAdmin />
             }
         ]
     },

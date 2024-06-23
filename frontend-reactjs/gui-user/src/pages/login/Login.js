@@ -9,6 +9,7 @@ import { RequestData } from "../../utils/request";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../redux/slices/authSlice";
+import { ROLE_ADMIN } from "../../utils/constants";
 
 const Login = () => {
   const navigation = useNavigate()
@@ -23,13 +24,17 @@ const Login = () => {
     setLoading(true);
     await delay(500);
 
-    const data =  await authService.login(RequestData().LoginRequest(inputUsername, inputPassword))
+    const data = await authService.login(RequestData().LoginRequest(inputUsername, inputPassword))
     if (data.status >= 400) {
       setShow(true);
-    }else {
+    } else {
       dispatch(addAuth(data.data))
       localStorage.setItem('username', JSON.stringify(inputUsername))
-      navigation("/")
+      if (data?.data?.listRoles?.includes(ROLE_ADMIN)) {
+        navigation("/admin/dashboard");
+      } else {
+        navigation("/");
+      }
     }
     setLoading(false);
   };
