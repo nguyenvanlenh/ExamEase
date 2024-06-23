@@ -196,7 +196,6 @@ export const CreateQuestionAdmin = () => {
                 </Modal.Header>
                 <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
                     <h5>Đề thi đã được tạo thành công!</h5>
-                    <p>Bạn có muốn <strong>tạo danh sách học sinh</strong> dành riêng cho đề thi này không?</p>
                 </Modal.Body>
                 <Modal.Footer>
 

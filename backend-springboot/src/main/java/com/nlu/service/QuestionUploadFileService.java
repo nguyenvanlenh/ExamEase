@@ -32,13 +32,11 @@ public class QuestionUploadFileService {
                 Map<Integer, String> answers = ExcelReaderAnswersUtils.read(answerFile.getInputStream());
                 // In ra hoặc xử lý đáp án từ file Excel
                 answers.forEach((questionNumber, answer) -> {
-                    System.out.println("Question " + questionNumber + ": " + answer);
                     questionUploadFiles.get(questionNumber-1).setCorrect(answer);
                 });
             } else {
                 return null;
             }
-            System.out.println(questionUploadFiles);
 
         } catch (IOException e) {
             e.printStackTrace();

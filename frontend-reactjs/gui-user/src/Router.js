@@ -25,7 +25,7 @@ import { Questions } from "./pages/admin/ManagementExams/ManagementQuestions";
 import { Users } from "./pages/admin/ManagementUsers/ManagementUsers";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "./pages/Error/NotFound";
-import { ROLE_ADMIN, ROLE_TEACHER } from "./utils/constants";
+import { ROLE_ADMIN, ROLE_TEACHER, ROLE_USER } from "./utils/constants";
 import { CreateExamAdmin } from "./pages/admin/ManagementExams/CreateExamAdmin";
 import { CreateQuestionAdmin } from "./pages/admin/ManagementExams/CreateQuestionAdmin";
 
@@ -33,11 +33,11 @@ import { CreateQuestionAdmin } from "./pages/admin/ManagementExams/CreateQuestio
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />
+        element: <ProtectedRoute roles={[ROLE_TEACHER, ROLE_USER, ROLE_ADMIN]}><Home /></ProtectedRoute>
     },
     {
         path: "/home",
-        element: <Home />
+        element: <ProtectedRoute roles={[ROLE_TEACHER, ROLE_USER, ROLE_ADMIN]}><Home /></ProtectedRoute>
     },
     {
         path: "/login",
@@ -63,23 +63,23 @@ export const router = createBrowserRouter([
     },
     {
         path: "/statistics",
-        element: <ResultStatistics />
+        element: <ProtectedRoute roles={[ROLE_TEACHER, ROLE_USER]}><ResultStatistics /></ProtectedRoute>
     },
     {
         path: "/list-exams",
-        element: <ListExams />
+        element: <ProtectedRoute roles={[ROLE_TEACHER, ROLE_USER]}><ListExams /></ProtectedRoute>
     },
     {
         path: "/exam-detail",
-        element: <Examdetail />
+        element: <ProtectedRoute roles={[ROLE_TEACHER, ROLE_USER, ROLE_ADMIN]}><Examdetail /></ProtectedRoute>
     },
     {
         path: "examining",
-        element: <Examining />
+        element: <ProtectedRoute roles={[ROLE_TEACHER, ROLE_USER]}><Examining /></ProtectedRoute>
     },
     {
         path: "/result",
-        element: <Result />
+        element: <ProtectedRoute roles={[ROLE_TEACHER, ROLE_USER]}><Result /></ProtectedRoute>
     },
     {
         path: "/examining-rules",

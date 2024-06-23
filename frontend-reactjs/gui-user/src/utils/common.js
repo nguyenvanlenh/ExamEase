@@ -79,4 +79,15 @@ export const caculatorScore = (totalQuestion, totalAnswerCorrect) => {
     return totalAnswerCorrect ? Math.min(MAX_SCORE, roundUpToNearestHalf(score)) : 0;
 }
 
+export const formatTime = (isoString) => {
+    const date = new Date(isoString);
+    let hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
 
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Nếu giờ bằng 0 thì đổi thành 12
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+
+    return `${hours}:${minutesStr} ${ampm}`;
+};

@@ -110,8 +110,8 @@ export const Exams = () => {
 
     const handleSaveEdit = async () => {
         const { id, title, shortDescription, description, timeExam, category, startTime, endTime, isPublic } = editExamData;
-        const request = RequestData().ExamRequest(1, title, shortDescription, description, 1, timeExam, category, startTime, endTime, isPublic, [], []);
-        const response = await examService.updateExam(request, id);
+        const request = RequestData().ExamRequest(1, title, shortDescription, description, 1, timeExam, category, formatDateLocal(startTime), formatDateLocal(endTime), isPublic, [], []);
+        const response = await examService.updateExam(id, request);
         if (response.status < 400) {
             setShowEditModal(false);
             setCurrentPage(0);
@@ -256,7 +256,7 @@ export const Exams = () => {
                                 <Form.Control
                                     type="datetime-local"
                                     name="startTime"
-                                    min={formatDate(new Date())}
+                                    min={formatDateLocal(new Date())}
                                     value={formatDateLocal(editExamData.startTime)}
                                     onChange={handleInputChange}
                                 />
@@ -266,7 +266,7 @@ export const Exams = () => {
                                 <Form.Control
                                     type="datetime-local"
                                     name="endTime"
-                                    min={formatDate(new Date())}
+                                    min={formatDateLocal(new Date())}
                                     value={formatDateLocal(editExamData.endTime)}
                                     onChange={handleInputChange}
                                 />

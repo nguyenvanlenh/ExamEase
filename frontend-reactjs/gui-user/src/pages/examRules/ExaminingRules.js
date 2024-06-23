@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Form, Button, Col, Row } from 'react-bootstrap';
 import './ExaminingRules.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatdMYFromString } from '../../utils/common';
+import { formatdMYFromString, formatTime } from '../../utils/common';
 import { examNumberService } from '../../services/examNumberService';
 import { addListQuestion } from '../../redux/slices/listQuestionSlice';
 import { useNavigate } from 'react-router-dom';
@@ -19,17 +19,17 @@ function ExaminingRules() {
   const auth = useSelector(state => state.auth)
   const handleSubmit = async () => {
     const data = await examNumberService.getExamNumberStudent(auth?.studentId);
-    if(data.data && data.status === 200) {
+    if (data.data && data.status === 200) {
       const selectedExam = data.data?.examNumbers[0];
       const listQuestions = selectedExam?.listQuestions;
       dispatch(addListQuestion(listQuestions));
 
       navigate("/examining-student")
-    }else {
+    } else {
       outSideExamSwal()
     }
-      
-      
+
+
   }
   const handleLogout = () => {
     dispatch(removeAuth())
@@ -43,7 +43,6 @@ function ExaminingRules() {
         <p><strong>Mã số sinh viên:</strong> {auth?.code}</p>
         <p><strong>Thời gian làm bài:</strong> {auth?.timeExam} phút</p>
         <p><strong>Ngày thi:</strong> {formatdMYFromString(auth?.dateExam)}</p>
-        <p><strong>Giờ thi:</strong> 9:00 AM</p>
         <p><strong>Thông tin nội quy khi thi:</strong></p>
         <ul className="rules-list">
           <li>Thí sinh phải có mặt trước giờ thi ít nhất 15 phút.</li>
@@ -66,18 +65,18 @@ function ExaminingRules() {
         <Row>
           <Col sm={6}>
             <Button variant="primary" type="button" disabled={!agreed} className="start-exam-btn" onClick={handleSubmit}>
-            Làm bài thi
-          </Button>
+              Làm bài thi
+            </Button>
           </Col>
           <Col sm={6}>
             <Button variant="danger" type="button" className="start-exam-btn" onClick={handleLogout}>
-            Đăng xuất
+              Đăng xuất
             </Button>
           </Col>
         </Row>
-        
 
-        
+
+
       </Form>
     </Container>
   );

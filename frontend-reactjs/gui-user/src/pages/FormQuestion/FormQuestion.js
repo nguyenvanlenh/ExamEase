@@ -62,7 +62,7 @@ export const FormQuestion = () => {
                     index + 1,
                     q.question,
                     q.listOptionRequests.map(o => {
-                        return RequestData().OptionRequest(o.id??0,o.content, o.isCorrect)
+                        return RequestData().OptionRequest(o.id ?? 0, o.content, o.isCorrect)
                     })
                 )
             })
@@ -226,13 +226,13 @@ export const FormQuestion = () => {
                         </Alert>
                     )}
                     <Form>
-                        <Form.Label>Tải lên danh sách câu hỏi: 
+                        <Form.Label>Tải lên danh sách câu hỏi:
                             <OverlayTrigger
                                 placement="top"
                                 overlay={<Tooltip>Hướng dẫn upload </Tooltip>}
                             >
-                                <HelpOutlineIcon style={{cursor: "pointer"}} onClick={()=> setShowModalUploadGuide(true)}/>
-                            </OverlayTrigger> 
+                                <HelpOutlineIcon style={{ cursor: "pointer" }} onClick={() => setShowModalUploadGuide(true)} />
+                            </OverlayTrigger>
                         </Form.Label>
                         <InputGroup className="mb-3">
                             <FileUploadIcon style={{ fontSize: "38px" }} />
@@ -251,7 +251,7 @@ export const FormQuestion = () => {
                                 placement="top"
                                 overlay={<Tooltip>Hướng dẫn upload </Tooltip>}
                             >
-                                <HelpOutlineIcon style={{cursor: "pointer"}} onClick={() => setShowModalUploadExcel(true)}/>
+                                <HelpOutlineIcon style={{ cursor: "pointer" }} onClick={() => setShowModalUploadExcel(true)} />
                             </OverlayTrigger>
                         </Form.Label>
                         <InputGroup className="mb-3">
@@ -279,8 +279,8 @@ export const FormQuestion = () => {
                     <Modal.Title>Hướng dẫn upload file docx</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
-                <Container>
-                    <h5 className="mb-4">Định dạng câu hỏi và đáp án như mẫu:</h5>
+                    <Container>
+                        <h5 className="mb-4">Định dạng câu hỏi và đáp án như mẫu:</h5>
                         <div>
                             Câu 1. Làm thế nào để upload file docx lên hệ thống?
                             <ol type="A">
@@ -294,8 +294,8 @@ export const FormQuestion = () => {
                             <strong >Lưu ý: </strong>
                             <i>"A, B, C, D dùng định dạng Document Number Formarts, mỗi đáp án trên 1 hàng"</i>
                         </div>
-                    <img src={imgGUI} alt="Ví dụ minh họa" className="img-fluid"/>
-                </Container>
+                        <img src={imgGUI} alt="Ví dụ minh họa" className="img-fluid" />
+                    </Container>
                 </Modal.Body>
             </Modal>
             <Modal className="modal-lg" show={showModalUploadExcel} onHide={() => setShowModalUploadExcel(false)}>
@@ -303,14 +303,14 @@ export const FormQuestion = () => {
                     <Modal.Title>Hướng dẫn upload file excel</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="d-flex flex-column justify-content-center align-items-center">
-                <Container>
-                    <h5 className="mb-4">Tạo 2 cột như hình dưới</h5>
-                    <div className="mb-2">
-                        <strong >Lưu ý: </strong>
-                        <i>Cột 1 thứ tự câu hỏi, cột 2 thứ đáp án đúng của câu hỏi đó</i>
-                    </div>
-                    <img src={imgExcel} alt="Ví dụ minh họa" className="img-fluid"/>
-                </Container>
+                    <Container>
+                        <h5 className="mb-4">Tạo 2 cột như hình dưới</h5>
+                        <div className="mb-2">
+                            <strong >Lưu ý: </strong>
+                            <i>Cột 1 thứ tự câu hỏi, cột 2 thứ đáp án đúng của câu hỏi đó</i>
+                        </div>
+                        <img src={imgExcel} alt="Ví dụ minh họa" className="img-fluid" />
+                    </Container>
                 </Modal.Body>
             </Modal>
         </>

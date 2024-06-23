@@ -9,6 +9,7 @@ import { removexamWorked } from "../../redux/slices/examWorkedSlice";
 import { removeQuestion } from "../../redux/slices/listQuestionSlice";
 import { getDataByKeyLS } from "../../utils/common";
 import { ROLE_TEACHER } from "../../utils/constants";
+import { removeExamRequest } from "../../redux/slices/examSlice";
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,12 +28,10 @@ function Header() {
         dispatch(removeAuth())
         dispatch(removexamWorked())
         dispatch(removeQuestion())
-        localStorage.removeItem('username');
-        localStorage.removeItem('category');
-        localStorage.removeItem('timeExam');
-        localStorage.removeItem('examSaved');
+        dispatch(removeExamRequest())
+        localStorage.clear()
         setIsMenuOpen(false)
-        navigation("/")
+        navigation("/login")
     }
     const [currentRoles, setCurrentRoles] = useState([]);
     const [isRole, setIsRole] = useState(false);

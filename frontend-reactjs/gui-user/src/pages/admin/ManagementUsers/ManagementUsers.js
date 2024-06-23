@@ -13,9 +13,7 @@ export const Users = () => {
     const [dataUser, setDataUser] = useState([]);
     const teacher = useSelector(state => state.auth)
     const [timeoutReached, setTimeoutReached] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    const [examIdToDelete, setExamIdToDelete] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [editUserData, setEditUserData] = useState({
@@ -51,11 +49,6 @@ export const Users = () => {
         return () => clearTimeout(timer);
     }, [dataUser]);
 
-    const handleDelete = async () => {
-        await examService.deleteExamById(examIdToDelete);
-        setShowDeleteModal(false);
-        setDataUser(dataUser.filter(exam => exam.id !== examIdToDelete));
-    };
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -96,7 +89,7 @@ export const Users = () => {
     };
     return (
         <>
-        <div className="container pb-0 manage-exam">
+            <div className="container pb-0 manage-exam">
                 <h2 className="pt-4">Danh sách tài khoản</h2>
                 {dataUser && dataUser.length > 0 ? (
                     <Table bordered hover className="mt-4">
@@ -113,7 +106,7 @@ export const Users = () => {
                         <tbody>
                             {dataUser.map((user, index) => (
                                 <tr key={user.id}>
-                                    <td className="text-center">{index+1}</td>
+                                    <td className="text-center">{index + 1}</td>
                                     <td>Lenhnguyen</td>
                                     <td>{user.email}</td>
                                     <td className="text-center">
@@ -125,8 +118,8 @@ export const Users = () => {
                                     </td>
                                     <td className="text-center">{user.active ? (
                                         <span className="badge bg-primary">Hoạt động</span>
-                                    ) : 
-                                    (<span className="badge bg-danger">Đã khóa</span>)}</td>
+                                    ) :
+                                        (<span className="badge bg-danger">Đã khóa</span>)}</td>
                                     <td className="text-center"><Button variant="link" onClick={() => handleEdit(user)}><EditIcon className="text-primary" /></Button></td>
                                 </tr>
                             ))
@@ -158,57 +151,57 @@ export const Users = () => {
                 <Modal.Body>
                     <div className="row">
                         <Form.Group className="mt-2">
-                                <Form.Label>Id</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="id"
-                                    value={editUserData.id}
-                                    onChange={handleInputChange}
-                                    disabled
-                                />
-                            </Form.Group>
-                            <Form.Group className="mt-2">
-                                <Form.Label>Tài khoản</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="username"
-                                    value={editUserData.username}
-                                    onChange={handleInputChange}
-                                    disabled
-                                />
-                            </Form.Group>
+                            <Form.Label>Id</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="id"
+                                value={editUserData.id}
+                                onChange={handleInputChange}
+                                disabled
+                            />
+                        </Form.Group>
+                        <Form.Group className="mt-2">
+                            <Form.Label>Tài khoản</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="username"
+                                value={editUserData.username}
+                                onChange={handleInputChange}
+                                disabled
+                            />
+                        </Form.Group>
 
-                            <Form.Group className="mt-2">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="email"
-                                    value={editUserData.email}
-                                    onChange={handleInputChange}
-                                    disabled
-                                />
-                            </Form.Group>
-                            <Form.Group className="mt-2">
-                                <Form.Label>Họ và tên</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="fullname"
-                                    value={editUserData.fullname}
-                                    onChange={handleInputChange}
-                                    disabled
-                                />
-                            </Form.Group>
-                            <Form.Group className="mt-2">
-                                <Form.Check
-                                    type="checkbox"
-                                    label="Hoạt động"
-                                    name="active"
-                                    checked={editUserData.active}
-                                    onChange={handleInputChange}
-                                />
-                            </Form.Group>
+                        <Form.Group className="mt-2">
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="email"
+                                value={editUserData.email}
+                                onChange={handleInputChange}
+                                disabled
+                            />
+                        </Form.Group>
+                        <Form.Group className="mt-2">
+                            <Form.Label>Họ và tên</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="fullname"
+                                value={editUserData.fullname}
+                                onChange={handleInputChange}
+                                disabled
+                            />
+                        </Form.Group>
+                        <Form.Group className="mt-2">
+                            <Form.Check
+                                type="checkbox"
+                                label="Hoạt động"
+                                name="active"
+                                checked={editUserData.active}
+                                onChange={handleInputChange}
+                            />
+                        </Form.Group>
 
-                        </div>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowEditModal(false)}>
@@ -220,17 +213,11 @@ export const Users = () => {
                 </Modal.Footer>
             </Modal>
             <SuccessModal show={showSuccessAlert}
-                notice={"Đã cập nhật đề thi thành công."}
+                notice={"Đã cập nhật người dùng thành công."}
                 onClose={() => setShowSuccessAlert(false)} />
             <ErrorModal show={showErrorAlert}
-                notice={"Đã xảy ra lỗi khi cập nhật đề thi. Vui lòng thử lại sau."}
+                notice={"Đã xảy ra lỗi khi cập nhật người dùng. Vui lòng thử lại sau."}
                 onClose={() => setShowErrorAlert(false)} />
-            <DeleteModal
-                show={showDeleteModal}
-                confirm={"Bạn muốn xóa bài thi này?"}
-                onClose={() => setShowDeleteModal(false)}
-                handleDelete={handleDelete}
-            />
 
         </>
     )

@@ -36,7 +36,7 @@ public class SecurityConfig{
 			"/api/auth/register",
 			"/api/students/login",
 			"/api/worktimes/students/**",
-			"/api/exam-numbers/students/submit/**",
+			"/api/exam-numbers/students/**",
 			"/api/user_answers/students/**",
 	};
 	private final static String[] SWAGGER_ENDPOINTS = {

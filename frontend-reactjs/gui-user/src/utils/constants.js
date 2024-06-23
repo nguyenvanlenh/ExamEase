@@ -20,4 +20,4 @@ export const END_TIME_EXAM = "END"
 export const PREPARATION_TIME = 5
 export const ROLE_ADMIN = "ROLE_ADMIN"
 export const ROLE_TEACHER = "ROLE_TEACHER"
-export const ROLE_USER = "ROLE_USER"
+export const ROLE_USER = "ROLE_STUDENT"
