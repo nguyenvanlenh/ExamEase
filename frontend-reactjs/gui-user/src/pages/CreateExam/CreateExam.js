@@ -104,7 +104,7 @@ export const CreateExam = () => {
                 categoryId,
                 startTime,
                 addMinutesToDate(startTime, Number(timeId)),
-                true,
+                false,
                 listExamNumberRequests,
                 []
             );
