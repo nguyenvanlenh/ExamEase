@@ -33,10 +33,14 @@ export const examNumberService = {
                 return error.response
             })
     },
-    getResultExamNumberUser: (idExamNumber, idUser) => {
+    getResultExamNumberUser: (idExamNumber, idUser, authObject) => {
         const url = `${URL_PATH}/api/exam-numbers/users/submit/${idExamNumber}?idUser=${idUser}`
-        return axios.get(url, examNumberService.createHeaders())
-            .then(response => {
+
+        return axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${authObject?.token}`
+            }
+        }).then(response => {
                 return response.data;
             })
             .catch(error => {

@@ -47,7 +47,6 @@ function Header() {
 
     useEffect(() => {
         setIsRole(currentRoles.some(role => role === ROLE_TEACHER));
-        console.log(currentRoles.some(role => role === ROLE_TEACHER));
     }, [currentRoles]);
 
     return (
