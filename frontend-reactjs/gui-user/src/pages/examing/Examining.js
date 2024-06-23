@@ -25,7 +25,6 @@ function Examining() {
   // const questions = listQuestionLocalStorage.get();
   const data = examiningLocalStorage.get();
   const idExamNumber = idExamNumberLocalStorage.get();
-
   useEffect(() => {
     const handleScroll = () => {
       window.scrollY > 32 ? setMove(true) : setMove(false);
@@ -91,7 +90,7 @@ function Examining() {
         auth
       );
       dispatch(removeQuestion())
-      navigate('/exam-detail', { state: { idExamNumber: idExamNumber } })
+      navigate(-1)
     }
   }
 

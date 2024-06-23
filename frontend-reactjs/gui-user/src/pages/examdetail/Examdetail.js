@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
-import "./examdetail.scss";
+import "./Examdetail.scss";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonIcon from "@mui/icons-material/Person";
 import Header from "../../components/header/Header";
@@ -109,7 +109,6 @@ function Examdetail() {
     const listQuestions = selectedExam?.listQuestions;
     dispatch(addListQuestion(listQuestions));
   }
-
   const handleRadioChange = (id) => {
     setIdExamNumber(id);
   };
@@ -122,10 +121,7 @@ function Examdetail() {
             <div className="content-block">
               <Stack direction="horizontal" gap={2}>
                 <Badge pill bg="secondary">
-                  # IELTS Academic
-                </Badge>
-                <Badge pill bg="secondary">
-                  # IELTS Academic
+                  # {examNumber?.category}
                 </Badge>
               </Stack>
               <h1 className="title">{examNumber?.title}</h1>
