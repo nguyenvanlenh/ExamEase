@@ -5,6 +5,7 @@ import java.util.List;
 import com.nlu.model.dto.response.QuestionResultResponse;
 import com.nlu.repository.QuestionRepository;
 import com.nlu.utils.AuthenticationUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +48,7 @@ public class QuestionController {
 				 .build();
 	}
 	@PutMapping("/{id}")
-	public ResponseData updateQuestionAndOptionRelate(@PathVariable("id") Long id,@RequestBody QuestionRequest request) {
+	public ResponseData updateQuestionAndOptionRelate(@PathVariable("id") Long id, @Valid @RequestBody QuestionRequest request) {
 		 questionService.updateQuestion(id,request);
 		 return ResponseData.builder()
 				 .status(HttpStatus.OK.value())

@@ -45,7 +45,7 @@ public class ExamController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseData updateExam(@PathVariable Long id, @RequestBody ExamRequest request) {
+	public ResponseData updateExam(@PathVariable Long id, @Valid @RequestBody ExamRequest request) {
 		 examService.updateExam(id, request);
 		 return ResponseData.builder()
 				 .status(HttpStatus.OK.value())
