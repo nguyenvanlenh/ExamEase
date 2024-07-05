@@ -1,11 +1,11 @@
 import React from 'react'
-import Question from '../question/Question'
+import Question from '../Question/Question'
 
 function ListQuestion(props) {
   return (
     <>
       {
-        props.listQuestion.length>0 && props.listQuestion.map((question, index) => (
+        props.listQuestion.length > 0 && props.listQuestion.map((question, index) => (
           <Question
             key={question.id}
             numberSentence={index}

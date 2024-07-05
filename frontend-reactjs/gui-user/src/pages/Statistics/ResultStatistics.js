@@ -1,7 +1,7 @@
 import './ResultStatistics.scss';
 import { Button, Card, Col, Form, InputGroup, Row, Table, Pagination } from "react-bootstrap";
-import Footer from "../../components/footer/Footer";
-import Header from "../../components/header/Header";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -15,7 +15,7 @@ export const ResultStatistics = () => {
     const totalTimeWorked = useSelector(selectTotalTimeSpent);
     const totalExamsWorked = useSelector(totalExams);
     const resultBestWorked = useSelector(resultBest);
-    
+
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 4;
@@ -25,7 +25,7 @@ export const ResultStatistics = () => {
         setCurrentPage(1); // Reset to first page on new search
     };
 
-    const filteredExamWorkeds = useSelector(state => 
+    const filteredExamWorkeds = useSelector(state =>
         state.examWorkeds.filter(exam =>
             exam.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             exam.workDayHanle.toLowerCase().includes(searchQuery.toLowerCase())
@@ -52,7 +52,7 @@ export const ResultStatistics = () => {
                     <div className="container">
                         <div className="row pt-3 pb-3">
                             <Col md={9}>
-                               
+
                                 <Row>
                                     <Col md={4} className="mb-3">
                                         <Card border="light" className="card-statistics">

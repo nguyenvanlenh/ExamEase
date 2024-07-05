@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, InputGroup, ProgressBar, Row, Table, FormControl, Alert, Modal } from 'react-bootstrap';
-import Footer from '../../components/footer/Footer';
-import Header from '../../components/header/Header';
+import Footer from '../../components/Footer/Footer';
+import Header from '../../components/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { getDataByKeyLS, setDataByKeyLS } from '../../utils/common';

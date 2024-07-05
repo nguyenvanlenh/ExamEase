@@ -156,7 +156,6 @@ public class ExamServiceImp implements ExamService {
 
 		Exam exam = examRepository.findById(examId)
 				.orElseThrow(() -> new NotFoundException("exam_not_found",examId));
-		ExamRequest.setForEntity(exam, request);
 
 		if (exam.getTimeExam().getId() != request.getTimeId()) {
 			TimeExam timeExam = timeExamRepository.findById(request.getTimeId())
