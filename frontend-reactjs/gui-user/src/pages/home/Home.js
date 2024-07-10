@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row, Spinner, Stack } from "react-bootstrap";
-import Footer from "../../components/footer/Footer";
-import Header from "../../components/header/Header";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
 import "./home.scss";
-import ListCardItem from "../../components/listCardItem/ListCardItem";
+import ListCardItem from "../../components/ListCardItem/ListCardItem";
 import { Link } from "react-router-dom";
 import EqualizerIcon from "@mui/icons-material/Equalizer";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
@@ -33,7 +33,7 @@ export default function Home() {
     const fetching = async () => {
       const response = await examService.searching("", "", 0, 8);
       setListExams(response?.data.content);
-      if(auth && Object.keys(auth).length > 0) {
+      if (auth && Object.keys(auth).length > 0) {
         const listWorkTime = await workTimeService.getAllWorkTimeUser(auth);
         dispatch(removexamWorked())
         dispatch(addExamWorked(listWorkTime?.data))
@@ -98,18 +98,18 @@ export default function Home() {
               <div className="text-chart">Thống kê kết quả luyện thi</div>
             </Link>
           </Stack>
-          
+
           <ListCardItem objectExams={objectTookExams} />
           {
             listResultExam && listResultExam.length > 0 &&
             (<div className="view-all">
-            <Link to={"/statistics"}>
-              <b>Xem tất cả</b>
-              <KeyboardDoubleArrowRightIcon fontSize="16" />
-            </Link>
-          </div>)
+              <Link to={"/statistics"}>
+                <b>Xem tất cả</b>
+                <KeyboardDoubleArrowRightIcon fontSize="16" />
+              </Link>
+            </div>)
           }
-          
+
         </div>
       </Container>
       <div className="exam-bottom">

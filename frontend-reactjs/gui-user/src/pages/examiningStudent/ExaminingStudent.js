@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./ExaminingStudent.scss";
-import Header from "../../components/header/Header";
+import Header from "../../components/Header/Header";
 import { Button, CloseButton } from "react-bootstrap";
-import ListQuestion from "../../components/listQuestion/ListQuestion";
-import ListBtnQuestion from "../../components/listBtnQuestion/ListBtnQuestion";
+import ListQuestion from "../../components/ListQuestion/ListQuestion";
+import ListBtnQuestion from "../../components/ListBtnQuestion/ListBtnQuestion";
 import { useDispatch, useSelector } from "react-redux";
 import { removeQuestion } from "../../redux/slices/listQuestionSlice";
 import { idExamNumberLocalStorage, } from "../../utils/localStorage";

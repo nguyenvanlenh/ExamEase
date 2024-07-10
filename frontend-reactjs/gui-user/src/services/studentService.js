@@ -2,7 +2,10 @@ import axios from "axios";
 import { URL_PATH } from "../utils/constants";
 import { getDataByKeyLS } from "../utils/common";
 
-const token = getDataByKeyLS("auth")?.token
+const getToken = () => {
+    const authData = getDataByKeyLS("auth");
+    return authData?.token;
+};
 
 export const studentService = {
     createStudent: (file, code_group) => {
@@ -14,7 +17,7 @@ export const studentService = {
 
         const config = {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${getToken()}`,
                 'Content-Type': 'multipart/form-data',
             },
         };
@@ -34,7 +37,7 @@ export const studentService = {
 
         const config = {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${getToken()}`
             }
         };
 

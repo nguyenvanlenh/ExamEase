@@ -6,8 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FormOption from '../../components/FormOption/FormOption';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
 import { RequestData } from '../../utils/request';
 import { scrollToElement, setDataByKeyLS } from '../../utils/common';
 import { addQuestionsIntoExamRequest, removeExamRequest } from '../../redux/slices/examSlice';
@@ -90,6 +90,7 @@ export const FormQuestion = () => {
     };
 
     const handleSaveAllQuestions = async () => {
+        console.log(examData);
         const data = await examService.createExam(examData);
         if (data?.status < 400) {
             setDataByKeyLS("examSaved", data.data);
