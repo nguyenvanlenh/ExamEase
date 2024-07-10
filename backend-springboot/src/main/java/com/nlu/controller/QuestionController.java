@@ -48,6 +48,7 @@ public class QuestionController {
 				 .build();
 	}
 	@PutMapping("/{id}")
+
 	public ResponseData updateQuestionAndOptionRelate(@PathVariable("id") Long id, @Valid @RequestBody QuestionRequest request) {
 		 questionService.updateQuestion(id,request);
 		 return ResponseData.builder()

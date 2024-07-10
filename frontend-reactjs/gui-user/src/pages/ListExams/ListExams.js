@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import "./ListExams.scss"
 import UserImage from "../../data/imgs/user_icon.webp"
-import Footer from "../../components/footer/Footer"
-import Header from "../../components/header/Header"
+import Footer from "../../components/Footer/Footer"
+import Header from "../../components/Header/Header"
 import { Button, Form, Image, InputGroup, ListGroup, Nav, Pagination, Row, Spinner, Stack } from "react-bootstrap"
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";

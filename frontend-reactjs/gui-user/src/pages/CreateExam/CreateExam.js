@@ -1,6 +1,6 @@
 import { Button, Col, Form, ProgressBar, Row } from "react-bootstrap"
-import Header from "../../components/header/Header"
-import Footer from "../../components/footer/Footer"
+import Header from "../../components/Header/Header"
+import Footer from "../../components/Footer/Footer"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,6 @@ import { createExamRequest, removeExamRequest } from "../../redux/slices/examSli
 import { formatDateLocal, getDataByKeyLS, setDataByKeyLS } from "../../utils/common";
 import { categoryService } from "../../services/categoryService";
 import { timeExamService } from "../../services/timeExamService";
-import { PREPARATION_TIME } from "../../utils/constants";
 export const CreateExam = () => {
     const dispatch = useDispatch();
     const requestData = RequestData();
@@ -28,7 +27,6 @@ export const CreateExam = () => {
     const [quantityQuestion, setQuantityQuestion] = useState(1);
     const [timeId, setTimeId] = useState(10);
     const [categoryId, setCategoryId] = useState(1);
-    const [endTime, setEndTime] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [quantityExamNumber, setQuantityExamNumber] = useState(1);
     const [listCate, setListCate] = useState(getDataByKeyLS("category"))
@@ -55,12 +53,8 @@ export const CreateExam = () => {
 
     const addMinutesToDate = (date, minutes) => {
         const result = new Date(date);
-        console.log(result);
         result.setMinutes(result.getMinutes() + minutes);
-        console.log(result);
         const data = formatDateLocal(result)
-        console.log(minutes);
-        console.log(data);
         return data;
     };
 

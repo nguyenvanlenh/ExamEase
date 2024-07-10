@@ -1,33 +1,33 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "./pages/home/Home";
-import Login from "./pages/login/Login";
-import { FormQuestion } from "./pages/FormQuestion/FormQuestion";
-import { CreateExam } from "./pages/CreateExam/CreateExam";
-import { CreateStudent } from "./pages/CreateStudent/CreateStudent";
-import { ListExams } from "./pages/ListExams/ListExams";
+import Home from "../pages/Home/Home";
+import Login from "../pages/Login/Login";
+import { FormQuestion } from "../pages/FormQuestion/FormQuestion";
+import { CreateExam } from "../pages/CreateExam/CreateExam";
+import { CreateStudent } from "../pages/CreateStudent/CreateStudent";
+import { ListExams } from "../pages/ListExams/ListExams";
 
-import { ResultStatistics } from "./pages/Statistics/ResultStatistics";
+import { ResultStatistics } from "../pages/Statistics/ResultStatistics";
 
-import Examdetail from "./pages/examdetail/Examdetail";
-import Examining from "./pages/examing/Examining";
-import Result from "./pages/result/Result";
-import Register from "./pages/register/Register";
-import ExaminingRules from "./pages/examRules/ExaminingRules";
-import { ManagementQuestion } from "./pages/ManagementQuestion/ManagementQuestion";
-import LoginStudent from "./pages/loginStudent/LoginStudent";
-import ExaminingStudent from "./pages/examiningStudent/ExaminingStudent";
-import ResultStudent from "./pages/resultStudent/ResultStudent";
-import { AdminLayout } from "./components/admin/Layout/AdminLayout";
-import { Dashboard } from "./pages/admin/Dashboard/Dashboard";
-import { ManagementExams } from "./pages/ManagementExams/ManagementExams";
-import { Exams } from "./pages/admin/ManagementExams/ManagementExams";
-import { Questions } from "./pages/admin/ManagementExams/ManagementQuestions";
-import { Users } from "./pages/admin/ManagementUsers/ManagementUsers";
+import Examdetail from "../pages/Examdetail/Examdetail";
+import Examining from "../pages/Examing/Examining";
+import Result from "../pages/Result/Result";
+import Register from "../pages/Register/Register";
+import ExaminingRules from "../pages/ExamRules/ExaminingRules";
+import { ManagementQuestion } from "../pages/ManagementQuestion/ManagementQuestion";
+import LoginStudent from "../pages/LoginStudent/LoginStudent";
+import ExaminingStudent from "../pages/ExaminingStudent/ExaminingStudent";
+import ResultStudent from "../pages/ResultStudent/ResultStudent";
+import { AdminLayout } from "../components/admin/Layout/AdminLayout";
+import { Dashboard } from "../pages/admin/Dashboard/Dashboard";
+import { ManagementExams } from "../pages/ManagementExams/ManagementExams";
+import { Exams } from "../pages/admin/ManagementExams/ManagementExams";
+import { Questions } from "../pages/admin/ManagementExams/ManagementQuestions";
+import { Users } from "../pages/admin/ManagementUsers/ManagementUsers";
 import ProtectedRoute from "./ProtectedRoute";
-import NotFound from "./pages/Error/NotFound";
-import { ROLE_ADMIN, ROLE_TEACHER, ROLE_USER } from "./utils/constants";
-import { CreateExamAdmin } from "./pages/admin/ManagementExams/CreateExamAdmin";
-import { CreateQuestionAdmin } from "./pages/admin/ManagementExams/CreateQuestionAdmin";
+import NotFound from "../pages/Error/NotFound";
+import { ROLE_ADMIN, ROLE_TEACHER, ROLE_USER } from "../utils/constants";
+import { CreateExamAdmin } from "../pages/admin/ManagementExams/CreateExamAdmin";
+import { CreateQuestionAdmin } from "../pages/admin/ManagementExams/CreateQuestionAdmin";
 
 
 export const router = createBrowserRouter([

@@ -54,19 +54,16 @@ public class ExamRequest implements Serializable {
     Boolean isPublic;
 
     @NotNull(message = "{exam_list_exam_number_requests_null}")
-    @Size(min = 1, message = "{exam_list_exam_number_requests_size}")
-    List<@Valid ExamNumberRequest> listExamNumberRequests;
+    List<ExamNumberRequest> listExamNumberRequests;
 
     @NotNull(message = "{exam_list_question_requests_null}")
-    @Size(min = 1, message = "{exam_list_question_requests_size}")
-    List<@Valid QuestionRequest> listQuestionRequests;
+    List<QuestionRequest> listQuestionRequests;
 
     public static void setForEntity(Exam exam, ExamRequest request) {
         exam.setShortDescription(request.getShortDescription());
         exam.setDescription(request.getDescription());
         exam.setTitle(request.getTitle());
         exam.setPublic(request.getIsPublic());
-        exam.setQuantityQuestion(request.getQuantityQuestion());
         exam.setStartTime(Timestamp.valueOf(request.getStartTime()));
         exam.setEndTime(Timestamp.valueOf(request.getEndTime()));
     }

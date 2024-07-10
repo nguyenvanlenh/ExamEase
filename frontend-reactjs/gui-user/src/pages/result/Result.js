@@ -14,8 +14,8 @@ import {
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import UserImage from "../../data/imgs/user_icon.webp";
 import "./Result.scss";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 import { Link, useLocation } from "react-router-dom";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DoneIcon from "@mui/icons-material/Done";
@@ -84,7 +84,7 @@ function Result() {
     fetchData();
   }, []);
 
-  const handleTabNumber = (number) => {};
+  const handleTabNumber = (number) => { };
   const handleOpenDetailQuestion = async (idQuestion) => {
     const question = await questionService.getQuestion(idQuestion, auth);
     setContentQuestion(question.data);
@@ -99,7 +99,7 @@ function Result() {
     } else if (index === 2) {
       return "C";
     }
-    return  "D"
+    return "D"
   }
   function handleSetColor(correct) {
     if (correct === true) {
@@ -111,8 +111,8 @@ function Result() {
   }
   function handleSetColorSelected(idOption) {
     const q = questionRes.find(question => question.selectedOptionId === idOption)
-    if(q) {
-      if(q.correct === true) {
+    if (q) {
+      if (q.correct === true) {
         return "color-correct";
       } else if (q.correct === false) {
         return "color-error";
@@ -170,10 +170,10 @@ function Result() {
                             <div className="h6" style={{ flex: 1 }}>
                               {result
                                 ? (
-                                    (result?.totalCorrect /
-                                      result?.totalQuestion) *
-                                    100.0
-                                  ).toFixed(1)
+                                  (result?.totalCorrect /
+                                    result?.totalQuestion) *
+                                  100.0
+                                ).toFixed(1)
                                 : 0}
                               %
                             </div>
@@ -241,10 +241,10 @@ function Result() {
                           <td>
                             {result
                               ? (
-                                  (result?.totalCorrect /
-                                    result?.totalQuestion) *
-                                  100.0
-                                ).toFixed(1)
+                                (result?.totalCorrect /
+                                  result?.totalQuestion) *
+                                100.0
+                              ).toFixed(1)
                               : 0}
                             %
                           </td>
@@ -292,7 +292,7 @@ function Result() {
                   </i>
                 </p>
                 <div className="mt-3">
-                  <Link 
+                  <Link
                     to={"/statistics"}
                     className="w-100 mt-3 btn btn-custom"
                     variant="outline-secondary"

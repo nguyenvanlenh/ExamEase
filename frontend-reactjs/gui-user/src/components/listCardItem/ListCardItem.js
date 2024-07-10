@@ -1,12 +1,12 @@
 import React from "react";
-import CardItem from "../cardItem/CardItem";
+import CardItem from "../CardItem/CardItem";
 import { Col, Row } from "react-bootstrap";
 
 function ListCardItem(prop) {
   const objectExams = prop.objectExams;
   const type = objectExams && objectExams.type;
   let notification;
-  if(type) {
+  if (type) {
     switch (type) {
       case "OBLIGATE_EXAM":
         notification = <Col className="fst-italic">Bạn không có lịch thi hôm nay!</Col>;

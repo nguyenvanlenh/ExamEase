@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Col, Container, Nav, Row, Table, Modal, Form, Stack } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { examService } from '../../services/examService';
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import './ManagementQuestion.scss';
 import { questionService } from '../../services/questionService';
@@ -45,7 +45,6 @@ export const ManagementQuestion = () => {
     };
     const fetchingDataResultOfStudents = async (codeGroup) => {
         const data = await resultService.getAllResultOfStudentByCodeGroup(codeGroup);
-        console.log(data.data.listResult);
         setDataResult(data.data.listResult);
     };
 
