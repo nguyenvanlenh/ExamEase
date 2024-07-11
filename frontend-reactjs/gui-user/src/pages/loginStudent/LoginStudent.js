@@ -25,7 +25,7 @@ const LoginStudent = () => {
     event.preventDefault();
     setLoading(true);
     await delay(500);
-    const data =  await authService.loginStudent(RequestData().LoginStudentRequest(inputEmail, inputPassword, inputCodeGroup))
+    const data =  await authService.loginStudent(RequestData().LoginStudentRequest(inputEmail?.trim(), inputPassword?.trim(), inputCodeGroup?.trim()))
     if (data.status !== 200) {
       setShow(true);
     }else {

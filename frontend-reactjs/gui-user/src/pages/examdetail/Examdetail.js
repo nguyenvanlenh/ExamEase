@@ -37,7 +37,7 @@ function Examdetail() {
   const location = useLocation();
   const id = location.state?.idExamNumber;
   const times = {
-    timeExam: [10, 15, 20, 25, 30, 40, 50, 60],
+    timeExam: [5, 10, 15, 20, 25, 30, 45, 50, 60, 70, 80, 90, 100, 110, 115, 120, 125, 130],
   };
 
   const [tabNumber, setTabNumber] = useState(0);

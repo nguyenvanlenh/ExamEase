@@ -36,7 +36,7 @@ export default function Home() {
       if (auth && Object.keys(auth).length > 0) {
         const listWorkTime = await workTimeService.getAllWorkTimeUser(auth);
         dispatch(removexamWorked())
-        dispatch(addExamWorked(listWorkTime?.data))
+        listWorkTime && dispatch(addExamWorked(listWorkTime?.data))
       }
     };
     fetching();

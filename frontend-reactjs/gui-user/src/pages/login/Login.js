@@ -24,12 +24,12 @@ const Login = () => {
     setLoading(true);
     await delay(500);
 
-    const data = await authService.login(RequestData().LoginRequest(inputUsername, inputPassword))
+    const data = await authService.login(RequestData().LoginRequest(inputUsername?.trim(), inputPassword?.trim()))
     if (data.status >= 400) {
       setShow(true);
     } else {
       dispatch(addAuth(data.data))
-      localStorage.setItem('username', JSON.stringify(inputUsername))
+      localStorage.setItem('username', JSON.stringify(inputUsername?.trim()))
       if (data?.data?.listRoles?.includes(ROLE_ADMIN)) {
         navigation("/admin/dashboard");
       } else {
