@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { examWorkedsLocalStorage } from '../../utils/localStorage';
-import { formatTimeHMS, totalMins } from '../../utils/utilsFunction';
+import { formatTimeHMS } from '../../utils/utilsFunction';
 import { formatdMYFromString } from '../../utils/common';
 
 const initialState = examWorkedsLocalStorage.get() || [];
