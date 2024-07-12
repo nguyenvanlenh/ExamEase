@@ -56,7 +56,7 @@ export const FormQuestion = () => {
 
     const handleUploadFileQuestion = async () => {
         const data = await questionService.uploadFileQuestion(file, answerFile);
-        if (data?.status < 400) {
+        if (data?.status === 200) {
             const listQuestionsCustom = data?.data?.map((q, index) => {
                 return RequestData().QuestionRequest(
                     index + 1,
@@ -69,7 +69,7 @@ export const FormQuestion = () => {
             dispatch(addQuestionsIntoExamRequest(listQuestionsCustom));
             setShowModalUpload(false)
         } else {
-            setError(data.data.message);
+            setError(data?.data?.message);
         }
     };
 

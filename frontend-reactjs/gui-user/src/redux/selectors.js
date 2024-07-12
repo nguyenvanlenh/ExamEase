@@ -4,8 +4,10 @@ import { createSelector } from '@reduxjs/toolkit';
 export const selectTotalTimeSpent = createSelector(
   state => state.examWorkeds,
   examWorkeds => {
+    console.log("examWorkeds: "+ examWorkeds)
     const totalTime = examWorkeds.reduce((total, work) => total + work.completionTimeHandle, 0);
-    return Math.floor(totalTime / 60) + " giờ " + (totalTime % 60) + " phút";
+    console.log("totalTime: "+ totalTime)
+    return Math.floor(totalTime / 60);
   }
 );
 
