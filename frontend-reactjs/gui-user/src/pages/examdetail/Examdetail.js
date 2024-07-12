@@ -212,7 +212,7 @@ function Examdetail() {
                     <Tab eventKey="Thảo luận" title="Thảo luận">
                       Tab content for Profile
                     </Tab>
-                    <Tab eventKey="contact" title="Contact">
+                    <Tab eventKey="contact" title="Liên hệ">
                       Tab content for Contact
                     </Tab>
                   </Tabs>
