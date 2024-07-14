@@ -31,10 +31,10 @@ export const PaginationComponent = ({ currentPage, totalPages, onPageChange }) =
                 );
             }
 
-            // Thêm dấu "..." nếu trang đầu tiên không nằm trong danh sách hiển thị
-            if (leftBoundary > 0) {
-                paginationItems.push(ellipsis);
-            }
+            // // Thêm dấu "..." nếu trang đầu tiên không nằm trong danh sách hiển thị
+            // if (leftBoundary > 0) {
+            //     paginationItems.push(ellipsis);
+            // }
 
             // Thêm các trang từ leftBoundary đến rightBoundary
             for (let i = leftBoundary; i <= rightBoundary; i++) {

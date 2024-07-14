@@ -48,7 +48,7 @@ function Examdetail() {
   const [examNumber, setExamNumber] = useState();
   const [time, setTime] = useState(45);
   const [idExamNumber, setIdExamNumber] = useState(0);
-
+  const [username, setUsername] = useState("User");
   async function dataExamNumber(id) {
     const data = await examNumberService.getExamNumberUser(id);
     setExamNumber(data.data);
@@ -64,7 +64,10 @@ function Examdetail() {
       dataExamNumber(id);
       dispatch(removeQuestion())
     }
-
+    const usernameLocal = JSON.parse(localStorage.getItem('username'))
+    if (usernameLocal) {
+      setUsername(usernameLocal);
+    }
   }, []);
 
   const handleSubmit = async () => {
@@ -234,7 +237,7 @@ function Examdetail() {
             <div className="user-target-info-box">
               <Image src={UserImage} roundedCircle height={70} />
               <div className="text-center">
-                <strong>20130302</strong>
+                <strong>{username}</strong>
               </div>
               <div className="user-target-info">
                 <p>
